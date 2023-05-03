@@ -86,22 +86,72 @@ int main()
   
   //ver codigo de lectura de fichero de baselga para completar los vectores
   
-int media(vector[n])
+float media(vector[n])
 {
-  int i/*valor unico*/, j=vector[0]/*sumatorio de los valores*/;
+  int i;/*valor unico*/
+  float j = vector[0];/*sumatorio de los valores*/
   for(i=0; i<n ; i++)
   {
     j=j+vector[i];
   }
-  int resultado=(j)/(n);/*n es el tamaño del vector , osea , el numero de valores*/
-}return resultado;
+  float resultado=(j)/(n);/*n es el tamaño del vector , osea , el numero de valores*/
+}return resultado
   
 
-int maximo(vector[n])
+  
+  
+float maximo(vector[n])
 {
-  int resultado , i;
-  for(
+  int i;
+  float resultado=0;
+  for(i=0 ; i<n ; i++) //alomejor habria que hacer esto con while
+  {
+    if (resultado < vector[i])
+    {
+      resultado = vector[i]
+    }
+  } 
+}return resultado     
   
   
   
+float minimo(vector[n])
+{
+  int i;
+  float resultado = vector[0];
+  for(i=0 ; i<n ; i++) //alomejor habria que hacer esto con while
+  {
+    if (resultado > vector[i])
+    {
+      resultado = vector[i]
+    }
+  } 
+}return resultado 
+  
+  
+  
+float varianza(vector[n])
+{
+  int i;
+  float resultado , sum=0;
+  for(i=0 , i<n ; i++)
+  {
+    sum = (sum-media(vector[n])) * (sum-media(vector[n]))
+  }
+  resultado = sum / n;
+}return resultado 
+
+
+
+  
+float engtot(vector[n]) //energia total generada a lo largo del tiempo
+{
+  float resultado
+  
+  
+  
+  
+void compare(1vector[i], 2vector[j])
+{
+}
   
