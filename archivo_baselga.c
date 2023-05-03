@@ -18,10 +18,10 @@ int main()
     for (int colummna = 0; columna < 5; columna++) {
             fgets(almacenFila, 1024, fp);
             termino = strtok(almacenFila, ",");
-            while (termino != NULL )
+            while (termino != NULL && columna != 3)
             {
                 termino = strtok(NULL, ",");
-                if (termino != NULL && columna != 3)
+                if (termino != NULL)
                 {
                     printf("%s ", termino);
                 }
