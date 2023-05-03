@@ -1,20 +1,29 @@
-#include<stdio.h>
-#include<stdiolib.h>
-printf("holis")
-//aqui el menu
+#include <stdio.h>
+#include <stdlib.h>
+
 int main()
 {
-  FILE *fp;
-  char ch;
-  fp = fopen("nombreDelArchivo.css", "r+"):
-  while ((ch = fgetc(fp)) != EOF)
-    print("%c", ch);
-  fprintf(fp, "\n\n/* New content*/\n");
-  fprintf(fp, "body { background-color: #f0f0f0; }");
+    FILE *fp;
+    char almacenFila[1024];
+    int columna  = 0;
+    char *termino;
 
-  fclose(fp);
+    fp = fopen("generacion_por_tecnologias_21_22.csv", "r");
 
-  printf("elige uno de los siguientes metodos de generacion de energia: 1: Hidraulica , 2: Turbinación bombeo , 3: Nuclear ,4: Carbón
-  switch
-  {
-    case 1:
+    if (fp == NULL)
+    {
+        printf("Archivo no valido");
+        exit(1);
+    }
+    while (fgets(almacenFila, 1024, fp)) {
+        termino = strtok(almacenFila, ",");
+        while (termino != NULL) {
+            termino = strtok(NULL, ",");
+            if (termino != NULL) {
+                printf("%s ", termino);
+            }
+        }
+    }
+    fclose(fp);
+    return 0;
+}
