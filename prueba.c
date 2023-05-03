@@ -1,5 +1,5 @@
 #include<stdio.h>
-
+printf("holis")
 //aqui el menu
 int main()
 {
