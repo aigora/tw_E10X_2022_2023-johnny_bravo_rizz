@@ -3,11 +3,7 @@
 // funcion para sacar los datos de la matriz malloc (es la unica manera de sacar los datos de la matriz basicamente)
 // si quieres leer o modificar la matriz, llamas esta funcion y te devuelve el puntero del vector palabra
 // si quieres leer o algo lo unico trata la palabra como un vector y listo
-char* leerMatriz (char*** matriz, int fila,int columna){
-    char ** punteroFila = matriz[fila];
-    char * punteroColumna = punteroFila[columna];
-    return punteroColumna;
-}
+
 int main()
 {
     // variables para iniciar la lectura
@@ -48,18 +44,23 @@ int main()
         rowNumber++;
     }
     fclose(dimensionsScout);
-    int maxSizeWords = 128;
+    int maxSizeWords = 4;
+    // declaracion de la matriz con malloc
+    // inicializamos el vector que va a almacenar los punteros a las filas
     char*** matrizDatos = (char***)malloc(sizeof(char**)*rowNumber);
+    printf(" %i %i \n\n", rowNumber, columnNumber);
     for (int filas = 0; filas < rowNumber; filas++){
+        printf("b %i\n", filas);
         // para cada uno de los vectores de fila, declaramos otro vector que almacena cada una de las columnas
-        char** fila_actual = matrizDatos[filas];
-        fila_actual = (char**)malloc(columnNumber*sizeof(char*));
-        for (int columnas; columnas < columnNumber; columnas++){
+        matrizDatos[filas] = (char**)malloc(columnNumber*sizeof(char*));
+        for (int columnas = 0; columnas < columnNumber; columnas++){
+            printf("%i", columnas);
             // para cada una de las columnas, creamos un array que almacena el numero máximo de caracteres
-            char* palabra_actual = fila_actual[columnas];
-            palabra_actual = (char*)malloc(maxSizeWords*sizeof(char));
+            matrizDatos[filas][columnas] = (char*)malloc(128*sizeof(char));
+            matrizDatos[filas][columnas][0] = 'A';
+            printf("%s\n",matrizDatos[filas][columnas]);
+            }
         }
-    }
     //char matrizDatos[rowNumber][columnNumber][128];
     printf(" %i %i ", rowNumber, columnNumber);
     // Aislamiento de datos en celdas de la matriz
@@ -95,8 +96,7 @@ int main()
                 if (fila >= 4){
                     filaReal = fila - 4;
                     for (int a = 0; element[a] != '\0'; a++){
-                        punteroPalabra = leerMatriz(matrizDatos, filaReal, column);
-                        punteroPalabra[a] = element[a];
+                        matrizDatos[filaReal][column][a] = element[a];
                         }
                     printf("%s",matrizDatos[filaReal][column]);
                     printf(" %i %i ", filaReal, column);
@@ -105,7 +105,9 @@ int main()
                     column++;
                     }
                 for (int i = 0; element[i] != '\0'; i++) {
-                    element[i] = '\0';
+                    for (int j = 0; j < 2; j++){
+                        element[i + j] = '\0';
+                        }
                     }
                 letraElement = 0;
             }
@@ -117,17 +119,6 @@ int main()
                 }
         }
         if (almacenFila[letra] != ','){
-            /*
-            if (!(almacenFila[letra] >= 32 && almacenFila[letra] <= 126)){
-
-            tildeFix = tildeFixer(almacenFila[letra]);
-            element[letraElement] = tildeFix;
-            letraElement++;
-
-            // Esta parte es para arreglar las tildes pero no sé como se hace asiq mira me cago en mi puta vida
-            continue;
-            }
-            */
             element[letraElement] = almacenFila[letra];
             letraElement++;
             printf("%s", element);
@@ -136,8 +127,7 @@ int main()
         }
         element[letraElement] = '\0';
         for (int a = 0; element[a] != '\0'; a++){
-            punteroPalabra = leerMatriz(matrizDatos, filaReal, column);
-            punteroPalabra[a] = element[a];
+            matrizDatos[filaReal][column][a] = element[a];
             }
         printf("%s",matrizDatos[filaReal][column]);
         printf(" %i %i ", filaReal, column);
