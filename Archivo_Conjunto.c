@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-// La funcion está comentada casi toda, si falta algo o algo no funciona mandadme un was
+// El códigpo está comentado casi todo, si falta algo o algo no funciona mandadme un was
+// las variables están un poco en spanglish xq estoy acostumbrado a escribir en ingles codigo, pero todo es mio asi q dont worry x plagio
 // hay printfs al inicio del proceso de indexado pero me sirven para ver si funciona, no les hagais mucho caso
 // NOTA PARA YO DEL FUTURO: Elimina todos  los \n que puedas xq hacen que el codigo corra bastante más rápido
 int main()
