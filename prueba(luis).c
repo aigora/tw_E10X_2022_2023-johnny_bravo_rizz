@@ -130,7 +130,7 @@ int main() //poner eñ break en el switch case
   
   //ver codigo de lectura de fichero de baselga para completar los vectores
   
-float media(vector[n])
+float media(float vector[n])
 {
   int i;/*valor unico*/
   float j = vector[0];/*sumatorio de los valores*/
@@ -144,7 +144,7 @@ float media(vector[n])
 
   
   
-float maximo(vector[n])
+float maximo(float vector[n])
 {
   int i;
   float resultado=0;
@@ -159,7 +159,7 @@ float maximo(vector[n])
   
   
   
-float minimo(vector[n])
+float minimo(float vector[n])
 {
   int i;
   float resultado = vector[0];
@@ -174,21 +174,25 @@ float minimo(vector[n])
   
   
   
-float varianza(vector[n])
+float varianza(float vector[n]) //revisar esto, creo que no funciona
 {
   int i;
   float resultado , sum=0;
-  for(i=0 , i<n ; i++)
+  for(i=0 ; i<n ; i++)
   {
     sum = (sum-media(vector[n])) * (sum-media(vector[n]))
   }
   resultado = sum / n;
 }return resultado 
-
-
-
   
-float engtot(vector[n]) //energia total generada a lo largo del tiempo
+  
+float covarianza(float vector[n], float vector2[n])
+{
+  int i;
+  for(i=0 ; i<n)
+}
+  
+float engtot(float vector[n]) //energia total generada a lo largo del tiempo
 {
   float resultado = vector[0];
   for(i=1 , i<n , i++)
@@ -198,9 +202,12 @@ float engtot(vector[n]) //energia total generada a lo largo del tiempo
 }return resultado
   
   
-  
-  
-void compare(1vector[i], 2vector[j])
-{
+float regresion(float vector[n] , int vector2[n])//calcula la recta de regresion de una fila de datos usando la media la varianza y la covarianza(hay que hacer la covarianza aun) para usando esa recta hacer una estimacion de lo que podria ser un valor futuro
+{//en regresion hay que introducir tres datos , el primer vector (y) es el valor energético , el segundo vector son los dias o fechas en los que ocurren esos valores , las fechas se hacen como numeros enteros para facilitar los calculos .
+  float regresion, b;
+  b = (covarianza(vector[n],vector2[n]))/(varianza(vector2[n]))
+  regresion = media(vector[n])+b*(x-media(vector2[n]))
 }
+  
+
   
