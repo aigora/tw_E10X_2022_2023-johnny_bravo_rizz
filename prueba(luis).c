@@ -3,7 +3,7 @@
 int main() //poner eñ break en el switch case
 {
   int menu; //plantilla menu
-  printf("elige uno de los siguientes metodos de generacion de energia: 1: Hidraulica , 2: Turbinación bombeo , 3: Nuclear ,4: Carbón ,5:Fuel + Gas ,6:Motores diesel ,7:Turbina de gas ,8:Turbina de vapor ,9:Ciclo combinado ,10:Hidroeelica ,11:Eolica ,12:Solar fotovoltaica ,13: Solar termica ,14:Otras renovables ,15:Cogeneracion ,16:Residuos no renovables ,17:Residuos renovables ,18:Generacon total");
+  printf("elige uno de los siguientes metodos de generacion de energia: 1: Hidraulica , 2: Turbinación bombeo , 3: Nuclear ,4: Carbón ,5:Fuel + Gas ,6:Motores diesel ,7:Turbina de gas ,8:Turbina de vapor ,9:Ciclo combinado ,10:Hidroeelica ,11:Eolica ,12:Solar fotovoltaica ,13: Solar termica ,14:Otras renovables ,15:Cogeneracion ,16:Residuos no renovables ,17:Residuos renovables ,18:Generacon total\n");
   scanf("%i", &menu); // habria que hacer un ultimo case en el que el usuario pueda elegir finalizar el programa y que se ejecute el programa infinitamente hasta que el usuario lo finalize
   switch menu
   {
@@ -13,43 +13,43 @@ int main() //poner eñ break en el switch case
         float vector[n] , vector1[n];
         vector[n] = vector1[n]; //el abjetivo de esta linea es asignar el valor del vector seleccionado en el case al vector[n]
         int menu2;
-        printf("elige una tarea: 1:media , 2: varianza , 3: valor maximo , 4: valor minimo , 5: energia total");
+        printf("elige una tarea: 1:media , 2: varianza , 3: valor maximo , 4: valor minimo , 5: energia total\n");
         scanf("%i",&menu2)
         switch menu2
         {
           case 1:
             {
               media(&datosATrabajar);
-              printf("la media es : %f",media(vector[n]));
+              printf("la media es : %f\n",media(vector[n]));
               break;
             }
             
           case 2:
             {
-              printf("la varianza es : %f",varianza(vector[n]));
+              printf("la varianza es : %f\n",varianza(vector[n]));
               break;
             }
             
           case 3:
             {
-              printf("el maximo es : %f",maximo(vector[n]));
+              printf("el maximo es : %f\n",maximo(vector[n]));
               break;
             }
             
           case 4:
             {
-              printf("el minimo es : %f",minimo(vector[n]));
+              printf("el minimo es : %f\n",minimo(vector[n]));
               break;
             }
             
           case 5:
             {
-              printf("la energia total es : %f",engtot(vector[n]));
+              printf("la energia total es : %f\n",engtot(vector[n]));
               break;
             }
             default
             {
-              printf("ha abido un error , prueba otra vez");
+              printf("ha abido un error , prueba otra vez\n");
             }
               
         break;
@@ -124,7 +124,7 @@ int main() //poner eñ break en el switch case
       }
       default:
       {
-        printf("no es valido , vuelve a empezar");
+        printf("no es valido , vuelve a empezar\n");
         break;
       }
     }
@@ -277,10 +277,14 @@ void regresion(struct datosMatriz *datosATrabajar)//calcula la recta de regresio
   
   
   b = (covarianza)/(varianza(vectorFecha[n]));
-  printf("La recta de regresion tiene la forma : y= %f + %f * (x-%f)", media(datosATrabajar->vectorFila[]), b, media(vectorFecha));
-    
+  printf("La recta de regresion tiene la forma : y= %f + %f * (x-%f) \n", media(datosATrabajar->vectorFila[]), b, media(vectorFecha[]));
+  float estimacion1, estimacion2, estimacion3,error;
   
-  regresion = media(vector[n])+b*(x-media(vector2[n]))
+  estimacion1 = media(datosATrabajar->vectorFila[]) + b * (((datosATrabajar->numColumnas)+1)-media(vectorFecha[]));  //esta ultima parte se podria hacer un codigo de tal forma que el usuario calcule la cantidad de estimaciones que quiera
+  estimacion2 = media(datosATrabajar->vectorFila[]) + b * (((datosATrabajar->numColumnas)+2)-media(vectorFecha[]));
+  estimacion3 = media(datosATrabajar->vectorFila[]) + b * (((datosATrabajar->numColumnas)+3)-media(vectorFecha[]));
+  error = covarianza / (varianza(datosATrabajar->vectorFila[]) *varianza(vectorFecha[]));
+  printf("Podemos hacer una estimacion para los primeros meses despues de los medidos: primer mes despues de los datos medidos: %f , segundo: %f y tercero: %f . El coeficiente de correlacion lineal de estos datos es: %f \n",estimacion1, estimacion2, estimacion3, error);
 }
 
   
