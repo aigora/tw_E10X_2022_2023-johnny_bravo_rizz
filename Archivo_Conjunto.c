@@ -9,7 +9,6 @@
 struct datosMatriz{
     int numColumnas;
     int numFilas;
-    int numColumnas;
     char ***matriz;
     char **vectorFilaFechas;
     char **vectorColumnaTitulos;
