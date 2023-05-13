@@ -236,7 +236,11 @@ El primero es la FILA que quieres, sus valores van entre 0 y 18, el segundo es l
 Si no quieres sacar un vector fila y un vector columna a la vez y quieres solo uno de los dos, el que no quieras dejalo con VALOR 0
 Teoricamente estos datos se podrían ajustar a una tabla de cualquier tamaño, pero en nuestro caso se van a quedar entre esos valores siempre
 Cuando llamas a esa funcion, lo que va a cambiar son los vectores de dentro la estructura, para acceder a ellos, tienes que escribir datosATRabajar.vectorFila o datosATrabajar.vectorColumna segun el que quieras
-Para meterlo en funciones es un poco más coñazo, ahora en un rato haré un conversor de vector estructura a vector normal para funciones, pero si lo usas fuera funciona.
+EJEMPLO DE USO: quieres la fila 3 ->
+getVectorByNum(&datosATrabajar, 3, 0)
+datosATrabajar.vectorFila <-- este es tu vector
+
+
 */
 return 0;
 }
