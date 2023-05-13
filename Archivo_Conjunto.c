@@ -60,7 +60,7 @@ int main()
     int transportVariable = 0;
     // Coge una fila con datos (la 5) y prueba a ver cuantas columnas de datos hay contando las comas
     // Se asume que delante de cada dato hay una coma, sin contar el titulo
-    for (int letra = 0; letra < strlen(pruebaDimensiones); letra++){
+    for (int letra = 0; pruebaDimensiones[letra] != '\0'; letra++){
         if (pruebaDimensiones[letra] == ','){
             if (lastWasComma){
                 break;
@@ -86,7 +86,6 @@ int main()
     char*** matrizDatos = (char***)malloc(sizeof(char**)*rowNumber);
     printf(" %i %i \n\n", rowNumber, columnNumber);
     for (int filas = 0; filas < rowNumber; filas++){
-        printf("b %i\n", filas);
         // para cada uno de los vectores de fila, declaramos otro vector que almacena los punteros
         // de los vectores de cada una de las columnas (o datos individuales es lo mismo)
         matrizDatos[filas] = (char**)malloc(columnNumber*sizeof(char*));
@@ -133,8 +132,8 @@ int main()
         if (almacenFila[letra] == ','){
             if (!floatElement){
                 // Se ejecuta si pilla una coma fuera de un decimal
-                element[letraElement] = '\0';
                 if (fila >= 4){
+                    element[letraElement] = '\0';
                     // a partir de la fila 5 va almacenando cosas en las celdas
                     filaReal = fila - 4;
                     for (int a = 0; element[a] != '\0'; a++){
@@ -160,10 +159,9 @@ int main()
             }
             else{
                 // esto es si es una coma decimal lo trata como un digito normal
-                element[letraElement] = almacenFila[letra];
+                element[letraElement] = '.';
                 letraElement++;
-                printf("%s", element);
-                printf("\n");
+                printf("%s\n", element);
                 continue;
                 }
             for (int a = 0; element[a] != '\0'; a++){
@@ -187,7 +185,7 @@ int main()
         printf("%s",matrizDatos[filaReal][column]);
         printf(" %i %i ", filaReal, column);
         printf("\n");
-        printf("\nsuccessful\n");
+        printf("successful\n\n");
     }
 // Esta es la comprobación de que los datos se han guardado bien
 for (int prueba2 = 0; prueba2 < 19; prueba2++){
