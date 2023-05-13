@@ -120,6 +120,7 @@ int main()
         fgets(almacenFila, 2048, elementSeparation);
         printf("%s", almacenFila);
         printf("\n");
+        letraElement = 0;
         // Iteramos hasta el final de la linea (hasta que sale \0)
         for (int letra = 0; almacenFila[letra] != '\0'; letra++){
             // si hay una doble coma, se considera que estás dentro de un decimal y la coma de dentro no la interpreta
