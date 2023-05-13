@@ -4,6 +4,36 @@
 // las variables están un poco en spanglish xq estoy acostumbrado a escribir en ingles codigo, pero todo es mio asi q dont worry x plagio
 // hay printfs al inicio del proceso de indexado pero me sirven para ver si funciona, no les hagais mucho caso
 // NOTA PARA YO DEL FUTURO: Elimina todos  los \n que puedas xq hacen que el codigo corra bastante más rápido
+// Esta estructura se usa mas abajo pero por el tema de la funcion tengo que declararla aquí arriba
+// De aquí se sacan los datos de la matriz para meterlos a vectores para trabajar con ellos
+struct datosMatriz{
+    int numColumnas;
+    int numFilas;
+    char ***matriz;
+    char **vectorFilaFechas;
+    char **vectorColumnaTitulos;
+    double *vectorFila;
+    double *vectorColumna;
+};
+void getVectorByNum (struct datosMatriz *datosATrabajar, int filaDeseada, int columnaDeseada){
+if (filaDeseada){
+    printf("Output row: %i\n", filaDeseada);
+    for (int columna = 1; columna < datosATrabajar->numColumnas; columna++){
+        datosATrabajar->vectorFila[columna] = strtof(datosATrabajar->matriz[filaDeseada][columna], NULL);
+        printf("%.6f\n", datosATrabajar->vectorFila[columna]);
+    }
+}
+
+printf("\n\n");
+if (columnaDeseada){
+    printf("Output column: %i\n", columnaDeseada);
+    for (int fila = 1; fila < datosATrabajar->numFilas; fila++){
+        datosATrabajar->vectorColumna[fila] = strtof(datosATrabajar->matriz[fila][columnaDeseada], NULL);
+        printf("%.6f\n", datosATrabajar->vectorColumna[fila]);
+    }
+}
+return;
+}
 int main()
 {
     // variables para iniciar la lectura
@@ -80,11 +110,10 @@ int main()
     // Variables pseudobooleanas que sirven para comprobar cositas
     int letraElement = 0;
     int floatElement = 0;
-    int tildeOld = 0;
     int column = 0;
     int filaReal = 0;
     rowNumber += 4;
-    char* punteroPalabra;
+    int isFirstComma = 1;
     // Se va mirando fila por fila lo que hay y se va almacenando en celdas de la matriz "matrizDatos"
     for (int fila = 0; fila < rowNumber; fila++) {
         column = 0;
@@ -134,7 +163,11 @@ int main()
                 letraElement++;
                 printf("%s", element);
                 printf("\n");
+                continue;
                 }
+            for (int a = 0; element[a] != '\0'; a++){
+                element[a] = '\0';
+            }
         }
         if (almacenFila[letra] != ','){
             // Si no es una coma almacena el digito en element
@@ -144,10 +177,11 @@ int main()
             printf("%s\n", element);
             }
         }
-        element[letraElement] = '\0';
+        element[letraElement - 1] = '\0';
         // Este se ejecuta para el último elemento xq no hay una coma al final de la linea
         for (int a = 0; element[a] != '\0'; a++){
             matrizDatos[filaReal][column][a] = element[a];
+            element[a] = '\0';
             }
         printf("%s",matrizDatos[filaReal][column]);
         printf(" %i %i ", filaReal, column);
@@ -156,13 +190,54 @@ int main()
     }
 // Esta es la comprobación de que los datos se han guardado bien
 for (int prueba2 = 0; prueba2 < 19; prueba2++){
-for (int prueba = 0; prueba < 25; prueba++){
-    printf("%s", matrizDatos[prueba2][prueba]);
-    printf("\n");
-}
+    for (int prueba = 0; prueba < 25; prueba++){
+        printf("%s", matrizDatos[prueba2][prueba]);
+        printf(" %i %i\n", prueba2,prueba);
+    }
 printf("\n\n");
 }
-fclose(dimensionsScout);
+fclose(dimensionsScout);    
+// <---------------- PREPARACIÓN DE LOS DATOS PARA USO ------------------------->
+rowNumber -= 4;
+// Declaramos una estructura donde meteremos punteros a una serie de vectores (ir al principio del archivo para explicación)
+struct datosMatriz datosATrabajar;
+datosATrabajar.matriz = matrizDatos;
+datosATrabajar.numColumnas = columnNumber;
+datosATrabajar.numFilas = rowNumber;
+// Declaramos los vectores en funcion del tamaño de la tabla con malloc
+// El vector vectorColumnaTitulos almacenará los titulos de las diferentes filas en un vector char
+datosATrabajar.vectorColumnaTitulos = (char**)malloc(sizeof(char*)*rowNumber);
+// El vector vectorColumna se llenará con datos double de la columna puntual con la que trabajemos gracias a la funcion getVectorByNum
+datosATrabajar.vectorColumna = (double*)malloc(sizeof(double*)*(rowNumber-1));
+for (int tituloFila = 0; tituloFila < rowNumber; tituloFila++){
+    // Declaramos los punteros de memoria para cada array de caracteres, y los llenamos con el titulo de la fila correspondiente
+    datosATrabajar.vectorColumnaTitulos[tituloFila] = (char*)malloc(sizeof(char)*80);
+    for (int letra = 0; matrizDatos[tituloFila][0][letra] != '\0'; letra++){
+        datosATrabajar.vectorColumnaTitulos[tituloFila][letra] = matrizDatos[tituloFila][0][letra];
+    }
+    printf("\ntitulo: %s\n",datosATrabajar.vectorColumnaTitulos[tituloFila]);
+};
+// El vector vectorFilaFechas almacenará la fila de fechas en un vector char
+datosATrabajar.vectorFilaFechas = (char**)malloc(sizeof(char*)*(columnNumber-1));
+datosATrabajar.vectorFila = (double*)malloc(sizeof(double)*(columnNumber-1));
+for (int fechaColumna = 1; fechaColumna < columnNumber; fechaColumna++){
+    datosATrabajar.vectorFilaFechas[fechaColumna - 1] = (char*)malloc(sizeof(char)*80);
+    for (int letra = 0; matrizDatos[0][fechaColumna][letra] != '\0'; letra++){
+        datosATrabajar.vectorFilaFechas[fechaColumna - 1][letra] = matrizDatos[0][fechaColumna][letra];
+    }
+    printf("\nfecha: %s\n",datosATrabajar.vectorFilaFechas[fechaColumna - 1]);
+};
+getVectorByNum(&datosATrabajar, 5, 3);
+    
+/* NOTA IMPORTANTE SOBRE EL USO DE LOS VECTORES DE LA MATRIZ:
+Los vectores no van a ser vectores per se, son elementos de la estructura datosATrabajar
+La funcion getVectorByNum tiene dos parametros, y con esos dos sacas los vectores que quieras
+El primero es la FILA que quieres, sus valores van entre 0 y 18, el segundo es la COLUMNA que quieres, sus valores van entre 0 y 25.
+Si no quieres sacar un vector fila y un vector columna a la vez y quieres solo uno de los dos, el que no quieras dejalo con VALOR 0
+Teoricamente estos datos se podrían ajustar a una tabla de cualquier tamaño, pero en nuestro caso se van a quedar entre esos valores siempre
+Cuando llamas a esa funcion, lo que va a cambiar son los vectores de dentro la estructura, para acceder a ellos, tienes que escribir datosATRabajar.vectorFila o datosATrabajar.vectorColumna segun el que quieras
+Para meterlo en funciones es un poco más coñazo, ahora en un rato haré un conversor de vector estructura a vector normal para funciones, pero si lo usas fuera funciona.
+*/
 return 0;
 }
 
