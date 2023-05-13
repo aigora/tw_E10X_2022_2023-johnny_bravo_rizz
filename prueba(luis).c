@@ -208,6 +208,9 @@ float regresion(float vector[n] , int vector2[n])//calcula la recta de regresion
   b = (covarianza(vector[n],vector2[n]))/(varianza(vector2[n]))
   regresion = media(vector[n])+b*(x-media(vector2[n]))
 }
+
   
+  
+//hacer un gáfico en horizontal
 
   
