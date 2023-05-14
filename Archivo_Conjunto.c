@@ -18,7 +18,8 @@ struct datosMatriz{
 void getVectorByNum (struct datosMatriz *datosATrabajar, int filaDeseada, int columnaDeseada){
 if (filaDeseada){
     printf("Output row: %i\n", filaDeseada);
-    for (int columna = 1; columna < datosATrabajar->numColumnas; columna++){
+    int columna;
+    for (columna = 1; columna < datosATrabajar->numColumnas; columna++){
         datosATrabajar->vectorFila[columna] = strtof(datosATrabajar->matriz[filaDeseada][columna], NULL);
         printf("%.6f\n", datosATrabajar->vectorFila[columna]);
     }
@@ -27,7 +28,8 @@ if (filaDeseada){
 printf("\n\n");
 if (columnaDeseada){
     printf("Output column: %i\n", columnaDeseada);
-    for (int fila = 1; fila < datosATrabajar->numFilas; fila++){
+    int fila;
+    for (fila = 1; fila < datosATrabajar->numFilas; fila++){
         datosATrabajar->vectorColumna[fila] = strtof(datosATrabajar->matriz[fila][columnaDeseada], NULL);
         printf("%.6f\n", datosATrabajar->vectorColumna[fila]);
     }
@@ -50,7 +52,8 @@ int main()
         exit(1);
     }
     // Declaración matriz con dimensiones variables por malloc
-    for (int columna = 0; columna < 5; columna++){
+    int columna;
+    for (columna = 0; columna < 5; columna++){
         fgets(pruebaDimensiones, 1024, dimensionsScout);
     }
     int lastWasComma = 0;
@@ -59,7 +62,8 @@ int main()
     int transportVariable = 0;
     // Coge una fila con datos (la 5) y prueba a ver cuantas columnas de datos hay contando las comas
     // Se asume que delante de cada dato hay una coma, sin contar el titulo
-    for (int letra = 0; pruebaDimensiones[letra] != '\0'; letra++){
+    int letra;
+    for (letra = 0; pruebaDimensiones[letra] != '\0'; letra++){
         if (pruebaDimensiones[letra] == ','){
             if (lastWasComma){
                 break;
