@@ -84,11 +84,13 @@ int main()
     // Creo un vector que almacena los punteros de cada uno de los vectores fila
     char*** matrizDatos = (char***)malloc(sizeof(char**)*rowNumber);
     printf(" %i %i \n\n", rowNumber, columnNumber);
-    for (int filas = 0; filas < rowNumber; filas++){
+    int filas = 0;
+    for (filas = 0; filas < rowNumber; filas++){
         // para cada uno de los vectores de fila, declaramos otro vector que almacena los punteros
         // de los vectores de cada una de las columnas (o datos individuales es lo mismo)
         matrizDatos[filas] = (char**)malloc(columnNumber*sizeof(char*));
-        for (int columnas = 0; columnas < columnNumber; columnas++){
+        int columnas = 0;
+        for (columnas = 0; columnas < columnNumber; columnas++){
             printf("%i", columnas);
             // para cada una de las columnas, creamos un vector que almacena el numero máximo de caracteres
             matrizDatos[filas][columnas] = (char*)malloc(80*sizeof(char));
@@ -107,22 +109,19 @@ int main()
     elementSeparation = fopen("generacion_por_tecnologias_21_22.csv", "r");
     char element[80] = "";
     // Variables pseudobooleanas que sirven para comprobar cositas
-    int letraElement = 0;
-    int floatElement = 0;
-    int column = 0;
-    int filaReal = 0;
+    int letraElement, floatElement, column, filaReal, fila = 0;
     rowNumber += 4;
     int isFirstComma = 1;
     // Se va mirando fila por fila lo que hay y se va almacenando en celdas de la matriz "matrizDatos"
-    for (int fila = 0; fila < rowNumber; fila++) {
+    for (fila = 0; fila < rowNumber; fila++) {
         column = 0;
         // Se almacena el contenido de la fila en almacenFila
         fgets(almacenFila, 2048, elementSeparation);
         printf("%s", almacenFila);
         printf("\n");
-        letraElement = 0;
+        letraElement, letra = 0;
         // Iteramos hasta el final de la linea (hasta que sale \0)
-        for (int letra = 0; almacenFila[letra] != '\0'; letra++){
+        for (letra = 0; almacenFila[letra] != '\0'; letra++){
             // si hay una doble coma, se considera que estás dentro de un decimal y la coma de dentro no la interpreta
             // como separación de elementos sino como coma decimal
             if (almacenFila[letra] == '"'){
@@ -136,7 +135,8 @@ int main()
                     element[letraElement] = '\0';
                     // a partir de la fila 5 va almacenando cosas en las celdas
                     filaReal = fila - 4;
-                    for (int a = 0; element[a] != '\0'; a++){
+                    int a = 0;
+                    for (a = 0; element[a] != '\0'; a++){
                         matrizDatos[filaReal][column][a] = element[a];
                         }
                     printf("%s",matrizDatos[filaReal][column]);
@@ -164,8 +164,9 @@ int main()
                 printf("%s\n", element);
                 continue;
                 }
-            for (int a = 0; element[a] != '\0'; a++){
-                element[a] = '\0';
+            int b = 0;
+            for (b = 0; element[b] != '\0'; b++){
+                element[b] = '\0';
             }
         }
         if (almacenFila[letra] != ','){
@@ -178,9 +179,10 @@ int main()
         }
         element[letraElement - 1] = '\0';
         // Este se ejecuta para el último elemento xq no hay una coma al final de la linea
-        for (int a = 0; element[a] != '\0'; a++){
-            matrizDatos[filaReal][column][a] = element[a];
-            element[a] = '\0';
+        int c = 0;
+        for (c = 0; element[c] != '\0'; c++){
+            matrizDatos[filaReal][column][c] = element[c];
+            element[c] = '\0';
             }
         printf("%s",matrizDatos[filaReal][column]);
         printf(" %i %i ", filaReal, column);
@@ -188,8 +190,9 @@ int main()
         printf("successful\n\n");
     }
 // Esta es la comprobación de que los datos se han guardado bien
-for (int prueba2 = 0; prueba2 < 19; prueba2++){
-    for (int prueba = 0; prueba < 25; prueba++){
+int prueba2, prueba = 0;
+for (prueba2 = 0; prueba2 < 19; prueba2++){
+    for (prueba = 0; prueba < 25; prueba++){
         printf("%s", matrizDatos[prueba2][prueba]);
         printf(" %i %i\n", prueba2,prueba);
     }
@@ -208,10 +211,12 @@ datosATrabajar.numFilas = rowNumber;
 datosATrabajar.vectorColumnaTitulos = (char**)malloc(sizeof(char*)*rowNumber);
 // El vector vectorColumna se llenará con datos double de la columna puntual con la que trabajemos gracias a la funcion getVectorByNum
 datosATrabajar.vectorColumna = (double*)malloc(sizeof(double*)*(rowNumber-1));
-for (int tituloFila = 0; tituloFila < rowNumber; tituloFila++){
+int tituloFila = 0;
+for (tituloFila = 0; tituloFila < rowNumber; tituloFila++){
     // Declaramos los punteros de memoria para cada array de caracteres, y los llenamos con el titulo de la fila correspondiente
     datosATrabajar.vectorColumnaTitulos[tituloFila] = (char*)malloc(sizeof(char)*80);
-    for (int letra = 0; matrizDatos[tituloFila][0][letra] != '\0'; letra++){
+    int letra = 0;
+    for (letra = 0; matrizDatos[tituloFila][0][letra] != '\0'; letra++){
         datosATrabajar.vectorColumnaTitulos[tituloFila][letra] = matrizDatos[tituloFila][0][letra];
     }
     printf("\ntitulo: %s\n",datosATrabajar.vectorColumnaTitulos[tituloFila]);
@@ -219,9 +224,11 @@ for (int tituloFila = 0; tituloFila < rowNumber; tituloFila++){
 // El vector vectorFilaFechas almacenará la fila de fechas en un vector char
 datosATrabajar.vectorFilaFechas = (char**)malloc(sizeof(char*)*(columnNumber-1));
 datosATrabajar.vectorFila = (double*)malloc(sizeof(double)*(columnNumber-1));
-for (int fechaColumna = 1; fechaColumna < columnNumber; fechaColumna++){
+int fechaColumna = 1;
+for (fechaColumna = 1; fechaColumna < columnNumber; fechaColumna++){
     datosATrabajar.vectorFilaFechas[fechaColumna - 1] = (char*)malloc(sizeof(char)*80);
-    for (int letra = 0; matrizDatos[0][fechaColumna][letra] != '\0'; letra++){
+    int letra = 0;
+    for (letra = 0; matrizDatos[0][fechaColumna][letra] != '\0'; letra++){
         datosATrabajar.vectorFilaFechas[fechaColumna - 1][letra] = matrizDatos[0][fechaColumna][letra];
     }
     printf("\nfecha: %s\n",datosATrabajar.vectorFilaFechas[fechaColumna - 1]);
