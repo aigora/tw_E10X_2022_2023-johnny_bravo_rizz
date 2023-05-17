@@ -277,12 +277,11 @@ void regresion(struct datosMatriz *datosATrabajar)//calcula la recta de regresio
   
   
   b = (covarianza)/(varianza(vectorFecha[n]));
-  printf("La recta de regresion tiene la forma : y= %f + %f * (x-%f) \n", media(datosATrabajar->vectorFila[]), b, media(vectorFecha[]));
-  float estimacion1, estimacion2, estimacion3,error;
+  printf("La recta de regresion tiene la forma : y= %f + %f * (x-%f) , ahora , dame un numero entero positivo , ese numero representara la cantidad de meses despues del ultimo mes registrado y hara una estimacion para ese mes. Pero cuanto mayor sea el numero , mayor sera el error\n", media(datosATrabajar->vectorFila[]), b, media(vectorFecha[]));
+  int num_meses;
+  float error estimacion;
   
-  estimacion1 = media(datosATrabajar->vectorFila[]) + b * (((datosATrabajar->numColumnas)+1)-media(vectorFecha[]));  //esta ultima parte se podria hacer un codigo de tal forma que el usuario calcule la cantidad de estimaciones que quiera
-  estimacion2 = media(datosATrabajar->vectorFila[]) + b * (((datosATrabajar->numColumnas)+2)-media(vectorFecha[]));
-  estimacion3 = media(datosATrabajar->vectorFila[]) + b * (((datosATrabajar->numColumnas)+3)-media(vectorFecha[]));
+  estimacion = media(datosATrabajar->vectorFila[]) + b * (((datosATrabajar->numColumnas)+num_meses)-media(vectorFecha[]));  
   error = covarianza / (varianza(datosATrabajar->vectorFila[]) *varianza(vectorFecha[]));
   printf("Podemos hacer una estimacion para los primeros meses despues de los medidos: primer mes despues de los datos medidos: %f , segundo: %f y tercero: %f . El coeficiente de correlacion lineal de estos datos es: %f \n",estimacion1, estimacion2, estimacion3, error);
 }
