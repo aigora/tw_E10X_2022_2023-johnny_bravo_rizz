@@ -15,6 +15,28 @@ struct datosMatriz{
     double *vectorFila;
     double *vectorColumna;
 };
+/*
+// esto aun está sin acabar, lo dejo aqui para futuras modificaciones
+void getVectorByName (struct datosMatriz *datosATrabajar, char peticion[]){
+int filas = 0;
+int columnas = 0;
+int letra = 0;
+int longitud = strlen(peticion);
+for (filas = 0; filas < datosATrabajar->numFilas; filas++){
+	printf("%s\n", datosATrabajar->vectorColumnaTitulos[filas]);
+	for (letra = 0; datosATrabajar->vectorColumnaTitulos[filas][letra] != '\0'; letra++){
+		if (datosATrabajar->vectorColumnaTitulos[filas][letra] != peticion[letra]){
+			break;
+		}
+		if (datosATrabajar->vectorColumnaTitulos[filas][letra] != peticion[letra] && letra == longitud - 1){
+			printf("\nHA SALIDO");
+			return;
+		}
+	}
+	
+}
+}
+*/
 void getVectorByNum (struct datosMatriz *datosATrabajar, int filaDeseada, int columnaDeseada){
 if (filaDeseada){
     printf("Output row: %i\n", filaDeseada);
@@ -41,7 +63,7 @@ int main()
     // variables para iniciar la lectura
     FILE *dimensionsScout;
     // Aqui se almacena toda la linea, maximo 1024 caracteres (creo que es suficiente)
-    char pruebaDimensiones[2048];
+    char pruebaDimensiones[1024];
     // se llama paco xq estuve probando cosas y se ha quedado asi, si vais a probarlo en vuestro pc
     // guardad el csv en la misma carpeta q el archivo de c y meteis aqui el codigo q sea
     dimensionsScout = fopen("paco.csv", "r");
@@ -99,8 +121,11 @@ int main()
             // para cada una de las columnas, creamos un vector que almacena el numero máximo de caracteres
             matrizDatos[filas][columnas] = (char*)malloc(80*sizeof(char));
             // Esto inicializa cada una de las celdas y les mete un valor para que no estén vacias y pasen cosas feas
-            matrizDatos[filas][columnas][0] = 'A';
-            printf("%s\n",matrizDatos[filas][columnas]);
+            // Solucion temporal mientras arreglo el memory leak
+            int arregloGuarro = 0;
+			for (arregloGuarro = 0; arregloGuarro < 80; arregloGuarro++){
+				matrizDatos[filas][columnas][arregloGuarro] = '\0';
+			}
             }
         }
     // comprobación de las dimensiones de la matriz
@@ -108,7 +133,7 @@ int main()
 
 
     // De aqui en adelante se trabaja la matriz per se de las dimensiones que hayan salido
-    char almacenFila[2048];
+    char almacenFila[1024];
     FILE *elementSeparation;
     elementSeparation = fopen("generacion_por_tecnologias_21_22.csv", "r");
     char element[80] = "";
@@ -123,7 +148,8 @@ int main()
         fgets(almacenFila, 2048, elementSeparation);
         printf("%s", almacenFila);
         printf("\n");
-        letraElement, letra = 0;
+        letraElement = 0; 
+        letra = 0;
         // Iteramos hasta el final de la linea (hasta que sale \0)
         for (letra = 0; almacenFila[letra] != '\0'; letra++){
             // si hay una doble coma, se considera que estás dentro de un decimal y la coma de dentro no la interpreta
