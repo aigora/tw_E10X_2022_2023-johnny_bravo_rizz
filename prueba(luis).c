@@ -223,7 +223,7 @@ float varianza(float vector[n]) //revisar esto, creo que no funciona
   |
   |
   V
-  float varianza(struct datosMatriz *datosATrabajar)
+float varianza(struct datosMatriz *datosATrabajar)
 {
   int i;
   float resultado , sum=0;
@@ -286,6 +286,14 @@ void regresion(struct datosMatriz *datosATrabajar)//calcula la recta de regresio
   printf("Podemos hacer una estimacion para los primeros meses despues de los medidos: primer mes despues de los datos medidos: %f , segundo: %f y tercero: %f . El coeficiente de correlacion lineal de estos datos es: %f \n",estimacion1, estimacion2, estimacion3, error);
 }
 
+void printea(struct datosMatriz *datosATrabajar)
+{
+  int i;
+  for(i=0;i<datosATrabajar->numColumnas;i++)
+  {
+    printf(
+  }
+}  
   
   
 //hacer un gáfico en horizontal
