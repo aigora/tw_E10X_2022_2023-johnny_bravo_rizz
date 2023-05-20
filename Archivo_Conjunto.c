@@ -15,28 +15,69 @@ struct datosMatriz{
     double *vectorFila;
     double *vectorColumna;
 };
-/*
-// esto aun está sin acabar, lo dejo aqui para futuras modificaciones
-void getVectorByName (struct datosMatriz *datosATrabajar, char peticion[]){
-int filas = 0;
-int columnas = 0;
-int letra = 0;
-int longitud = strlen(peticion);
+// FUNCION SACAR VECTOR FILA/COLUMNA POR NOMBRE 
+void getVectorByName (struct datosMatriz *datosATrabajar, char* peticion, double* vectorPeticion){
+int filas, columnas, letra, columnaDeseada, filaDeseada, sizeOfVector, alojamientoVector;
+columnaDeseada = 0;
+filaDeseada = 0;
 for (filas = 0; filas < datosATrabajar->numFilas; filas++){
+	letra = 0;
 	printf("%s\n", datosATrabajar->vectorColumnaTitulos[filas]);
-	for (letra = 0; datosATrabajar->vectorColumnaTitulos[filas][letra] != '\0'; letra++){
-		if (datosATrabajar->vectorColumnaTitulos[filas][letra] != peticion[letra]){
-			break;
-		}
-		if (datosATrabajar->vectorColumnaTitulos[filas][letra] != peticion[letra] && letra == longitud - 1){
-			printf("\nHA SALIDO");
-			return;
-		}
+	printf("%s",peticion);
+	while (datosATrabajar->vectorColumnaTitulos[filas][letra] != '\0' && peticion[letra] != '\0') {
+	        if (datosATrabajar->vectorColumnaTitulos[filas][letra] != peticion[letra]) {
+				break;  // Strings are not equal
+	        }
+	        letra++;
+	    }
+	    if ((datosATrabajar->vectorColumnaTitulos[filas][letra] == '\0'|| datosATrabajar->vectorColumnaTitulos[filas][letra] == '\n') && (peticion[letra] == '\0' || peticion[letra] == '\n')) {
+	        printf("\n SON IGUALES \n");
+			filaDeseada = filas;
+			break;  // Strings are equal
+	    }  // Strings are not equal
 	}
+if (!filaDeseada){
+	for (columnas = 0; columnas < datosATrabajar->numColumnas - 1; columnas++){
+	letra = 0;
+	printf("%s\n", datosATrabajar->vectorFilaFechas[columnas]);
+	printf("%s",peticion);
+	while (datosATrabajar->vectorFilaFechas[columnas][letra] != '\0' && peticion[letra] != '\0') {
+	        if (datosATrabajar->vectorFilaFechas[columnas][letra] != peticion[letra]) {
+				break;  // Strings are not equal
+	        }
+	        letra++;
+	    }
+	    if ((datosATrabajar->vectorFilaFechas[columnas][letra] == '\0'|| datosATrabajar->vectorFilaFechas[columnas][letra] == '\n') && (peticion[letra] == '\0' || peticion[letra] == '\n')) {
+	        columnaDeseada = columnas;
+			break;  // Strings are equal
+	    }  // Strings are not equal
+	}
+}
+// IMPORTANTE AVISO
+// En c no hay error por colocar valores fuera del scope de un array, asi que hay que cuidar mucho el tamaño de los vectores que le metes a esta funcion
+if (filaDeseada){
+	printf("Fila deseada: %i\n\n", filaDeseada);
+	sizeOfVector = datosATrabajar->numColumnas;	
+	for(alojamientoVector = 1; alojamientoVector < sizeOfVector; alojamientoVector++){	
+		vectorPeticion[alojamientoVector - 1] = strtof(datosATrabajar->matriz[filaDeseada][alojamientoVector], NULL);
+		printf("%.6f %i\n",vectorPeticion[alojamientoVector - 1], alojamientoVector);
+	}
+}
+else if (columnaDeseada){
+	printf("Columna deseada: %i\n\n", columnaDeseada);
+	sizeOfVector = datosATrabajar->numFilas - 1;
+	for(alojamientoVector = 1; alojamientoVector < sizeOfVector; alojamientoVector++){	
+		vectorPeticion[alojamientoVector - 1] = strtof(datosATrabajar->matriz[alojamientoVector][columnaDeseada], NULL);
+		printf("%.6f %i\n",vectorPeticion[alojamientoVector - 1], alojamientoVector);
+	}
+}
+else{
+	printf("No match found, please check your spelling or see the list of available options\nSi quieres sacar la columna titulos o la fila fechas, reminder de que estan en la estructura datosATRabajar\n");
+	return;
+}
 	
-}
-}
-*/
+	
+// FUNCION SACAR VECTORES FILA Y/O COLUMNA POR NUMERO DE REFERENCIA
 void getVectorByNum (struct datosMatriz *datosATrabajar, int filaDeseada, int columnaDeseada){
 if (filaDeseada){
     printf("Output row: %i\n", filaDeseada);
@@ -63,7 +104,8 @@ int main()
     // variables para iniciar la lectura
     FILE *dimensionsScout;
     // Aqui se almacena toda la linea, maximo 1024 caracteres (creo que es suficiente)
-    char pruebaDimensiones[1024];
+    int sizeBuffer = 1024;
+    char* pruebaDimensiones = (char*)malloc(sizeof(char*)*sizeBuffer);
     // se llama paco xq estuve probando cosas y se ha quedado asi, si vais a probarlo en vuestro pc
     // guardad el csv en la misma carpeta q el archivo de c y meteis aqui el codigo q sea
     dimensionsScout = fopen("paco.csv", "r");
@@ -101,9 +143,13 @@ int main()
     // A partir de la linea 5 (donde empiezan los datos) se pone a intentar leer lineas hasta que está vacio y para
     while (fgets(pruebaDimensiones, 1024, dimensionsScout)){
         rowNumber++;
+	int i;
+	for (i = 0; pruebaDimensiones[i] != '\0'; i++){
+		pruebaDimensiones[i] = '\0';
+	}
     }
     fclose(dimensionsScout);
-    int maxSizeWords = 4;
+    free(pruebaDimensiones);
     // declaracion de la matriz con malloc
     // inicializamos el vector que va a almacenar los punteros a las filas
     // Esto no le hagais mucho caso, pero está declarando un tensor asiq necesito usar punteros triples
@@ -123,22 +169,27 @@ int main()
             // Esto inicializa cada una de las celdas y les mete un valor para que no estén vacias y pasen cosas feas
             // Solucion temporal mientras arreglo el memory leak
             int arregloGuarro = 0;
-			for (arregloGuarro = 0; arregloGuarro < 80; arregloGuarro++){
-				matrizDatos[filas][columnas][arregloGuarro] = '\0';
-			}
+	    for (arregloGuarro = 0; arregloGuarro < 80; arregloGuarro++){
+	        matrizDatos[filas][columnas][arregloGuarro] = '\0';
+	    }
+	    printf("%c \n",  matrizDatos[filas][columnas][0]);
             }
         }
     // comprobación de las dimensiones de la matriz
     printf(" %i %i ", rowNumber, columnNumber);
 
 
-    // De aqui en adelante se trabaja la matriz per se de las dimensiones que hayan salido
+    // < ------------------------------------------- PROCESO DE INSERTADO DE DATOS DEL ARCHIVO EN EL TENSOR DINAMICO matrizDatos ------------------------------------->
     char almacenFila[1024];
     FILE *elementSeparation;
     elementSeparation = fopen("generacion_por_tecnologias_21_22.csv", "r");
     char element[80] = "";
     // Variables pseudobooleanas que sirven para comprobar cositas
-    int letraElement, floatElement, column, filaReal, fila = 0;
+    int letraElement = 0;  
+    int column = 0 ;
+    int filaReal = 0; 
+    int fila = 0;
+    int floatElement = 0;
     rowNumber += 4;
     int isFirstComma = 1;
     // Se va mirando fila por fila lo que hay y se va almacenando en celdas de la matriz "matrizDatos"
@@ -146,8 +197,7 @@ int main()
         column = 0;
         // Se almacena el contenido de la fila en almacenFila
         fgets(almacenFila, 2048, elementSeparation);
-        printf("%s", almacenFila);
-        printf("\n");
+        printf("%s\n", almacenFila);
         letraElement = 0; 
         letra = 0;
         // Iteramos hasta el final de la linea (hasta que sale \0)
@@ -209,7 +259,8 @@ int main()
         }
         element[letraElement - 1] = '\0';
         // Este se ejecuta para el último elemento xq no hay una coma al final de la linea
-        int c = 0;
+        if (fila >= 4){
+	int c = 0;
         for (c = 0; element[c] != '\0'; c++){
             matrizDatos[filaReal][column][c] = element[c];
             element[c] = '\0';
@@ -218,7 +269,8 @@ int main()
         printf(" %i %i ", filaReal, column);
         printf("\n");
         printf("successful\n\n");
-    }
+	}
+}
 // Esta es la comprobación de que los datos se han guardado bien
 int prueba2, prueba = 0;
 for (prueba2 = 0; prueba2 < 19; prueba2++){
@@ -263,19 +315,21 @@ for (fechaColumna = 1; fechaColumna < columnNumber; fechaColumna++){
     }
     printf("\nfecha: %s\n",datosATrabajar.vectorFilaFechas[fechaColumna - 1]);
 };
-getVectorByNum(&datosATrabajar, 5, 3);
-    
+// <--------------------- USO DE LOS DATOS ---------------------------->
+char inputString[40];
+int cosaAAA = 1;
+while (cosaAAA){
+printf("Enter a string: ");
+fgets(inputString, sizeof(inputString), stdin);
+double vectorFila[datosATrabajar.numColumnas - 1];
+getVectorByName(&datosATrabajar, inputString, vectorFila);
+}    
 /* NOTA IMPORTANTE SOBRE EL USO DE LOS VECTORES DE LA MATRIZ:
-Los vectores no van a ser vectores per se, son elementos de la estructura datosATrabajar
-La funcion getVectorByNum tiene dos parametros, y con esos dos sacas los vectores que quieras
-El primero es la FILA que quieres, sus valores van entre 0 y 18, el segundo es la COLUMNA que quieres, sus valores van entre 0 y 25.
-Si no quieres sacar un vector fila y un vector columna a la vez y quieres solo uno de los dos, el que no quieras dejalo con VALOR 0
-Teoricamente estos datos se podrían ajustar a una tabla de cualquier tamaño, pero en nuestro caso se van a quedar entre esos valores siempre
-Cuando llamas a esa funcion, lo que va a cambiar son los vectores de dentro la estructura, para acceder a ellos, tienes que escribir datosATRabajar.vectorFila o datosATrabajar.vectorColumna segun el que quieras
-EJEMPLO DE USO: quieres la fila 3 ->
-getVectorByNum(&datosATrabajar, 3, 0)
-datosATrabajar.vectorFila <-- este es tu vector
-
+He cambiado como se sacan los vectores de la matriz para que sea mas sencillo de utilizar
+la funcion getVectorByName simplemente tiene el input del vector y la fila/columna que quereis (detecta sola si es una fila o una columna)
+lo unico tened cuidado con el tema del vector, la funcion no puede detectar si pone un elemento fuera de un vector, asi que asume que quereis o una fila 
+o una columna entera. Si pedis una fila y el vector es mas pequeño que el numero de columnas, va a dar errores
+He dejado arriba un ejemplo de cómo se puede implementar el uso de la funcion
 
 */
 return 0;
