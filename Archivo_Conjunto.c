@@ -167,28 +167,6 @@ for (i= 0; i < datosATrabajar->numColumnas-1; i++){
 	printf("%s  %.6f \n", datosATrabajar->vectorFila[i],vectorAOrdenar[i]);
 }
 } 		
-// FUNCION SACAR VECTORES FILA Y/O COLUMNA POR NUMERO DE REFERENCIA
-void getVectorByNum (struct datosMatriz *datosATrabajar, int filaDeseada, int columnaDeseada){
-if (filaDeseada){
-    printf("Output row: %i\n", filaDeseada);
-    int columna;
-    for (columna = 1; columna < datosATrabajar->numColumnas; columna++){
-        datosATrabajar->vectorFila[columna] = strtof(datosATrabajar->matriz[filaDeseada][columna], NULL);
-        printf("%.6f\n", datosATrabajar->vectorFila[columna]);
-    }
-}
-
-printf("\n\n");
-if (columnaDeseada){
-    printf("Output column: %i\n", columnaDeseada);
-    int fila;
-    for (fila = 1; fila < datosATrabajar->numFilas; fila++){
-        datosATrabajar->vectorColumna[fila] = strtof(datosATrabajar->matriz[fila][columnaDeseada], NULL);
-        printf("%.6f\n", datosATrabajar->vectorColumna[fila]);
-    }
-}
-return;
-}
 int main()
 {
     // variables para iniciar la lectura
