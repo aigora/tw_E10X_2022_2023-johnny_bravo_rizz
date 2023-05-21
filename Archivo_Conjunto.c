@@ -12,8 +12,8 @@ struct datosMatriz{
     char ***matriz;
     char **vectorFilaFechas;
     char **vectorColumnaTitulos;
-    double *vectorFila;
-    double *vectorColumna;
+    char **vectorFila;
+    char **vectorColumna;
 };
 // FUNCION SACAR VECTOR FILA/COLUMNA POR NOMBRE 
 void getVectorByName (struct datosMatriz *datosATrabajar, char* peticion, double* vectorPeticion){
@@ -76,7 +76,97 @@ else{
 	return;
 }
 	
+// FUNCION PARA SACAR UN VALOR CONCRETO DE ALGUN SITIO DE LA MATRIZ
+double getExactValueFromMatrix(struct datosMatriz *datosATrabajar, char* tituloDeseado, char* fechaDeseada){
+// Este codigo lo repito varias veces en varias funciones para poder convertir un titulo en un numero de la matriz de datos, soy un vago y funciona stfu
+int filas, columnas, letra;
+int columnaDeseada = 0;
+int filaDeseada = 0;
+for (filas = 0; filas < datosATrabajar->numFilas; filas++){
+	letra = 0;
+	while (datosATrabajar->vectorColumnaTitulos[filas][letra] != '\0' && tituloDeseado[letra] != '\0') {
+	        if (datosATrabajar->vectorColumnaTitulos[filas][letra] != tituloDeseado[letra]) {
+				break;  // Strings are not equal
+	        }
+	        letra++;
+	    }
+	    if ((datosATrabajar->vectorColumnaTitulos[filas][letra] == '\0'|| datosATrabajar->vectorColumnaTitulos[filas][letra] == '\n') && (tituloDeseado[letra] == '\0' || tituloDeseado[letra] == '\n')) {
+			filaDeseada = filas;
+			break;  // Strings are equal
+	    }  // Strings are not equal
+	}
+for (columnas = 0; columnas < datosATrabajar->numColumnas - 1; columnas++){
+letra = 0;
+while (datosATrabajar->vectorFilaFechas[columnas][letra] != '\0' && fechaDeseada[letra] != '\0') {
+        if (datosATrabajar->vectorFilaFechas[columnas][letra] != fechaDeseada[letra]) {
+			break;  // Strings are not equal
+        }
+        letra++;
+    }
+    if ((datosATrabajar->vectorFilaFechas[columnas][letra] == '\0'|| datosATrabajar->vectorFilaFechas[columnas][letra] == '\n') && (fechaDeseada[letra] == '\0' || fechaDeseada[letra] == '\n')) {
+        columnaDeseada = columnas;
+		break;  // Strings are equal
+    }  // Strings are not equal
+}
+
+return strtof(datosATrabajar->matriz[filaDeseada][columnaDeseada], NULL);
+}
+// FUNCION PARA ORDENAR UN VECTOR DE MENOR A MAYOR (<) O DE MAYOR A MENOR (>)
+void sortVector (struct datosMatriz *datosATrabajar, double* vectorAOrdenar, char mayorOMenor)
+{
+// Esta es una implementación adaptada a nosotros de un algortimo que ya existe llamado BubleSort
+printf("\n%c \n",datosATrabajar->vectorFilaFechas[0][0]);
+int i, j, letra; 
+double temporalStore;
+char buffer;
+char temporalDateStore[7];
+printf("Before sort: \n");
+for (i= 0; i < datosATrabajar->numColumnas - 1; i++){
+	datosATrabajar->vectorFila[i] = datosATrabajar->vectorFilaFechas[i];
+	printf("%s\n", datosATrabajar->vectorFila[i]);
+	printf(" %.6f ", vectorAOrdenar[i]);
 	
+}
+printf("\n");
+if (mayorOMenor == '<'){
+	for (i= 0; i < datosATrabajar->numColumnas-2; i++){
+		for (j= 0; j < datosATrabajar->numColumnas-2-i;j++){
+			if (vectorAOrdenar[j] > vectorAOrdenar[j+1]){
+				temporalStore = vectorAOrdenar[j];
+				vectorAOrdenar[j] = vectorAOrdenar[j+1];
+				vectorAOrdenar[j+1] = temporalStore;
+				datosATrabajar->vectorColumna[j] = datosATrabajar->vectorFila[j];
+				datosATrabajar->vectorFila[j] = datosATrabajar->vectorFila[j+1];
+				datosATrabajar->vectorFila[j+1]= datosATrabajar->vectorColumna[j];
+			
+				
+			}
+		}
+	}
+}
+else if (mayorOMenor == '>'){
+	for (i= 0; i < datosATrabajar->numColumnas-2; i++){
+		for (j= 0; j < datosATrabajar->numColumnas-2-i;j++){
+			if (vectorAOrdenar[j] < vectorAOrdenar[j+1]){
+				temporalStore = vectorAOrdenar[j];
+				vectorAOrdenar[j] = vectorAOrdenar[j+1];
+				vectorAOrdenar[j+1] = temporalStore;
+				datosATrabajar->vectorColumna[j] = datosATrabajar->vectorFila[j];
+				datosATrabajar->vectorFila[j] = datosATrabajar->vectorFila[j+1];
+				datosATrabajar->vectorFila[j+1]= datosATrabajar->vectorColumna[j];
+			}
+		}
+	}
+}
+else{
+	printf("That is not one of the two options sugested\n");
+	return;
+}
+printf("After sort: \n");
+for (i= 0; i < datosATrabajar->numColumnas-1; i++){
+	printf("%s  %.6f \n", datosATrabajar->vectorFila[i],vectorAOrdenar[i]);
+}
+} 		
 // FUNCION SACAR VECTORES FILA Y/O COLUMNA POR NUMERO DE REFERENCIA
 void getVectorByNum (struct datosMatriz *datosATrabajar, int filaDeseada, int columnaDeseada){
 if (filaDeseada){
@@ -250,12 +340,61 @@ int main()
             }
         }
         if (almacenFila[letra] != ','){
-            // Si no es una coma almacena el digito en element
+                       // Si no es una coma almacena el digito en element
             // element es un array que sirve como buffer para el contenido de las celdas, cuando se transfiere se vacia
-            element[letraElement] = almacenFila[letra];
-            letraElement++;
-            printf("%s\n", element);
-            }
+            if (column == 0){
+            // Esto es un poco overkill xq no hay tantos acentos pero quiero programar algo que funcione para todos los programas asiq mimimi
+	            char fixedChar;
+		    switch (almacenFila[letra])
+		    {
+			case 'á':
+				fixedChar = 'a';
+				break;
+			case 'é':
+				fixedChar = 'e';
+				break;
+			case 'í':
+				fixedChar = 'i';
+				break;
+			case 'ó':
+				fixedChar = 'o';
+				break;
+			case 'ú':
+				fixedChar = 'u';
+				break;
+			case 'Á':
+				fixedChar = 'A';
+				break;
+			case 'É':
+				fixedChar = 'E';
+				break;
+			case 'Í':
+				fixedChar = 'I';
+				break;
+			case 'Ó':
+				fixedChar = 'O';
+				break;
+			case 'Ú':
+				fixedChar = 'U';
+				break;
+			case 'ü':
+				fixedChar = 'u';
+				break;
+			case 'Ü':
+				fixedChar = 'U';
+				break;
+			default:
+				fixedChar = almacenFila[letra];
+				break;
+		}
+		element[letraElement] = fixedChar;
+	}
+		else{
+		    element[letraElement] = almacenFila[letra];
+		}
+		letraElement++;
+		printf("%s\n", element);
+		}
         }
         element[letraElement - 1] = '\0';
         // Este se ejecuta para el último elemento xq no hay una coma al final de la linea
@@ -292,7 +431,7 @@ datosATrabajar.numFilas = rowNumber;
 // El vector vectorColumnaTitulos almacenará los titulos de las diferentes filas en un vector char
 datosATrabajar.vectorColumnaTitulos = (char**)malloc(sizeof(char*)*rowNumber);
 // El vector vectorColumna se llenará con datos double de la columna puntual con la que trabajemos gracias a la funcion getVectorByNum
-datosATrabajar.vectorColumna = (double*)malloc(sizeof(double*)*(rowNumber-1));
+datosATrabajar.vectorColumna = (char**)malloc(sizeof(char*)*(rowNumber-1));
 int tituloFila = 0;
 for (tituloFila = 0; tituloFila < rowNumber; tituloFila++){
     // Declaramos los punteros de memoria para cada array de caracteres, y los llenamos con el titulo de la fila correspondiente
@@ -305,7 +444,7 @@ for (tituloFila = 0; tituloFila < rowNumber; tituloFila++){
 };
 // El vector vectorFilaFechas almacenará la fila de fechas en un vector char
 datosATrabajar.vectorFilaFechas = (char**)malloc(sizeof(char*)*(columnNumber-1));
-datosATrabajar.vectorFila = (double*)malloc(sizeof(double)*(columnNumber-1));
+datosATrabajar.vectorFila = (char**)malloc(sizeof(char*)*(columnNumber-1));
 int fechaColumna = 1;
 for (fechaColumna = 1; fechaColumna < columnNumber; fechaColumna++){
     datosATrabajar.vectorFilaFechas[fechaColumna - 1] = (char*)malloc(sizeof(char)*80);
@@ -316,6 +455,7 @@ for (fechaColumna = 1; fechaColumna < columnNumber; fechaColumna++){
     printf("\nfecha: %s\n",datosATrabajar.vectorFilaFechas[fechaColumna - 1]);
 };
 // <--------------------- USO DE LOS DATOS ---------------------------->
+// EJEMPLO DE COMO USAR EL getVectorByName y la funcion SortVector (ahora mismo solamente funciona para filas)
 char inputString[40];
 int cosaAAA = 1;
 while (cosaAAA){
@@ -323,6 +463,7 @@ printf("Enter a string: ");
 fgets(inputString, sizeof(inputString), stdin);
 double vectorFila[datosATrabajar.numColumnas - 1];
 getVectorByName(&datosATrabajar, inputString, vectorFila);
+sortVector(&datosATrabajar, vectorFila, '>');	
 }    
 /* NOTA IMPORTANTE SOBRE EL USO DE LOS VECTORES DE LA MATRIZ:
 He cambiado como se sacan los vectores de la matriz para que sea mas sencillo de utilizar
