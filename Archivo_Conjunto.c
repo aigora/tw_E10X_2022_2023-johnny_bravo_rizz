@@ -169,6 +169,8 @@ for (i= 0; i < datosATrabajar->numColumnas-1; i++){
 } 		
 int main()
 {
+    int linesUntilData = 4;
+    int isCommaEndingLine = 0;
     // variables para iniciar la lectura
     FILE *dimensionsScout;
     // Aqui se almacena toda la linea, maximo 1024 caracteres (creo que es suficiente)
@@ -185,7 +187,7 @@ int main()
     }
     // Declaración matriz con dimensiones variables por malloc
     int columna;
-    for (columna = 0; columna < 5; columna++){
+    for (columna = 0; columna < linesUntilData + 1 + isCommaEndingLine; columna++){
         fgets(pruebaDimensiones, 1024, dimensionsScout);
     }
     int lastWasComma = 0;
@@ -207,6 +209,9 @@ int main()
             lastWasComma = 0;
         }
     }
+    if (isCommaEndingLine){
+	columnNumber = columnNumber - isCommaEndingLine;
+	}
     int rowNumber = 1;
     // A partir de la linea 5 (donde empiezan los datos) se pone a intentar leer lineas hasta que está vacio y para
     while (fgets(pruebaDimensiones, 1024, dimensionsScout)){
@@ -258,7 +263,7 @@ int main()
     int filaReal = 0; 
     int fila = 0;
     int floatElement = 0;
-    rowNumber += 4;
+    rowNumber += linesUntilData;
     int isFirstComma = 1;
     // Se va mirando fila por fila lo que hay y se va almacenando en celdas de la matriz "matrizDatos"
     for (fila = 0; fila < rowNumber; fila++) {
@@ -279,7 +284,7 @@ int main()
         if (almacenFila[letra] == ','){
             if (!floatElement){
                 // Se ejecuta si pilla una coma fuera de un decimal
-                if (fila >= 4){
+                if (fila >= linesUntilData){
                     element[letraElement] = '\0';
                     // a partir de la fila 5 va almacenando cosas en las celdas
                     filaReal = fila - 4;
@@ -390,8 +395,8 @@ int main()
 }
 // Esta es la comprobación de que los datos se han guardado bien
 int prueba2, prueba = 0;
-for (prueba2 = 0; prueba2 < 19; prueba2++){
-    for (prueba = 0; prueba < 25; prueba++){
+for (prueba2 = 0; prueba2 < rowNumber - linesUntilData; prueba2++){
+    for (prueba = 0; prueba < columnNumber; prueba++){
         printf("%s", matrizDatos[prueba2][prueba]);
         printf(" %i %i\n", prueba2,prueba);
     }
