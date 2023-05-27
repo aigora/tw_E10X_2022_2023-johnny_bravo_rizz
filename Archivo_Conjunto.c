@@ -16,7 +16,7 @@ struct datosMatriz{
     char **vectorColumna;
 };
 // FUNCION SACAR VECTOR FILA/COLUMNA POR NOMBRE 
-void getVectorByName (struct datosMatriz *datosATrabajar, char* peticion, double* vectorPeticion){
+int getVectorByName (struct datosMatriz *datosATrabajar, char* peticion, double* vectorPeticion){
 int filas, columnas, letra, columnaDeseada, filaDeseada, sizeOfVector, alojamientoVector;
 columnaDeseada = 0;
 filaDeseada = 0;
@@ -73,9 +73,11 @@ else if (columnaDeseada){
 }
 else{
 	printf("No match found, please check your spelling or see the list of available options\nSi quieres sacar la columna titulos o la fila fechas, reminder de que estan en la estructura datosATRabajar\n");
-	return;
+	return -1;
 }
-	
+// Sirve para la parte de Luis a mi no me afecta
+return filaDeseada;
+}	
 // FUNCION PARA SACAR UN VALOR CONCRETO DE ALGUN SITIO DE LA MATRIZ
 double getExactValueFromMatrix(struct datosMatriz *datosATrabajar, char* tituloDeseado, char* fechaDeseada){
 // Este codigo lo repito varias veces en varias funciones para poder convertir un titulo en un numero de la matriz de datos, soy un vago y funciona stfu
