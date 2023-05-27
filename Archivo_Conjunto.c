@@ -15,6 +15,12 @@ struct datosMatriz{
     char **vectorFila;
     char **vectorColumna;
 };
+float media(struct datosMatriz *datosATrabajar, double* Vector);
+float media1(double* Vector);
+float varianza(struct datosMatriz *datosATrabajar, double* Vector);
+float varianza1(double* Vector);
+float engtot(struct datosMatriz *datosATrabajar, double* Vector);
+void regresion(struct datosMatriz *datosATrabajar, double* Vector);
 // FUNCION SACAR VECTOR FILA/COLUMNA POR NOMBRE 
 int getVectorByName (struct datosMatriz *datosATrabajar, char* peticion, double* vectorPeticion){
 int filas, columnas, letra, columnaDeseada, filaDeseada, sizeOfVector, alojamientoVector;
@@ -78,6 +84,7 @@ else{
 // Sirve para la parte de Luis a mi no me afecta
 return filaDeseada;
 }	
+	
 // FUNCION PARA SACAR UN VALOR CONCRETO DE ALGUN SITIO DE LA MATRIZ
 double getExactValueFromMatrix(struct datosMatriz *datosATrabajar, char* tituloDeseado, char* fechaDeseada){
 // Este codigo lo repito varias veces en varias funciones para poder convertir un titulo en un numero de la matriz de datos, soy un vago y funciona stfu
@@ -171,8 +178,6 @@ for (i= 0; i < datosATrabajar->numColumnas-1; i++){
 } 		
 int main()
 {
-    int linesUntilData = 4;
-    int isCommaEndingLine = 0;
     // variables para iniciar la lectura
     FILE *dimensionsScout;
     // Aqui se almacena toda la linea, maximo 1024 caracteres (creo que es suficiente)
@@ -180,7 +185,7 @@ int main()
     char* pruebaDimensiones = (char*)malloc(sizeof(char*)*sizeBuffer);
     // se llama paco xq estuve probando cosas y se ha quedado asi, si vais a probarlo en vuestro pc
     // guardad el csv en la misma carpeta q el archivo de c y meteis aqui el codigo q sea
-    dimensionsScout = fopen("paco.csv", "r");
+    dimensionsScout = fopen("generacion_por_tecnologias_21_22_puntos_simplificado.csv", "r");
     // Error por si nos confundimos al escribir el archivo o se mueve o lo que sea
     if (dimensionsScout == NULL)
     {
@@ -189,7 +194,7 @@ int main()
     }
     // Declaración matriz con dimensiones variables por malloc
     int columna;
-    for (columna = 0; columna < linesUntilData + 1 + isCommaEndingLine; columna++){
+    for (columna = 0; columna < 5; columna++){
         fgets(pruebaDimensiones, 1024, dimensionsScout);
     }
     int lastWasComma = 0;
@@ -211,9 +216,6 @@ int main()
             lastWasComma = 0;
         }
     }
-    if (isCommaEndingLine){
-	columnNumber = columnNumber - isCommaEndingLine;
-	}
     int rowNumber = 1;
     // A partir de la linea 5 (donde empiezan los datos) se pone a intentar leer lineas hasta que está vacio y para
     while (fgets(pruebaDimensiones, 1024, dimensionsScout)){
@@ -265,7 +267,7 @@ int main()
     int filaReal = 0; 
     int fila = 0;
     int floatElement = 0;
-    rowNumber += linesUntilData;
+    rowNumber += 4;
     int isFirstComma = 1;
     // Se va mirando fila por fila lo que hay y se va almacenando en celdas de la matriz "matrizDatos"
     for (fila = 0; fila < rowNumber; fila++) {
@@ -286,7 +288,7 @@ int main()
         if (almacenFila[letra] == ','){
             if (!floatElement){
                 // Se ejecuta si pilla una coma fuera de un decimal
-                if (fila >= linesUntilData){
+                if (fila >= 4){
                     element[letraElement] = '\0';
                     // a partir de la fila 5 va almacenando cosas en las celdas
                     filaReal = fila - 4;
@@ -397,8 +399,8 @@ int main()
 }
 // Esta es la comprobación de que los datos se han guardado bien
 int prueba2, prueba = 0;
-for (prueba2 = 0; prueba2 < rowNumber - linesUntilData; prueba2++){
-    for (prueba = 0; prueba < columnNumber; prueba++){
+for (prueba2 = 0; prueba2 < 19; prueba2++){
+    for (prueba = 0; prueba < 25; prueba++){
         printf("%s", matrizDatos[prueba2][prueba]);
         printf(" %i %i\n", prueba2,prueba);
     }
@@ -458,6 +460,157 @@ o una columna entera. Si pedis una fila y el vector es mas pequeño que el numer
 He dejado arriba un ejemplo de cómo se puede implementar el uso de la funcion
 
 */
+
+
+	int menu=0, menu2;
+	while(menu!=19)
+	{
+		char typeInput[40];
+		printf("Que tipo de energia quieres tratar ?\n ");
+		fgets(typeInput, sizeof(typeInput), stdin);
+		double vectorFila[datosATrabajar.numColumnas - 1];
+		menu = getVectorByName(&datosATrabajar, typeInput, vectorFila);
+		if(menu<1 || menu>19)
+		{
+			printf("ese tipo de energiía no es valido, intenta otra vez");
+			printf("elige uno de los siguientes metodos de generacion de energia: 1: Hidraulica , 2: Turbinación bombeo , 3: Nuclear ,4: Carbón ,5:Fuel + Gas ,6:Motores diesel ,7:Turbina de gas ,8:Turbina de vapor ,9:Ciclo combinado ,10:Hidroeelica ,11:Eolica ,12:Solar fotovoltaica ,13: Solar termica ,14:Otras renovables ,15:Cogeneracion ,16:Residuos no renovables ,17:Residuos renovables ,18:Generacon total ,19: finalizar programa\n");
+			continue;
+		}
+		
+		while(menu>0 && menu<19)
+		{ 
+			menu = getVectorByName(&datosATrabajar, typeInput, vectorFila);
+			printf("elige una tarea: 1:media , 2: varianza , 3: valor maximo y minimo , 4: energia total, 5: estimaciones de valores futuros, 6: volver a la seleccion de tipo de energia\n");
+	    		fgets(typeInput, sizeof(typeInput), stdin);
+	    		while(menu2>6 || menu2<1)
+	    	{
+		    	printf("Lo siento ese, numero no es valido, elige otro");
+		    	printf("elige una tarea: 1:media , 2: varianza , 3: valor maximo y minimo , 4: energia total, 5: estimaciones de valores futuros, 6: finalizar\n");
+		    	scanf("%i",&menu2);
+			}
+			while(menu2<6 && menu2>0)
+	    		{
+			  		switch(menu2)
+		    		{
+		   	        	case 1:
+		    	    	{
+		            		printf("la media es : %f\n",media(&datosATrabajar, vectorFila));
+		       				break;
+		        		}
+		    	    	case 2:
+		    			{
+		     	    		printf("la varianza es : %f\n",varianza(&datosATrabajar, vectorFila));
+		     	   			break;
+		         		}
+	          			case 3:
+	         	   		{
+	          	    	  printf("la energia total es : %f\n",engtot(&datosATrabajar,vectorFila));
+	          	    	  break;
+	          			}
+	          			case 4:
+	          			{
+	          	    		regresion(&datosATrabajar,vectorFila);
+	           		  		break;
+			   			}
+	    	    	}
+			}
+		}
+	}
 return 0;
 }
 
+
+float media(struct datosMatriz *datosATrabajar, double* Vector)
+{
+  int i;/*valor unico*/
+  float j = Vector[0], resultado;/*sumatorio de los valores*/
+  for(i=0; i<datosATrabajar->numColumnas ; i++)
+  {
+	j=j+Vector[i];
+  }
+  resultado =(float)(j)/(float)(datosATrabajar->numColumnas);/*n es el tamaño del vector , osea , el numero de valores*/
+  return resultado;
+}
+//maximos y minimos no son necesarios ya que el codigo del baselga ya hace esa funcion pero hay que implementarla en el menu
+
+float varianza(struct datosMatriz *datosATrabajar, double* Vector)
+{
+  double* vectorFila;
+  int i;
+  float resultado , sum=0;
+  for(i=0 ; i<datosATrabajar->numColumnas ; i++)
+  {
+    sum = sum + ((Vector[i]-media(datosATrabajar, Vector)) * (Vector[i]-media(datosATrabajar, Vector)));
+  }
+  resultado = sum / datosATrabajar->numColumnas;
+  return resultado;
+}
+
+
+float engtot(struct datosMatriz *datosATrabajar,double* Vector) //energia total generada a lo largo del tiempo
+{
+  int i;
+  float resultado = Vector[0];
+  for(i=1 ; i<datosATrabajar->numColumnas ; i++)
+  {
+    resultado = resultado +  Vector[i];
+  }
+  return resultado;
+}
+
+void regresion(struct datosMatriz *datosATrabajar, double* Vector)//calcula la recta de regresion de una fila de datos usando la media la varianza y la covarianza(hay que hacer la covarianza aun) para usando esa recta hacer una estimacion de lo que podria ser un valor futuro
+{//en regresion hay que introducir tres datos , el primer vector (y) es el valor energético , el segundo vector son los dias o fechas en los que ocurren esos valores , las fechas se hacen como numeros enteros para facilitar los calculos .
+  double vectorFecha[datosATrabajar->numColumnas] ;
+  int r=0;
+  for(r=0; r<datosATrabajar->numColumnas; r++)
+  {
+  	vectorFecha[r]=r;
+  }
+  float b, x;
+  //aqui calculo la covarianza poruque por ahora solo la usamos en esta funcion y es complicado hacerlo con una funcion ya que tiene dos vectores, aqui uno de esos vectores no es variable asique es mas facil
+  int i;
+  float covarianza , sum=0;
+  for(i=0 ; i<datosATrabajar->numColumnas ; i++)
+  {
+    sum = sum + ((Vector[i]-media(datosATrabajar, Vector)) * (vectorFecha[i]-media1(vectorFecha)));
+  }
+  covarianza = sum / datosATrabajar->numColumnas;
+  
+  b = (covarianza)/(varianza1(vectorFecha));
+  printf("La recta de regresion tiene la forma : y= %f + %f * (x-%f) , ahora , dame un numero entero positivo , ese numero representara la cantidad de meses despues del ultimo mes registrado y hara una estimacion para ese mes. Pero cuanto mayor sea el numero , mayor sera el error\n", media(datosATrabajar, Vector), b, media1(vectorFecha));
+  int num_meses;
+  scanf("%i",&num_meses);
+  float error ,estimacion;
+  
+  estimacion = media(datosATrabajar, Vector) + b * (((datosATrabajar->numColumnas)+num_meses)-media(datosATrabajar, vectorFecha));  
+  error = covarianza / (varianza(datosATrabajar, Vector) * varianza1(vectorFecha));
+  printf("Podemos hacer una estimacion para los primeros meses despues de los medidos: despues de %i meses , estimamos:%f . El coeficiente de correlacion lineal de estos datos es: %f \n",num_meses, estimacion, error);
+}
+
+float media1(double* Vector) //esto es igual que la funcion media pero con un vector cualquiera
+{
+  int tamanio;
+  tamanio = sizeof(Vector) / sizeof(Vector[0]);
+  int i;/*valor unico*/
+  float j = Vector[0], resultado;/*sumatorio de los valores*/
+  for(i=0; i<tamanio ; i++)
+  {
+	j=j+Vector[i];
+  }
+  resultado =(float)(j)/(float)(tamanio);/*n es el tamaño del vector , osea , el numero de valores*/
+  return resultado;
+}
+
+float varianza1(double* Vector)
+{
+  int tamanio;
+  tamanio = sizeof(Vector) / sizeof(Vector[0]);
+  int i;
+  float resultado , sum=0;
+  for(i=0 ; i<tamanio ; i++)
+  {
+    sum = sum + ((Vector[i]-media1(Vector)) * (Vector[i]-media1(Vector)));
+  }
+  resultado = sum / tamanio;
+  return resultado;
+}
