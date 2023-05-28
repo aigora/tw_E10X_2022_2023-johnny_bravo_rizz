@@ -21,6 +21,7 @@ float varianza(struct datosMatriz *datosATrabajar, double* Vector);
 float varianza1(double* Vector);
 float engtot(struct datosMatriz *datosATrabajar, double* Vector);
 void regresion(struct datosMatriz *datosATrabajar, double* Vector);
+void grafica(struct datosMatriz *datosATrabajar, double* Vector);
 // FUNCION SACAR VECTOR FILA/COLUMNA POR NOMBRE 
 int getVectorByName (struct datosMatriz *datosATrabajar, char* peticion, double* vectorPeticion){
 int filas, columnas, letra, columnaDeseada, filaDeseada, sizeOfVector, alojamientoVector;
@@ -613,4 +614,19 @@ float varianza1(double* Vector)
   }
   resultado = sum / tamanio;
   return resultado;
+}
+
+void grafica(struct datosMatriz *datosATrabajar, double* Vector){
+	int i, longitud;
+	longitud = sizeof(Vector) / sizeof (Vector[0]);
+	for (i=0; i<longitud; i++){
+		int nveces=Vector[i]/100;
+		int j;
+		for(j=0; j<nveces; j++){
+			printf("-");
+			if(j==(nveces-1)){
+				printf("\n");
+			}
+		}
+	}
 }
