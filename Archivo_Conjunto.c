@@ -616,15 +616,15 @@ float varianza1(double* Vector)
   return resultado;
 }
 
-void grafica(struct datosMatriz *datosATrabajar, double* Vector){
+void grafica(struct datosMatriz *datosATrabajar, double* Vector){//funcion para expresar de forma gráfica los resultados numéricos
 	int i, longitud;
 	longitud = sizeof(Vector) / sizeof (Vector[0]);
 	for (i=0; i<longitud; i++){
-		int nveces=Vector[i]/100;
+		int nveces=Vector[i]/100; //de esta forma hacemos que cada '-', que es de lo que esta formada la grafica represente 100 unidades
 		int j;
-		for(j=0; j<nveces; j++){
+		for(j=0; j<nveces; j++){ //bucle para imprimir la grafica
 			printf("-");
-			if(j==(nveces-1)){
+			if(j==(nveces-1)){//cuando el vector se acaba hay que añadir un \0
 				printf("\n");
 			}
 		}
