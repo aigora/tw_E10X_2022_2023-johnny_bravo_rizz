@@ -22,15 +22,13 @@ float varianza1(double* Vector);
 float engtot(struct datosMatriz *datosATrabajar, double* Vector);
 void regresion(struct datosMatriz *datosATrabajar, double* Vector);
 void grafica(struct datosMatriz *datosATrabajar, double* Vector);
-// FUNCION SACAR VECTOR FILA/COLUMNA POR NOMBRE 
-int getVectorByName (struct datosMatriz *datosATrabajar, char* peticion, double* vectorPeticion){
-int filas, columnas, letra, columnaDeseada, filaDeseada, sizeOfVector, alojamientoVector;
-columnaDeseada = 0;
-filaDeseada = 0;
+// FUNCION PARA CONVERTIR EL TITULO DE LA FILA/COLUMNA A SU POSICION NUMERICA
+int getNumberFromName (struct datosMatriz *datosATrabajar, char* peticion){
+int filas, columnas, letra, sizeOfVector;
+int columnaDeseada = 0;
+int filaDeseada = 0;
 for (filas = 0; filas < datosATrabajar->numFilas; filas++){
 	letra = 0;
-	printf("%s\n", datosATrabajar->vectorColumnaTitulos[filas]);
-	printf("%s",peticion);
 	while (datosATrabajar->vectorColumnaTitulos[filas][letra] != '\0' && peticion[letra] != '\0') {
 	        if (datosATrabajar->vectorColumnaTitulos[filas][letra] != peticion[letra]) {
 				break;  // Strings are not equal
@@ -38,16 +36,13 @@ for (filas = 0; filas < datosATrabajar->numFilas; filas++){
 	        letra++;
 	    }
 	    if ((datosATrabajar->vectorColumnaTitulos[filas][letra] == '\0'|| datosATrabajar->vectorColumnaTitulos[filas][letra] == '\n') && (peticion[letra] == '\0' || peticion[letra] == '\n')) {
-	        printf("\n SON IGUALES \n");
 			filaDeseada = filas;
-			break;  // Strings are equal
+			return filaDeseada*31;;  // Strings are equal
 	    }  // Strings are not equal
 	}
 if (!filaDeseada){
 	for (columnas = 0; columnas < datosATrabajar->numColumnas - 1; columnas++){
 	letra = 0;
-	printf("%s\n", datosATrabajar->vectorFilaFechas[columnas]);
-	printf("%s",peticion);
 	while (datosATrabajar->vectorFilaFechas[columnas][letra] != '\0' && peticion[letra] != '\0') {
 	        if (datosATrabajar->vectorFilaFechas[columnas][letra] != peticion[letra]) {
 				break;  // Strings are not equal
@@ -56,21 +51,37 @@ if (!filaDeseada){
 	    }
 	    if ((datosATrabajar->vectorFilaFechas[columnas][letra] == '\0'|| datosATrabajar->vectorFilaFechas[columnas][letra] == '\n') && (peticion[letra] == '\0' || peticion[letra] == '\n')) {
 	        columnaDeseada = columnas;
-			break;  // Strings are equal
+			return columnaDeseada*29;  // Strings are equal
 	    }  // Strings are not equal
 	}
 }
+printf("\n No column or row by that name \n");
+return 0;	
+
+}
+// FUNCION SACAR VECTOR FILA/COLUMNA POR NOMBRE 
+int getVectorByName (struct datosMatriz *datosATrabajar, char* peticion, double* vectorPeticion){
+int sizeOfVector, alojamientoVector, deseo;
+deseo = getNumberFromName(datosATrabajar, peticion);
+if (!deseo){
+	printf("\nThe spelling went wrong or something failed\n");
+	return 0;
+}
 // IMPORTANTE AVISO
 // En c no hay error por colocar valores fuera del scope de un array, asi que hay que cuidar mucho el tamaño de los vectores que le metes a esta funcion
-if (filaDeseada){
+if (!(deseo%31)){
+	int filaDeseada = deseo/31;
 	printf("Fila deseada: %i\n\n", filaDeseada);
 	sizeOfVector = datosATrabajar->numColumnas;	
 	for(alojamientoVector = 1; alojamientoVector < sizeOfVector; alojamientoVector++){	
 		vectorPeticion[alojamientoVector - 1] = strtof(datosATrabajar->matriz[filaDeseada][alojamientoVector], NULL);
 		printf("%.6f %i\n",vectorPeticion[alojamientoVector - 1], alojamientoVector);
 	}
+	// Parte de luis
+	return filaDeseada;
 }
-else if (columnaDeseada){
+else if (!(deseo%29)){
+	int columnaDeseada = deseo/29;
 	printf("Columna deseada: %i\n\n", columnaDeseada);
 	sizeOfVector = datosATrabajar->numFilas - 1;
 	for(alojamientoVector = 1; alojamientoVector < sizeOfVector; alojamientoVector++){	
@@ -82,44 +93,21 @@ else{
 	printf("No match found, please check your spelling or see the list of available options\nSi quieres sacar la columna titulos o la fila fechas, reminder de que estan en la estructura datosATRabajar\n");
 	return -1;
 }
-// Sirve para la parte de Luis a mi no me afecta
-return filaDeseada;
-}	
+}
+
 	
 // FUNCION PARA SACAR UN VALOR CONCRETO DE ALGUN SITIO DE LA MATRIZ
 double getExactValueFromMatrix(struct datosMatriz *datosATrabajar, char* tituloDeseado, char* fechaDeseada){
-// Este codigo lo repito varias veces en varias funciones para poder convertir un titulo en un numero de la matriz de datos, soy un vago y funciona stfu
 int filas, columnas, letra;
-int columnaDeseada = 0;
-int filaDeseada = 0;
-for (filas = 0; filas < datosATrabajar->numFilas; filas++){
-	letra = 0;
-	while (datosATrabajar->vectorColumnaTitulos[filas][letra] != '\0' && tituloDeseado[letra] != '\0') {
-	        if (datosATrabajar->vectorColumnaTitulos[filas][letra] != tituloDeseado[letra]) {
-				break;  // Strings are not equal
-	        }
-	        letra++;
-	    }
-	    if ((datosATrabajar->vectorColumnaTitulos[filas][letra] == '\0'|| datosATrabajar->vectorColumnaTitulos[filas][letra] == '\n') && (tituloDeseado[letra] == '\0' || tituloDeseado[letra] == '\n')) {
-			filaDeseada = filas;
-			break;  // Strings are equal
-	    }  // Strings are not equal
+int columnaDeseada = getNumberFromName(datosATrabajar, fechaDeseada)/29;
+if (columnaDeseada){
+	int filaDeseada = getNumberFromName(datosATrabajar, tituloDeseado)/31;
+	if (filaDeseada){
+		return strtof(datosATrabajar->matriz[filaDeseada][columnaDeseada], NULL);
 	}
-for (columnas = 0; columnas < datosATrabajar->numColumnas - 1; columnas++){
-letra = 0;
-while (datosATrabajar->vectorFilaFechas[columnas][letra] != '\0' && fechaDeseada[letra] != '\0') {
-        if (datosATrabajar->vectorFilaFechas[columnas][letra] != fechaDeseada[letra]) {
-			break;  // Strings are not equal
-        }
-        letra++;
-    }
-    if ((datosATrabajar->vectorFilaFechas[columnas][letra] == '\0'|| datosATrabajar->vectorFilaFechas[columnas][letra] == '\n') && (fechaDeseada[letra] == '\0' || fechaDeseada[letra] == '\n')) {
-        columnaDeseada = columnas;
-		break;  // Strings are equal
-    }  // Strings are not equal
-}
-
-return strtof(datosATrabajar->matriz[filaDeseada][columnaDeseada], NULL);
+	}
+printf("Could not get exact value from matrix\n");
+return 0;
 }
 // FUNCION PARA ORDENAR UN VECTOR DE MENOR A MAYOR (<) O DE MAYOR A MENOR (>)
 void sortVector (struct datosMatriz *datosATrabajar, double* vectorAOrdenar, char mayorOMenor)
