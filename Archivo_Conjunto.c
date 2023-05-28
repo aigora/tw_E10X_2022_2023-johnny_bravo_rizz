@@ -22,6 +22,7 @@ float varianza1(double* Vector);
 float engtot(struct datosMatriz *datosATrabajar, double* Vector);
 void regresion(struct datosMatriz *datosATrabajar, double* Vector);
 void grafica(struct datosMatriz *datosATrabajar, double* Vector);
+void imprimirVectorEnArchivo(struct datosMatriz *datosATrabajar, double* Vector, const char* nombreArchivo);
 // FUNCION PARA CONVERTIR EL TITULO DE LA FILA/COLUMNA A SU POSICION NUMERICA
 int getNumberFromName (struct datosMatriz *datosATrabajar, char* peticion){
 int filas, columnas, letra, sizeOfVector;
@@ -617,4 +618,24 @@ void grafica(struct datosMatriz *datosATrabajar, double* Vector){//funcion para 
 			}
 		}
 	}
+}
+
+void imprimirVectorEnArchivo(struct datosMatriz *datosATrabajar, double* Vector, const char* nombreArchivo) {
+    FILE* archivo = fopen(nombreArchivo, "w");
+    if (archivo == NULL) {
+        printf("No se pudo abrir el archivo.\n");
+        return;
+    }
+    
+    fprintf(archivo, "El vector es: ");
+    int i;
+    int longitud = sizeof(Vector) / sizeof (Vector[0]);
+    for (i = 0; i < longitud; i++) {
+        fprintf(archivo, "%d ", Vector[i]);
+    }
+    fprintf(archivo, "\n");
+    
+    fclose(archivo);
+
+    printf("\nEl vector se ha escrito correctamente en el archivo.\n");
 }
