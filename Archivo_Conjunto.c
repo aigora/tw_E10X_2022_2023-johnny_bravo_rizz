@@ -452,60 +452,242 @@ He dejado arriba un ejemplo de cómo se puede implementar el uso de la funcion
 */
 
 
-	int menu=0, menu2;
-	while(menu!=19)
-	{
-		char typeInput[40];
-		printf("Que tipo de energia quieres tratar ?\n ");
-		fgets(typeInput, sizeof(typeInput), stdin);
-		double vectorFila[datosATrabajar.numColumnas - 1];
-		menu = getVectorByName(&datosATrabajar, typeInput, vectorFila);
-		if(menu<1 || menu>19)
-		{
-			printf("ese tipo de energiía no es valido, intenta otra vez");
-			printf("elige uno de los siguientes metodos de generacion de energia: 1: Hidraulica , 2: Turbinación bombeo , 3: Nuclear ,4: Carbón ,5:Fuel + Gas ,6:Motores diesel ,7:Turbina de gas ,8:Turbina de vapor ,9:Ciclo combinado ,10:Hidroeelica ,11:Eolica ,12:Solar fotovoltaica ,13: Solar termica ,14:Otras renovables ,15:Cogeneracion ,16:Residuos no renovables ,17:Residuos renovables ,18:Generacon total ,19: finalizar programa\n");
+	int opcion1 = 0;
+int opcion;
+int opcion2; 
+char inputPeriodSelect[40], inputDataSelect[40], inputOperationSelect[40], inputFuncionalidadSelect[40], inputAnual[40];
+int numeroTareas = 6;
+char vectorFuncionalidades[6][60] = {"Media","Varianza","Valor maximo y minimo", "Estimaciones futuras","Ordenación","Grafico"};
+double* vectorFila;
+while(opcion1!=19)
+{
+	opcion1 = 0;
+	opcion2 = 1;
+	printf("\n%s\n", inputDataSelect);
+	printf("Bienvenido al menú del equip 3232!\n");
+	printf("Cómo deseas trabajar con los datos? \n");
+	printf("1.Intervalo Mensual 2.Anual 3.Total 4.Dato Exacto (Escribe el numero)\n");
+	fgets(inputPeriodSelect, sizeof(inputPeriodSelect), stdin);
+    inputPeriodSelect[strcspn(inputPeriodSelect, "\n")] = '\0';
+    char* inputYear[40], inputYearInicio[40], inputYearFinal[40];
+    int yearInicio, yearFinal, sizeIntervalo;
+	int opcion = inputPeriodSelect[0] - '0';
+    switch(opcion){
+    	case 1:
+    	{
+    		char inputYearInicio[40], inputYearFinal[40]; 
+			// Intervalo mensual
+    		printf("\nIntroduce el mes inicial: ");
+    		fgets(inputYearInicio, sizeof(inputYearInicio), stdin);
+    		inputYearInicio[strcspn(inputYearInicio, "\n")] = '\0';
+    		yearInicio = getNumberFromName(&datosATrabajar, inputYearInicio)/29;
+    		printf("\nIntroduce el mes final: ");
+    		fgets(inputYearFinal, sizeof(inputYearFinal), stdin);
+    		inputYearFinal[strcspn(inputYearFinal, "\n")] = '\0';
+			yearFinal = getNumberFromName(&datosATrabajar, inputYearFinal)/29;
+			sizeIntervalo = yearFinal - yearInicio;
+			if (sizeIntervalo <= 1 || !yearFinal || !yearInicio){
+				printf("Las fechas no son las correctas\n ");
+				continue;
+			}
+			break;
+		}
+    	case 2:
+    	{
+			printf("Que intervalo anual, 2021 o 2022\n");
+    		fgets(inputAnual, sizeof(inputAnual), stdin);
+    		inputAnual[strcspn(inputAnual, "\n")] = '\0';
+    		if (inputAnual[0] == '2' && inputAnual[1] == '0' && inputAnual[2] == '2' && inputAnual[3] == '1'){
+    			inputYearInicio[0] = '0';
+    			inputYearInicio[1] = '1';
+    			inputYearInicio[2] = '/';
+    			inputYearInicio[3] = '2';
+    			inputYearInicio[4] = '0';
+    			inputYearInicio[5] = '2';
+    			inputYearInicio[6] = '1';
+				yearInicio = getNumberFromName(&datosATrabajar, inputYearInicio)/29;
+				inputYearFinal[0] = '1';
+    			inputYearFinal[1] = '2';
+    			inputYearFinal[2] = '/';
+    			inputYearFinal[3] = '2';
+    			inputYearFinal[4] = '0';
+    			inputYearFinal[5] = '2';
+    			inputYearFinal[6] = '1';
+				yearFinal = getNumberFromName(&datosATrabajar, inputYearFinal)/29;
+			}
+			else if (inputAnual[0] == '2' && inputAnual[1] == '0' && inputAnual[2] == '2' && inputAnual[3] == '2'){
+    			inputYearInicio[0] = '0';
+    			inputYearInicio[1] = '1';
+    			inputYearInicio[2] = '/';
+    			inputYearInicio[3] = '2';
+    			inputYearInicio[4] = '0';
+    			inputYearInicio[5] = '2';
+    			inputYearInicio[6] = '2';
+    			yearInicio = getNumberFromName(&datosATrabajar, inputYearInicio)/29;
+				inputYearFinal[0] = '1';
+    			inputYearFinal[1] = '2';
+    			inputYearFinal[2] = '/';
+    			inputYearFinal[3] = '2';
+    			inputYearFinal[4] = '0';
+    			inputYearFinal[5] = '2';
+    			inputYearFinal[6] = '2';
+				yearFinal = getNumberFromName(&datosATrabajar, inputYearFinal)/29;
+			}
+			else{
+				printf("That is not one of the options\n");
+				continue;
+			}
+			sizeIntervalo = 12;
+			printf(" %i %i \n", yearInicio, yearFinal);
+    		break;
+		}
+    	case 3:
+    	{
+    		//Total
+    		sizeIntervalo = 24;
+    		break;
+		}
+    	case 4:
+    	{
+    		printf("\nIntroduce the type of electricity: ");
+    		fgets(inputDataSelect, sizeof(inputDataSelect), stdin);
+		    inputDataSelect[strcspn(inputDataSelect, "\n")] = '\0';
+    		printf("\nIntroduce the date desired: ");    		
+    		fgets(inputYearInicio, sizeof(inputYearInicio), stdin);
+    		inputYearInicio[strcspn(inputYearInicio, "\n")] = '\0';
+    		double validacionExacto = getExactValueFromMatrix(&datosATrabajar,inputDataSelect,inputYearInicio);
+    		if (validacionExacto){
+			printf("\nOn %s, there were %.6fGWh produced of type %s",inputYearInicio, getExactValueFromMatrix(&datosATrabajar,inputDataSelect,inputYearInicio),inputDataSelect);
+			}
+			else{
+			printf("One of the two parameters is wrong");
+			}
+			int i;
+			for (i = 0; i < 40; i++){
+				inputDataSelect[i] = '\0';
+				inputYearInicio[i] = '\0';
+			}
 			continue;
 		}
-		
-		while(menu>0 && menu<19)
-		{ 
-			menu = getVectorByName(&datosATrabajar, typeInput, vectorFila);
-			printf("elige una tarea: 1:media , 2: varianza , 3: valor maximo y minimo , 4: energia total, 5: estimaciones de valores futuros, 6: volver a la seleccion de tipo de energia\n");
-	    		fgets(typeInput, sizeof(typeInput), stdin);
-	    		while(menu2>6 || menu2<1)
-	    	{
-		    	printf("Lo siento ese, numero no es valido, elige otro");
-		    	printf("elige una tarea: 1:media , 2: varianza , 3: valor maximo y minimo , 4: energia total, 5: estimaciones de valores futuros, 6: finalizar\n");
-		    	scanf("%i",&menu2);
-			}
-			while(menu2<6 && menu2>0)
-	    		{
-			  		switch(menu2)
-		    		{
-		   	        	case 1:
-		    	    	{
-		            		printf("la media es : %f\n",media(&datosATrabajar, vectorFila));
-		       				break;
-		        		}
-		    	    	case 2:
-		    			{
-		     	    		printf("la varianza es : %f\n",varianza(&datosATrabajar, vectorFila));
-		     	   			break;
-		         		}
-	          			case 3:
-	         	   		{
-	          	    	  printf("la energia total es : %f\n",engtot(&datosATrabajar,vectorFila));
-	          	    	  break;
-	          			}
-	          			case 4:
-	          			{
-	          	    		regresion(&datosATrabajar,vectorFila);
-	           		  		break;
-			   			}
-	    	    	}
-			}
+	}
+	// Mete aqui lo que haga falta
+	printf("elige uno de los siguientes metodos de generacion de energia (Escribe el nombre): (Para volver atras, introduce Exit) \n");
+	int tipoElectricidad;
+	for (tipoElectricidad = 1; tipoElectricidad < datosATrabajar.numFilas; tipoElectricidad++){
+		printf("%i. %s ",tipoElectricidad,datosATrabajar.vectorColumnaTitulos[tipoElectricidad]);
+		if ((tipoElectricidad-1)%5 == 0 && (tipoElectricidad-1) ){
+			printf("\n");
 		}
 	}
+	printf("\n");
+	fgets(inputDataSelect, sizeof(inputDataSelect), stdin);
+    inputDataSelect[strcspn(inputDataSelect, "\n")] = '\0';
+	if (inputDataSelect[0] == 'E' && inputDataSelect[1] == 'x' && inputDataSelect[2] == 'i' && inputDataSelect[3] == 't'){
+		int i;
+		for (i = 0; i < 40; i++){
+			inputDataSelect[i] = '\0';
+		}
+		continue;
+	}
+	if (sizeIntervalo != 24){
+	vectorFila = (double*)malloc(sizeof(double)*sizeIntervalo);
+	opcion1 = getSpliceOfVector(&datosATrabajar, inputYearInicio, inputYearFinal, inputDataSelect, vectorFila);
+	}
+	else{
+	vectorFila = (double*)malloc(sizeof(double)*(datosATrabajar.numColumnas - 1));
+	opcion1 = getVectorByName(&datosATrabajar, inputDataSelect, vectorFila);
+	}
+	if(!opcion1)
+	{
+		printf("\n ese tipo de energia no es valido, intenta otra vez");
+		int i;
+		for (i = 0; i < 40; i++){
+			inputDataSelect[i] = '\0';
+		}
+		continue;
+	}
+	while(opcion2)
+	{ 
+		printf("\n elige una tarea(Escribe el numero): (Para volver atras, escribe Back) \n");
+    	int tarea;
+		for (tarea = 1; tarea < numeroTareas; tarea++){
+			printf("%i. %s ",tarea,vectorFuncionalidades[tarea-1]);
+			if ((tarea-1)%5 == 0 && (tarea-1) ){
+				printf("\n");
+			}
+		}
+		printf("\n");
+		fgets(inputFuncionalidadSelect, sizeof(inputFuncionalidadSelect), stdin);
+    	inputFuncionalidadSelect[strcspn(inputFuncionalidadSelect, "\n")] = '\0';
+    	if (inputFuncionalidadSelect[0] == 'B' && inputFuncionalidadSelect[1] == 'a' && inputFuncionalidadSelect[2] == 'c' && inputFuncionalidadSelect[3] == 'k'){
+		int i;
+		for (i = 0; i < 40; i++){
+			inputDataSelect[i] = '\0';
+			inputFuncionalidadSelect[i] = '\0';
+		}
+		break;
+		}
+    	int opcion2 = inputFuncionalidadSelect[0] - '0';
+		if(opcion2> numeroTareas|| opcion2<1)
+    	{
+	    	printf("\n Esta opcion no es valida, por favor vuelve a intentarlo");
+	    	continue;
+		}
+		else{
+		  		switch(opcion2)
+	    		{
+	   	        	case 1:
+	    	    	{
+	    	    		// MEDIA
+	            		printf("la media es : %f\n",media(&datosATrabajar, vectorFila));
+	       				break;
+	        		}
+	    	    	case 2:
+	    			{
+	    				// VARIANZA
+	     	    		// printf("la varianza es : %f\n",varianza(&datosATrabajar, vectorFila));
+	     	   			break;
+	         		}
+          			case 3:
+         	   		{
+         	   			// MAXIMO Y MINIMO
+          	    	  	// printf("la energia total es : %f\n",engtot(&datosATrabajar,vectorFila));
+          	    	  break;
+          			}
+          			case 4:
+          			{
+          				// RECTA REGRESIÓN
+          	    		// regresion(&datosATrabajar,vectorFila);
+           		  		break;
+		   			}
+		   			case 5:
+	    	    	{
+	    	    		// ORDENACION VECTOR
+	            		// printf("la media es : %f\n",media(&datosATrabajar, vectorFila));
+	       				break;
+	        		}
+	    	    	case 6:
+	    			{
+	    				// GRAFICO
+	     	    		// printf("la varianza es : %f\n",varianza(&datosATrabajar, vectorFila));
+	     	   			break;
+	         		}
+    	    	}
+		}
+	break;
+	}
+printf("\n LIMPIO STRING \n");
+int i;
+for (i = 0; i < 40; i++){
+			inputDataSelect[i] = '\0';
+			inputOperationSelect[i] = '\0';
+			inputFuncionalidadSelect[i] = '\0';
+			inputPeriodSelect[i] = '\0';
+			inputAnual[i] = '\0';
+			inputYearInicio[i] = '\0';
+			inputYearFinal[i] = '\0';
+		}
+}
 return 0;
 }
 
