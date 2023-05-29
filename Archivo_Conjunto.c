@@ -24,6 +24,7 @@ float varianza1(double* Vector);
 float engtot(struct datosMatriz *datosATrabajar, double* Vector);
 void regresion(struct datosMatriz *datosATrabajar, double* Vector);
 void grafica(struct datosMatriz *datosATrabajar, double* Vector);
+void obtenerMaximoMinimo(struct datosMatriz *datosATrabajar, double* Vector, double *maximo, double *minimo);
 // FUNCION PARA SACAR SOLO UN CACHO DE LA MATRIZ
 int getSpliceOfVector (struct datosMatriz *datosATrabajar, char* inicioSplice, char* finSplice, char* filaSpliced, double* vectorSpliced){
 	int fechaInicio = getNumberFromName(datosATrabajar, inicioSplice)/29;
@@ -722,7 +723,9 @@ while(1)
           			case 3:
           			{
           				// maximo y minimo
-          	    		printf("la energia total acumulada es : %f\n",engtot(&datosATrabajar,vectorFila));
+          	    		double maximo, minimo;
+          				obtenerMaximoMinimo(&datosATrabajar, vectorFila, &maximo, &minimo);
+          	    		printf("el maximo es:%f y el minimo es:%f \n",maximo,minimo);
            		  		break;
 		   			}
 		   			case 4:
@@ -906,4 +909,19 @@ void imprimirVectorEnArchivo(struct datosMatriz *datosATrabajar, double* Vector,
 //cerramos el archivo
     printf("\nEl vector se ha escrito correctamente en el archivo.\n");
 	//informamos que se ha impreso correctamente el vector
+}
+
+void obtenerMaximoMinimo(struct datosMatriz *datosATrabajar, double* Vector, double *maximo, double *minimo) {
+    *maximo = Vector[0];
+    *minimo = Vector[0];
+    int i;
+
+    for (i = 1; i < datosATrabajar->longitudIntervalo; i++) {
+        if (Vector[i] > *maximo) {
+            *maximo = Vector[i];
+        }
+        if (Vector[i] < *minimo) {
+            *minimo = Vector[i];
+        }
+    }
 }
