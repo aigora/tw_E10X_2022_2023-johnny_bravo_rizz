@@ -520,8 +520,8 @@ int opcion1 = 0;
 int opcion;
 int opcion2; 
 char inputPeriodSelect[40], inputDataSelect[40], inputOperationSelect[40], inputFuncionalidadSelect[40], inputAnual[40];
-int numeroTareas = 5;
-char vectorFuncionalidades[5][60] = {"Media","Varianza","Valor maximo y minimo", "Estimaciones futuras","Grafico"};
+int numeroTareas = 8;
+char vectorFuncionalidades[8][60] = {"Media","Varianza","Valor maximo y minimo", "Estimaciones futuras","Grafico","varianza","recta de regresion","energia total"};
 double* vectorFila;
 while(1)
 {
@@ -721,13 +721,13 @@ while(1)
           			}
           			case 3:
           			{
-          				// energia total
+          				// maximo y minimo
           	    		printf("la energia total acumulada es : %f\n",engtot(&datosATrabajar,vectorFila));
            		  		break;
 		   			}
 		   			case 4:
 	    	    	{
-	    	    			// recta de regresion
+	    	    			// estimaciones futuras
 	    	    		regresion(&datosATrabajar,vectorFila);
 	       				break;
 	        		}
@@ -739,6 +739,9 @@ while(1)
 	         		}
 	         		case 6:
 	    			{
+					//varianza
+					//recta de regresion
+					//energia total
 	    				if (datosATrabajar.longitudIntervalo == 1){
 	    					printf("Choose another option\n");				 
 							continue;
