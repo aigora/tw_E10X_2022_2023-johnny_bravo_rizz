@@ -41,7 +41,7 @@ void compararVectores(int vectores[][5], int numVectores, int longitud)
                     	diferencia = 0- diferencia;
 					}
                     
-                    printf("Posición %i: vector%i[%i] = %i, vector%i[%i] = %i, Diferencia: %i\n", i, j+1, i, vectores[j][i], k+1, i, vectores[k][i], diferencia);
+                    printf("PosiciÃ³n %i: vector%i[%i] = %i, vector%i[%i] = %i, Diferencia: %i\n", i, j+1, i, vectores[j][i], k+1, i, vectores[k][i], diferencia);
                     diferencias++;
                 }
             }
