@@ -6,6 +6,6 @@ Con dichos datos, se podrán realizar diversas operaciones y procesos, a la vez 
 El codigo es robusto, y presenta errores y seguros en caso de un imput mal introducido o un error de indexado
 
 ## Integrantes del equipo
-Guillermo Baselga
-Luis Caicoya
+Guillermo Baselga, 
+Luis Caicoya, 
 Nicolas Calle
