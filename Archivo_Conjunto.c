@@ -1,11 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-// El códigpo está comentado casi todo, si falta algo o algo no funciona mandadme un was
-// las variables están un poco en spanglish xq estoy acostumbrado a escribir en ingles codigo, pero todo es mio asi q dont worry x plagio
-// hay printfs al inicio del proceso de indexado pero me sirven para ver si funciona, no les hagais mucho caso
-// NOTA PARA YO DEL FUTURO: Elimina todos  los \n que puedas xq hacen que el codigo corra bastante más rápido
-// Esta estructura se usa mas abajo pero por el tema de la funcion tengo que declararla aquí arriba
-// De aquí se sacan los datos de la matriz para meterlos a vectores para trabajar con ellos
 struct datosMatriz{
     int numColumnas;
     int numFilas;
