@@ -152,8 +152,8 @@ char temporalDateStore[30];
 printf("Before sort: \n");
 for (i= 0; i < datosATrabajar->numColumnas - 1; i++){
 	datosATrabajar->vectorFila[i] = datosATrabajar->vectorFilaFechas[i];
-	printf("%s\n", datosATrabajar->vectorFila[i]);
-	printf(" %.6f ", vectorAOrdenar[i]);
+	printf("%s ", datosATrabajar->vectorFila[i]);
+	printf("%.6f\n", vectorAOrdenar[i]);
 }
 printf("\n");
 // Implementación de un algoritmo de ordenacion que ordena tanto el contenido de la fila como una copia de sus posiciones en fechas
