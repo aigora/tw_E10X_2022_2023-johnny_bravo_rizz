@@ -502,12 +502,12 @@ int numeroTareas = 6;
 char vectorFuncionalidades[6][60] = {"Media","Varianza","Valor maximo y minimo", "Estimaciones futuras","Grafico","energia total"};
 // Inicialización del puntero hacia el vector que mas tarde será asignado con malloc 
 double* vectorFila;
+printf("\n\nBienvenido al menu del equipo Jhonny Bravo Rizz!\n");
 while(1)
 {
     // Reinicio de las variables y selección de la manera que se desean tratar los datos
     opcion1 = 0;
     opcion2 = 1;
-    printf("\n\nBienvenido al menu del equipo Jhonny Bravo Rizz!\n");
     printf("Como deseas trabajar con los datos? \n");
     printf("1.Intervalo Mensual 2.Total 3.Dato Exacto 4.Fecha concreta 5.Imprimir todo el fichero 6. Cerrar el programa(Escribe el numero)\n");
     fgets(inputPeriodSelect, sizeof(inputPeriodSelect), stdin);
