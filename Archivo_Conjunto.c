@@ -704,6 +704,7 @@ while(1)
 	    	printf("\n Esta opcion no es valida, por favor vuelve a intentarlo");
 	    	continue;
 		}
+		else{
 		  		switch(opcion2)
 	    		{
 	   	        	case 1:
@@ -712,36 +713,45 @@ while(1)
 	            		printf("la media es : %f\n",media(&datosATrabajar, vectorFila));
 	       				break;
 	        		}
-	    	    	case 2:
-	    			{
-	    				// VARIANZA
-	     	    		printf("la varianza es : %f\n",varianza(&datosATrabajar, vectorFila));
-	     	   			break;
-	         		}
-          			case 3:
+          			case 2:
          	   		{
          	   			// MAXIMO Y MINIMO
-          	    	  	printf("la energia total es : %f\n",engtot(&datosATrabajar,vectorFila));
+          	    	  	// printf("la energia total es : %f\n",engtot(&datosATrabajar,vectorFila));
           	    	  break;
           			}
-          			case 4:
+          			case 3:
           			{
           				// RECTA REGRESIÓN
-          	    		regresion(&datosATrabajar,vectorFila);
+          	    		// regresion(&datosATrabajar,vectorFila);
            		  		break;
 		   			}
-		   			case 5:
+		   			case 4:
 	    	    	{
 	    	    		// ORDENACION VECTOR
 	            		// printf("la media es : %f\n",media(&datosATrabajar, vectorFila));
 	       				break;
 	        		}
-	    	    	case 6:
+	    	    	case 5:
 	    			{
 	    				// GRAFICO
 	     	    		grafica(&datosATrabajar,vectorFila);
 						break;
 	         		}
+	         		case 6:
+	    			{
+	    				if (datosATrabajar.longitudIntervalo == 1){
+	    					printf("Choose another option\n");				 
+							continue;
+						}
+	    				sortVector(&datosATrabajar, vectorFila, '>');
+	     	   			break;
+	         		}
+	         		default:
+	         		{	
+					printf("Choose another option\n");				 
+					continue;
+					}
+						 
     	    	}
 		}
 	break;
@@ -757,10 +767,10 @@ for (i = 0; i < 40; i++){
 			inputYearInicio[i] = '\0';
 			inputYearFinal[i] = '\0';
 		}
+free(vectorFila);
 }
 return 0;
 }
-
 // <---------------------------------------- FIN DEL ARCHIVO MAIN ---------------------------------------------------->
 float media(struct datosMatriz *datosATrabajar, double* Vector)//funcion calculo de una media
 {
