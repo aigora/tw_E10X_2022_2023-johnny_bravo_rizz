@@ -509,7 +509,7 @@ while(1)
     opcion1 = 0;
     opcion2 = 1;
     printf("Como deseas trabajar con los datos? \n");
-    printf("1.Intervalo Mensual 2.Total 3.Dato Exacto 4.Fecha concreta 5.Imprimir todo el fichero 6. Cerrar el programa(Escribe el numero)\n");
+    printf("1.Intervalo Mensual 2.Total 3.Dato Exacto \n4.Fecha concreta 5.Imprimir todo el fichero 6. Cerrar el programa(Escribe el numero)\n");
     fgets(inputPeriodSelect, sizeof(inputPeriodSelect), stdin);
     inputPeriodSelect[strcspn(inputPeriodSelect, "\n")] = '\0';
     // Variables de input posteriores y conversion del input de char a int
