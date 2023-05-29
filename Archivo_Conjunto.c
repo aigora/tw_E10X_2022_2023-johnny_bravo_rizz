@@ -513,8 +513,8 @@ while(1)
     // Reinicio de las variables y selección de la manera que se desean tratar los datos
     opcion1 = 0;
     opcion2 = 1;
-    printf("\n\nBienvenido al menu del equipo 3232!\n");
-    printf("¿Como deseas trabajar con los datos? \n");
+    printf("\n\nBienvenido al menu del equipo Jhonny Bravo Rizz!\n");
+    printf("Como deseas trabajar con los datos? \n");
     printf("1.Intervalo Mensual 2.Total 3.Dato Exacto 4.Fecha concreta 5.Imprimir todo el fichero(Escribe el numero)\n");
     fgets(inputPeriodSelect, sizeof(inputPeriodSelect), stdin);
     inputPeriodSelect[strcspn(inputPeriodSelect, "\n")] = '\0';
@@ -587,7 +587,7 @@ while(1)
 		printf("\n");
 	    	fgets(inputDataSelect, sizeof(inputDataSelect), stdin);
 		inputDataSelect[strcspn(inputDataSelect, "\n")] = '\0';
-    		printf("\nIntroduce the date desired: \n");
+    		printf("\nIntroduce la fecha deseada: \n");
 		int mes;
     		for (mes = 1; mes < (datosATrabajar.numColumnas - 1); mes++){
 				printf("%i. %s ",mes,datosATrabajar.vectorFilaFechas[mes]);
@@ -606,7 +606,7 @@ while(1)
 				}
 			else{
 			// Si el valor es 0, algo ha salido mal
-				printf("One of the two parameters is wrong");
+				printf("Uno de los parametros no es correcto");
 			}
 			// Reinicio de las variables input
 			int i;
@@ -795,7 +795,6 @@ while(1)
 		}
 	break;
 	}
-printf("\n LIMPIO STRING \n");
 int i;
 for (i = 0; i < 40; i++){
 			inputDataSelect[i] = '\0';
