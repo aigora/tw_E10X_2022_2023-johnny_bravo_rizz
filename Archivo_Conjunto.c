@@ -475,7 +475,6 @@ for (tituloFila = 0; tituloFila < rowNumber; tituloFila++){
 	for (letra = 0; matrizDatos[tituloFila][0][letra] != '\0'; letra++){
         datosATrabajar.vectorColumnaTitulos[tituloFila][letra] = matrizDatos[tituloFila][0][letra];
     }
-    printf("\ntitulo: %s\n",datosATrabajar.vectorColumnaTitulos[tituloFila]);
 };
 // El vector vectorFilaFechas almacenará la fila de fechas en un vector char
 datosATrabajar.vectorFilaFechas = (char**)malloc(sizeof(char*)*(columnNumber-1));
@@ -492,7 +491,6 @@ for (fechaColumna = 1; fechaColumna < columnNumber; fechaColumna++){
     for (letra = 0; matrizDatos[0][fechaColumna][letra] != '\0'; letra++){
         datosATrabajar.vectorFilaFechas[fechaColumna - 1][letra] = matrizDatos[0][fechaColumna][letra];
     }
-    printf("\nfecha: %s\n",datosATrabajar.vectorFilaFechas[fechaColumna - 1]);
 };
 // <--------------------- USO DE LOS DATOS ---------------------------->
 // EJEMPLO DE COMO USAR EL getVectorByName y la funcion SortVector (ahora mismo solamente funciona para filas)
