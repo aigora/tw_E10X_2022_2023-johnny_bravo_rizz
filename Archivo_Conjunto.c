@@ -204,10 +204,10 @@ int main()
 	// Variables para customización del archivo a abrir
 	char inputArchivo[40];
 	int filasAntesDatos, filasDespuesDatos;
-	printf("\nBienvenido/a al indexador de csv del grupo johnny bravo rizz. \n\nEsta aplicación está programada de tal manera que puede leer cualquier csv que se le ofrezca, siempre y cuando\nse ajusten ciertos parametros. \n\nHemos preparado 3 archivos de demostración, por favor elige cual deseas (introduce el numero):\n");
-	printf("1.SALDOS POR FRONTERAS - FÍSICO_01-05-2022_29-05-2023\n");
-	printf("2.ESTRUCTURA DE LA GENERACIÓN POR TECNOLOGÍAS_01-01-2021_31-12-2022\n");
-	printf("3.EMISIONES Y FACTOR DE EMISIÓN DE CO2 EQ. DE LA GENERACIÓN_22-05-2023_29-05-2023\n");
+	printf("\nBienvenido/a al indexador de csv del grupo johnny bravo rizz. \n\nEsta aplicacion esta programada de tal manera que puede leer cualquier csv que se le ofrezca, siempre y cuando\nse ajusten ciertos parametros. \n\nHemos preparado 3 archivos de demostracion, por favor elige cual deseas (introduce el numero):\n");
+	printf("1.SALDOS POR FRONTERAS - FISICO_01-05-2022_29-05-2023\n");
+	printf("2.ESTRUCTURA DE LA GENERACION POR TECNOLOGIAS_01-01-2021_31-12-2022\n");
+	printf("3.EMISIONES Y FACTOR DE EMISION DE CO2 EQ. DE LA GENERACION_22-05-2023_29-05-2023\n");
 	// VALORES DE AJUSTE DEPENDIENTES DE ARCHIVO DE ORIGEN
 	fgets(inputArchivo,sizeof(inputArchivo),stdin);
 	FILE *dimensionsScout;
@@ -513,8 +513,8 @@ while(1)
     // Reinicio de las variables y selección de la manera que se desean tratar los datos
     opcion1 = 0;
     opcion2 = 1;
-    printf("\n\nBienvenido al menú del equip 3232!\n");
-    printf("Cómo deseas trabajar con los datos? \n");
+    printf("\n\nBienvenido al menu del equipo 3232!\n");
+    printf("¿Como deseas trabajar con los datos? \n");
     printf("1.Intervalo Mensual 2.Total 3.Dato Exacto 4.Fecha concreta 5.Imprimir todo el fichero(Escribe el numero)\n");
     fgets(inputPeriodSelect, sizeof(inputPeriodSelect), stdin);
     inputPeriodSelect[strcspn(inputPeriodSelect, "\n")] = '\0';
