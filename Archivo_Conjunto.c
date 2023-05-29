@@ -29,7 +29,7 @@ float varianza1(double* Vector);
 float engtot(struct datosMatriz *datosATrabajar, double* Vector);
 void regresion(struct datosMatriz *datosATrabajar, double* Vector);
 void grafica(struct datosMatriz *datosATrabajar, double* Vector);
-void imprimirVectorEnArchivo(struct datosMatriz *datosATrabajar, double* Vector, const char* nombreArchivo)
+void imprimirVectorEnArchivo(struct datosMatriz *datosATrabajar, double* Vector, const char* nombreArchivo);
 // FUNCION PARA SACAR SOLO UN CACHO DE LA MATRIZ
 int getSpliceOfVector (struct datosMatriz *datosATrabajar, char* inicioSplice, char* finSplice, char* filaSpliced, double* vectorSpliced){
 	int fechaInicio = getNumberFromName(datosATrabajar, inicioSplice)/29;
@@ -878,6 +878,7 @@ void grafica(struct datosMatriz *datosATrabajar, double* Vector){//funcion para 
 void imprimirVectorEnArchivo(struct datosMatriz *datosATrabajar, double* Vector, const char* nombreArchivo) {
     FILE* archivo = fopen(nombreArchivo, "w");
     if (archivo == NULL) {
+	    //en caso de que el archivo no se pueda abrir informará del error
         printf("No se pudo abrir el archivo.\n");
         return;
     }
@@ -886,11 +887,14 @@ void imprimirVectorEnArchivo(struct datosMatriz *datosATrabajar, double* Vector,
     int i;
     int longitud = sizeof(Vector) / sizeof (Vector[0]);
     for (i = 0; i < datosATrabajar->longitudIntervalo; i++) {
+	    //recorre el vector
         fprintf(archivo, "%d ", Vector[i]);
+	    //lo imprime en el archivo
     }
     fprintf(archivo, "\n");
     
     fclose(archivo);
-
+//cerramos el archivo
     printf("\nEl vector se ha escrito correctamente en el archivo.\n");
+	//informamos que se ha impreso correctamente el vector
 }
