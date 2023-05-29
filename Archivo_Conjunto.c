@@ -509,7 +509,7 @@ while(1)
     opcion2 = 1;
     printf("\n\nBienvenido al menu del equipo Jhonny Bravo Rizz!\n");
     printf("Como deseas trabajar con los datos? \n");
-    printf("1.Intervalo Mensual 2.Total 3.Dato Exacto 4.Fecha concreta 5.Imprimir todo el fichero(Escribe el numero)\n");
+    printf("1.Intervalo Mensual 2.Total 3.Dato Exacto 4.Fecha concreta 5.Imprimir todo el fichero 6. Cerrar el programa(Escribe el numero)\n");
     fgets(inputPeriodSelect, sizeof(inputPeriodSelect), stdin);
     inputPeriodSelect[strcspn(inputPeriodSelect, "\n")] = '\0';
     // Variables de input posteriores y conversion del input de char a int
@@ -632,6 +632,14 @@ while(1)
 		}
 			break;
 		}
+	    case 6:{
+	    free(matrizDatos);
+	    free(datosATrabajar.vectorFila);
+	    free(datosATrabajar.vectorFilaFechas);
+	    free(datosATrabajar.vectorColumna);
+            free(datosATrabajar.vectorColumnaTitulos);
+	    return 0;
+	    }
 	}
 	if(sizeIntervalo != 1){
 		// Solo se pide fila si no se ha elegido una fecha con anterioridad
