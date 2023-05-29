@@ -715,20 +715,20 @@ while(1)
 	        		}
           			case 2:
          	   		{
-         	   			// MAXIMO Y MINIMO
-          	    	  	printf("la energia total acumulada es : %f\n",engtot(&datosATrabajar,vectorFila));
+         	   			// Varianza
+         	   			  printf("la varianza es: %f",varianza(&datosATrabajar, vectorFila));
           	    	  break;
           			}
           			case 3:
           			{
-          				// RECTA REGRESIÓN
-          	    		regresion(&datosATrabajar,vectorFila);
+          				// energia total
+          	    		printf("la energia total acumulada es : %f\n",engtot(&datosATrabajar,vectorFila));
            		  		break;
 		   			}
 		   			case 4:
 	    	    	{
-	    	    		// ORDENACION VECTOR
-	            		  printf("la varianza es: %f",varianza(&datosATrabajar, vectorFila));
+	    	    			// recta de regresion
+	    	    		regresion(&datosATrabajar,vectorFila);
 	       				break;
 	        		}
 	    	    	case 5:
