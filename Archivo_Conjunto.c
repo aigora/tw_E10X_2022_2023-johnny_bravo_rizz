@@ -80,7 +80,7 @@ if (!filaDeseada){
 	}
 }
 // Si no se ha resuelto la funcion en este punto, es que no hay match y se devuelve un error
-printf("\n No column or row by that name \n");
+printf("\n No hay ninguna fila o columna con ese nombre  \n");
 return 0;	
 
 }
@@ -90,7 +90,7 @@ int sizeOfVector, alojamientoVector, deseo;
 // deseo almacena el return de la función getVectorByName, y saca un error si se ha devuelto un valor 0
 deseo = getNumberFromName(datosATrabajar, peticion);
 if (!deseo){
-	printf("\nThe spelling went wrong or something failed\n");
+	printf("\nPrueba otra vez por favor\n");
 	return 0;
 }
 // Si la división por modulo de deseo entre 31 da 0, es que se ha devuelto una fila	
@@ -120,7 +120,7 @@ else if (!(deseo%29)){
 }
 // En caso de que no sea ninguna, se devuelve un erro de ortografía
 else{
-	printf("No match found, please check your spelling or see the list of available options\nSi quieres sacar la columna titulos o la fila fechas, reminder de que estan en la estructura datosATRabajar\n");
+	printf("\nNo se ha encontrado un match, por favor prueba de nuevo\n");
 	return -1;
 }
 }
@@ -139,7 +139,6 @@ if (columnaDeseada){
 		return strtof(datosATrabajar->matriz[filaDeseada][columnaDeseada], NULL);
 	}
 	}
-printf("Could not get exact value from matrix\n");
 return 0;
 }
 void sortVector (struct datosMatriz *datosATrabajar, double* vectorAOrdenar, char mayorOMenor)
@@ -288,7 +287,6 @@ int main()
     // Al ser un tensor (o vector de punteros a vectores de punteros hacia vectores de caracteres) Se tienen que declarar todos esos vectores por separado con su tipo de puntero correspondiente
     char*** matrizDatos = (char***)malloc(sizeof(char**)*rowNumber);
     // Este tensor es absolutamente variable, y se adapta a los contenidos del archivo 
-    printf(" %i %i \n\n", rowNumber, columnNumber);
     int filas = 0;
     for (filas = 0; filas < rowNumber; filas++){
         // para cada uno de los vectores de fila, declaramos otro vector que almacena los punteros
@@ -296,7 +294,6 @@ int main()
         matrizDatos[filas] = (char**)malloc(columnNumber*sizeof(char*));
         int columnas = 0;
         for (columnas = 0; columnas < columnNumber; columnas++){
-            printf("%i", columnas);
             // para cada una de las columnas, creamos un vector que almacena el numero máximo de caracteres
             matrizDatos[filas][columnas] = (char*)malloc(80*sizeof(char));
             // Esto inicializa cada una de las celdas y les mete un valor para que no estén vacias y se corrompa su contenido
@@ -304,11 +301,9 @@ int main()
 	    for (inicializacionMatriz = 0; inicializacionMatriz < 80; inicializacionMatriz++){
 	        matrizDatos[filas][columnas][inicializacionMatriz] = '\0';
 	    }
-	    printf("%c \n",  matrizDatos[filas][columnas][0]);
             }
         }
     // comprobación de las dimensiones de la matriz
-    printf(" %i %i ", rowNumber, columnNumber);
 
     // < ------------------------------------------- PROCESO DE INSERTADO DE DATOS DEL ARCHIVO EN EL TENSOR DINAMICO matrizDatos ------------------------------------->
     char almacenFila[1024];
@@ -339,7 +334,6 @@ int main()
         column = 0;
         // Se almacena el contenido de la fila en almacenFila
         fgets(almacenFila, 1024, elementSeparation);
-        printf("%s\n", almacenFila);
         letraElement = 0; 
         letra = 0;
         // Iteramos hasta el final de la linea (hasta que sale \0)
@@ -361,8 +355,6 @@ int main()
                     for (a = 0; element[a] != '\0'; a++){
                         matrizDatos[filaReal][column][a] = element[a];
                         }
-                    printf("%s",matrizDatos[filaReal][column]);
-                    printf(" %i %i \nsuccessful\n", filaReal, column);
                     column++;
                     }
                 letraElement = 0;
@@ -371,7 +363,6 @@ int main()
                 // esto es si es una coma decimal lo trata como un digito normal
                 element[letraElement] = '.';
                 letraElement++;
-                printf("%s\n", element);
                 continue;
                 }
 	// Vaciado del buffer element para evitar traspasos de datos erroneos
@@ -436,7 +427,6 @@ int main()
 		}
 		// contador de la letra que se está llenando
 		letraElement++;
-		printf("%s\n", element);
 		}
         }
         element[letraElement - 1] = '\0';
@@ -447,10 +437,6 @@ int main()
             matrizDatos[filaReal][column][c] = element[c];
             element[c] = '\0';
             }
-        printf("%s",matrizDatos[filaReal][column]);
-        printf(" %i %i ", filaReal, column);
-        printf("\n");
-        printf("successful\n\n");
 	}
 }
 // Esta es la comprobación de que los datos se han guardado bien
