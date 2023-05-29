@@ -26,23 +26,30 @@ void regresion(struct datosMatriz *datosATrabajar, double* Vector);
 void grafica(struct datosMatriz *datosATrabajar, double* Vector);
 void imprimirVectorEnArchivo(struct datosMatriz *datosATrabajar, double* Vector, const char* nombreArchivo);
 void obtenerMaximoMinimo(struct datosMatriz *datosATrabajar, double* Vector, double *maximo, double *minimo);
-// FUNCION PARA SACAR SOLO UN CACHO DE LA MATRIZ
+// FUNCION PARA SACAR SOLO UN CACHO DE LA MATRIZ EN UN VECTOR FILA
 int getSpliceOfVector (struct datosMatriz *datosATrabajar, char* inicioSplice, char* finSplice, char* filaSpliced, double* vectorSpliced){
+	// declaramos los puntos de inicio y fin del splice con la función getNumberFromName
 	int fechaInicio = getNumberFromName(datosATrabajar, inicioSplice)/29;
 	int fechaFinal = getNumberFromName(datosATrabajar, finSplice)/29;
+	// Sacamos la fila que vamos a splicear
 	int intfilaSpliced = getNumberFromName(datosATrabajar, filaSpliced)/31;
 	int fila;
+	// transferimos los contenidos de la matriz al vector splice
 	for (fila = fechaInicio; fila <= fechaFinal; fila++){
 		vectorSpliced[fila - fechaInicio] = strtof(datosATrabajar->matriz[intfilaSpliced][fila], NULL);
 		printf("\n%.6f %i\n",vectorSpliced[fila - fechaInicio], fila);
 	}
+// devolvemos el valor de la fila spliceada para procesamiento posterior con el menú
 return intfilaSpliced;
 }
 // FUNCION PARA CONVERTIR EL TITULO DE LA FILA/COLUMNA A SU POSICION NUMERICA
 int getNumberFromName (struct datosMatriz *datosATrabajar, char* peticion){
+// Declaramos valores para los forloops
 int filas, columnas, letra, sizeOfVector;
+// Inicialización de los valores que alojarán lo que buscamos
 int columnaDeseada = 0;
 int filaDeseada = 0;
+// Iteramos el vector vectorColumnaTitulos a ver si hay algun match, y si lo hay, lo returneamos multiplicado por un primo (31) para diferenciarlo de las columnas
 for (filas = 0; filas < datosATrabajar->numFilas; filas++){
 	letra = 0;
 	while (datosATrabajar->vectorColumnaTitulos[filas][letra] != '\0' && peticion[letra] != '\0') {
@@ -56,6 +63,7 @@ for (filas = 0; filas < datosATrabajar->numFilas; filas++){
 			return (filaDeseada)*31;;  // Strings are equal
 	    }  // Strings are not equal
 	}
+// Si no se ha encontrado un match en los titulos, se prueba con el vector vectorFilaFechas, y se devolverá la columna multiplicada por un primo (29)
 if (!filaDeseada){
 	for (columnas = 0; columnas < datosATrabajar->numColumnas - 1; columnas++){
 	letra = 0;
@@ -71,6 +79,7 @@ if (!filaDeseada){
 	    }  // Strings are not equal
 	}
 }
+// Si no se ha resuelto la funcion en este punto, es que no hay match y se devuelve un error
 printf("\n No column or row by that name \n");
 return 0;	
 
@@ -78,16 +87,17 @@ return 0;
 // FUNCION SACAR VECTOR FILA/COLUMNA POR NOMBRE 
 int getVectorByName (struct datosMatriz *datosATrabajar, char* peticion, double* vectorPeticion){
 int sizeOfVector, alojamientoVector, deseo;
+// deseo almacena el return de la función getVectorByName, y saca un error si se ha devuelto un valor 0
 deseo = getNumberFromName(datosATrabajar, peticion);
 if (!deseo){
 	printf("\nThe spelling went wrong or something failed\n");
 	return 0;
 }
-// IMPORTANTE AVISO
-// En c no hay error por colocar valores fuera del scope de un array, asi que hay que cuidar mucho el tamaño de los vectores que le metes a esta funcion
+// Si la división por modulo de deseo entre 31 da 0, es que se ha devuelto una fila	
 if (!(deseo%31)){
 	int filaDeseada = deseo/31;
 	printf("Fila deseada: %i\n\n", filaDeseada);
+	// Se obtiene el tamaño del vector completo consultando la estructura datosATrabajar
 	sizeOfVector = datosATrabajar->numColumnas;	
 	for(alojamientoVector = 1; alojamientoVector < sizeOfVector; alojamientoVector++){	
 		vectorPeticion[alojamientoVector - 1] = strtof(datosATrabajar->matriz[filaDeseada][alojamientoVector], NULL);
@@ -96,15 +106,19 @@ if (!(deseo%31)){
 	// Parte de luis
 	return filaDeseada;
 }
+
+// Si la división por modulo de deseo entre 29 da 0, es que se ha devuelto una columna	
 else if (!(deseo%29)){
 	int columnaDeseada = deseo/29;
 	printf("Columna deseada: %i\n\n", columnaDeseada);
+	// Se resta uno al numero de filas para ignorar la fila de fechas
 	sizeOfVector = datosATrabajar->numFilas - 1;
 	for(alojamientoVector = 1; alojamientoVector < sizeOfVector; alojamientoVector++){	
 		vectorPeticion[alojamientoVector - 1] = strtof(datosATrabajar->matriz[alojamientoVector][columnaDeseada], NULL);
 		printf("%.6f %i\n",vectorPeticion[alojamientoVector - 1], alojamientoVector);
 	}
 }
+// En caso de que no sea ninguna, se devuelve un erro de ortografía
 else{
 	printf("No match found, please check your spelling or see the list of available options\nSi quieres sacar la columna titulos o la fila fechas, reminder de que estan en la estructura datosATRabajar\n");
 	return -1;
@@ -115,10 +129,13 @@ else{
 // FUNCION PARA SACAR UN VALOR CONCRETO DE ALGUN SITIO DE LA MATRIZ
 double getExactValueFromMatrix(struct datosMatriz *datosATrabajar, char* tituloDeseado, char* fechaDeseada){
 int filas, columnas, letra;
+// Se intenta sacar la columna de la matriz
 int columnaDeseada = getNumberFromName(datosATrabajar, fechaDeseada)/29;
 if (columnaDeseada){
+	// Si el valor no es 0, se intenta sacar la fila
 	int filaDeseada = getNumberFromName(datosATrabajar, tituloDeseado)/31;
 	if (filaDeseada){
+		// Si ambos valores no son nulos, se devuelve el contenido de la matriz pasado por strtof()
 		return strtof(datosATrabajar->matriz[filaDeseada][columnaDeseada], NULL);
 	}
 	}
@@ -127,32 +144,31 @@ return 0;
 }
 void sortVector (struct datosMatriz *datosATrabajar, double* vectorAOrdenar, char mayorOMenor)
 {
-// Esta es una implementación adaptada a nosotros de un algortimo que ya existe llamado BubleSort
-printf("\n%c \n",datosATrabajar->vectorFilaFechas[0][0]);
 int i, j, letra; 
 double temporalStore;
 char buffer;
-char temporalDateStore[7];
+char temporalDateStore[30];
+// Comprobación del vector antes de la ordenación
 printf("Before sort: \n");
 for (i= 0; i < datosATrabajar->numColumnas - 1; i++){
 	datosATrabajar->vectorFila[i] = datosATrabajar->vectorFilaFechas[i];
 	printf("%s\n", datosATrabajar->vectorFila[i]);
 	printf(" %.6f ", vectorAOrdenar[i]);
-	
 }
 printf("\n");
+// Implementación de un algoritmo de ordenacion que ordena tanto el contenido de la fila como una copia de sus posiciones en fechas
 if (mayorOMenor == '<'){
 	for (i= 0; i < datosATrabajar->numColumnas-2; i++){
 		for (j= 0; j < datosATrabajar->numColumnas-2-i;j++){
+			// En el caso de que sea uno mayor que el otro, se permutan las posiciones
 			if (vectorAOrdenar[j] > vectorAOrdenar[j+1]){
 				temporalStore = vectorAOrdenar[j];
 				vectorAOrdenar[j] = vectorAOrdenar[j+1];
 				vectorAOrdenar[j+1] = temporalStore;
+				// Se realiza de manera analoga la permutacion para la copia del vectorFilaFechas en vectorColumna, sirviendo este como buffer
 				datosATrabajar->vectorColumna[j] = datosATrabajar->vectorFila[j];
 				datosATrabajar->vectorFila[j] = datosATrabajar->vectorFila[j+1];
 				datosATrabajar->vectorFila[j+1]= datosATrabajar->vectorColumna[j];
-			
-				
 			}
 		}
 	}
@@ -160,10 +176,12 @@ if (mayorOMenor == '<'){
 else if (mayorOMenor == '>'){
 	for (i= 0; i < datosATrabajar->numColumnas-2; i++){
 		for (j= 0; j < datosATrabajar->numColumnas-2-i;j++){
+			// En el caso de que sea uno mayor que el otro, se permutan las posiciones
 			if (vectorAOrdenar[j] < vectorAOrdenar[j+1]){
 				temporalStore = vectorAOrdenar[j];
 				vectorAOrdenar[j] = vectorAOrdenar[j+1];
-				vectorAOrdenar[j+1] = temporalStore;
+				vectorAOrdenar[j+1] = temporalStore
+				// Se realiza de manera analoga la permutacion para la copia del vectorFilaFechas en vectorColumna, sirviendo este como buffer
 				datosATrabajar->vectorColumna[j] = datosATrabajar->vectorFila[j];
 				datosATrabajar->vectorFila[j] = datosATrabajar->vectorFila[j+1];
 				datosATrabajar->vectorFila[j+1]= datosATrabajar->vectorColumna[j];
@@ -171,10 +189,12 @@ else if (mayorOMenor == '>'){
 		}
 	}
 }
+// Se saca un error si se pone mal el signo de mayor o menor
 else{
 	printf("That is not one of the two options sugested\n");
 	return;
 }
+// Comprobación de los datos con sus fechas correspondientes 
 printf("After sort: \n");
 for (i= 0; i < datosATrabajar->numColumnas-1; i++){
 	printf("%s  %.6f \n", datosATrabajar->vectorFila[i],vectorAOrdenar[i]);
@@ -182,9 +202,9 @@ for (i= 0; i < datosATrabajar->numColumnas-1; i++){
 } 		
 int main()
 {
+	// Variables para customización del archivo a abrir
 	char inputArchivo[40];
-	int filasAntesDatos;
-	int filasDespuesDatos;
+	int filasAntesDatos, filasDespuesDatos;
 	printf("\nBienvenido/a al indexador de csv del grupo johnny bravo rizz. \n\nEsta aplicación está programada de tal manera que puede leer cualquier csv que se le ofrezca, siempre y cuando\nse ajusten ciertos parametros. \n\nHemos preparado 3 archivos de demostración, por favor elige cual deseas (introduce el numero):\n");
 	printf("1.SALDOS POR FRONTERAS - FÍSICO_01-05-2022_29-05-2023\n");
 	printf("2.ESTRUCTURA DE LA GENERACIÓN POR TECNOLOGÍAS_01-01-2021_31-12-2022\n");
@@ -215,18 +235,16 @@ int main()
 	}
 	printf("\n\n %i %i \n\n", filasAntesDatos, filasDespuesDatos);
     // variables para iniciar la lectura
-    // Aqui se almacena toda la linea, maximo 1024 caracteres (creo que es suficiente)
+    // Aqui se almacena toda la linea, maximo 1024 caracteres
     int sizeBuffer = 1024;
+    // Declaración dinamica del vector buffer que almacenará la fila de la matriz
     char* pruebaDimensiones = (char*)malloc(sizeof(char*)*sizeBuffer);
-    // se llama paco xq estuve probando cosas y se ha quedado asi, si vais a probarlo en vuestro pc
-    // guardad el csv en la misma carpeta q el archivo de c y meteis aqui el codigo q sea
-    // Error por si nos confundimos al escribir el archivo o se mueve o lo que sea
     if (dimensionsScout == NULL)
     {
         printf("Archivo no valido");
         exit(1);
     }
-    // Declaración matriz con dimensiones variables por malloc
+    // Se sacan filas hasta que se alcanza la primera fila con datos
     int columna;
     for (columna = 0; columna < filasAntesDatos + 1; columna++){
         fgets(pruebaDimensiones, 1024, dimensionsScout);
@@ -235,7 +253,7 @@ int main()
     int isCommaInWord = 0;
     int columnNumber = 1;
     int transportVariable = 0;
-    // Coge una fila con datos (la 5) y prueba a ver cuantas columnas de datos hay contando las comas
+    // Despues, se prueba a ver cuantas columnas de datos hay contando las comas
     // Se asume que delante de cada dato hay una coma, sin contar el titulo
     int letra;
     for (letra = 0; pruebaDimensiones[letra] != '\0'; letra++){
@@ -253,22 +271,23 @@ int main()
     int rowNumber = 1;
     // A partir de la linea 5 (donde empiezan los datos) se pone a intentar leer lineas hasta que está vacio y para
     while (fgets(pruebaDimensiones, 1024, dimensionsScout)){
-        rowNumber++;
+        // A cada fila que lee no nula, se le añade uno a rowNumber
+	rowNumber++;
 	int i;
 	for (i = 0; pruebaDimensiones[i] != '\0'; i++){
 		pruebaDimensiones[i] = '\0';
 	}
     }
     if (filasDespuesDatos){
+	// Se aplica esta correccion para omitir las filas posteriores a los datos (suelen contener notas o aclaraciones)
     	rowNumber = rowNumber - filasDespuesDatos;
 	}
     fclose(dimensionsScout);
     free(pruebaDimensiones);
     // declaracion de la matriz con malloc
-    // inicializamos el vector que va a almacenar los punteros a las filas
-    // Esto no le hagais mucho caso, pero está declarando un tensor asiq necesito usar punteros triples
-    // Creo un vector que almacena los punteros de cada uno de los vectores fila
+    // Al ser un tensor (o vector de punteros a vectores de punteros hacia vectores de caracteres) Se tienen que declarar todos esos vectores por separado con su tipo de puntero correspondiente
     char*** matrizDatos = (char***)malloc(sizeof(char**)*rowNumber);
+    // Este tensor es absolutamente variable, y se adapta a los contenidos del archivo 
     printf(" %i %i \n\n", rowNumber, columnNumber);
     int filas = 0;
     for (filas = 0; filas < rowNumber; filas++){
@@ -280,11 +299,10 @@ int main()
             printf("%i", columnas);
             // para cada una de las columnas, creamos un vector que almacena el numero máximo de caracteres
             matrizDatos[filas][columnas] = (char*)malloc(80*sizeof(char));
-            // Esto inicializa cada una de las celdas y les mete un valor para que no estén vacias y pasen cosas feas
-            // Solucion temporal mientras arreglo el memory leak
-            int arregloGuarro;
-	    for (arregloGuarro = 0; arregloGuarro < 80; arregloGuarro++){
-	        matrizDatos[filas][columnas][arregloGuarro] = '\0';
+            // Esto inicializa cada una de las celdas y les mete un valor para que no estén vacias y se corrompa su contenido
+            int inicializacionMatriz;
+	    for (inicializacionMatriz = 0; inicializacionMatriz < 80; inicializacionMatriz++){
+	        matrizDatos[filas][columnas][inicializacionMatriz] = '\0';
 	    }
 	    printf("%c \n",  matrizDatos[filas][columnas][0]);
             }
@@ -307,8 +325,8 @@ int main()
 			elementSeparation = fopen("Archivo3.csv", "r");
 			break;
 	}
-    char element[80] = "";
-    // Variables pseudobooleanas que sirven para comprobar cositas
+    char element[80];
+    // Variables pseudobooleanas que sirven para comprobar cosas dentro del indexado
     int letraElement = 0;  
     int column = 0 ;
     int filaReal = 0; 
@@ -320,14 +338,13 @@ int main()
     for (fila = 0; fila < rowNumber; fila++) {
         column = 0;
         // Se almacena el contenido de la fila en almacenFila
-        fgets(almacenFila, 2048, elementSeparation);
+        fgets(almacenFila, 1024, elementSeparation);
         printf("%s\n", almacenFila);
         letraElement = 0; 
         letra = 0;
         // Iteramos hasta el final de la linea (hasta que sale \0)
         for (letra = 0; almacenFila[letra] != '\0'; letra++){
-            // si hay una doble coma, se considera que estás dentro de un decimal y la coma de dentro no la interpreta
-            // como separación de elementos sino como coma decimal
+            // si hay una doble coma, se considera que estás dentro de un decimal y la coma de dentro no la interpreta como separación de elementos sino como coma decimal
             if (almacenFila[letra] == '"'){
             floatElement = !floatElement;
             continue;
@@ -337,8 +354,9 @@ int main()
                 // Se ejecuta si pilla una coma fuera de un decimal
                 if (fila >= filasAntesDatos){
                     element[letraElement] = '\0';
-                    // a partir de la fila 5 va almacenando cosas en las celdas
-                    filaReal = fila - filasAntesDatos;
+                    // a partir de la fila correspondiente a filasAntesDatos, se va almacenando cosas en las celdas
+                    // Se corrige la fila para corresponder con la posicion en la matriz
+		    filaReal = fila - filasAntesDatos;
                     int a = 0;
                     for (a = 0; element[a] != '\0'; a++){
                         matrizDatos[filaReal][column][a] = element[a];
@@ -347,18 +365,6 @@ int main()
                     printf(" %i %i \nsuccessful\n", filaReal, column);
                     column++;
                     }
-                // Esto a veces hace falta a veces no, para la version final si no se corrompe nada lo quitamos
-                // Es un fix xq a veces el ultimo término salia raro y ya no pasa, pero porsiaca lo dejo anotado
-                /*
-                for (int i = 0; element[i] != '\0'; i++) {
-                    element[i] = '\0';
-
-                    for (int j = 0; j < 2; j++){
-                        element[i + j] = '\0';
-                        }
-
-                    }
-                */
                 letraElement = 0;
             }
             else{
@@ -368,16 +374,17 @@ int main()
                 printf("%s\n", element);
                 continue;
                 }
+	// Vaciado del buffer element para evitar traspasos de datos erroneos
             int b = 0;
             for (b = 0; element[b] != '\0'; b++){
                 element[b] = '\0';
             }
         }
         if (almacenFila[letra] != ','){
-                       // Si no es una coma almacena el digito en element
+            // Si no es una coma almacena el digito en element
             // element es un array que sirve como buffer para el contenido de las celdas, cuando se transfiere se vacia
             if (column == 0){
-            // Esto es un poco overkill xq no hay tantos acentos pero quiero programar algo que funcione para todos los programas asiq mimimi
+            // Esto es un poco overkill xq no hay tantos acentos pero quiero programar algo que funcione para todos los programas 
 	            char fixedChar;
 		    switch (almacenFila[letra])
 		    {
@@ -421,11 +428,13 @@ int main()
 				fixedChar = almacenFila[letra];
 				break;
 		}
+		// La corrección se aplica unicamente en la primera columna de cada fila
 		element[letraElement] = fixedChar;
 	}
 		else{
 		    element[letraElement] = almacenFila[letra];
 		}
+		// contador de la letra que se está llenando
 		letraElement++;
 		printf("%s\n", element);
 		}
@@ -448,6 +457,7 @@ int main()
 
 fclose(dimensionsScout);    
 // <---------------- PREPARACIÓN DE LOS DATOS PARA USO ------------------------->
+// Comprobación de que los datos se han guardado bien en la matriz
 rowNumber -= filasAntesDatos;
 int prueba2, prueba = 0;
 for (prueba2 = 0; prueba2 < rowNumber; prueba2++){
@@ -457,15 +467,16 @@ for (prueba2 = 0; prueba2 < rowNumber; prueba2++){
     }
 printf("\n\n");
 }
-// Declaramos una estructura donde meteremos punteros a una serie de vectores (ir al principio del archivo para explicación)
+// Declaramos una estructura donde meteremos informacion util sobre la matrizzz
 struct datosMatriz datosATrabajar;
+// Almacenamos la matriz misma y sus dimensiones dentro de la estructura
 datosATrabajar.matriz = matrizDatos;
 datosATrabajar.numColumnas = columnNumber;
 datosATrabajar.numFilas = rowNumber;
 // Declaramos los vectores en funcion del tamaño de la tabla con malloc
 // El vector vectorColumnaTitulos almacenará los titulos de las diferentes filas en un vector char
 datosATrabajar.vectorColumnaTitulos = (char**)malloc(sizeof(char*)*rowNumber);
-// El vector vectorColumna se llenará con datos double de la columna puntual con la que trabajemos gracias a la funcion getVectorByNum
+// El vector vectorColumna se llenará con datos char y servirá para ayudar con calculos y manipulación de datos
 datosATrabajar.vectorColumna = (char**)malloc(sizeof(char*)*(rowNumber-1));
 int tituloFila = 0;
 for (tituloFila = 0; tituloFila < rowNumber; tituloFila++){
@@ -482,11 +493,13 @@ for (tituloFila = 0; tituloFila < rowNumber; tituloFila++){
 };
 // El vector vectorFilaFechas almacenará la fila de fechas en un vector char
 datosATrabajar.vectorFilaFechas = (char**)malloc(sizeof(char*)*(columnNumber-1));
+// El vector vectorFila servirá principalmente de buffer para datos
 datosATrabajar.vectorFila = (char**)malloc(sizeof(char*)*(columnNumber-1));
 int fechaColumna = 1;
 for (fechaColumna = 1; fechaColumna < columnNumber; fechaColumna++){
     datosATrabajar.vectorFilaFechas[fechaColumna - 1] = (char*)malloc(sizeof(char)*80);
     int letra = 0;
+// Vaciamos los vectores para evitar corrupcion de los datos
     for (letra = 0; letra < 80; letra++){
         datosATrabajar.vectorFilaFechas[fechaColumna - 1][letra] = '\0';
     }
@@ -508,54 +521,55 @@ getVectorByName(&datosATrabajar, inputString, vectorFila);
 sortVector(&datosATrabajar, vectorFila, '>');	
 }
 */    
-/* NOTA IMPORTANTE SOBRE EL USO DE LOS VECTORES DE LA MATRIZ:
-He cambiado como se sacan los vectores de la matriz para que sea mas sencillo de utilizar
-la funcion getVectorByName simplemente tiene el input del vector y la fila/columna que quereis (detecta sola si es una fila o una columna)
-lo unico tened cuidado con el tema del vector, la funcion no puede detectar si pone un elemento fuera de un vector, asi que asume que quereis o una fila 
-o una columna entera. Si pedis una fila y el vector es mas pequeño que el numero de columnas, va a dar errores
-He dejado arriba un ejemplo de cómo se puede implementar el uso de la funcion
 
-*/
-
-// INICIO DEL MENÚ DE OPCIONES
+// <---------------------------------------------------- INICIO DEL MENÚ DE OPCIONES ------------------------------------------------------->
+// Variables para los inputs
 int opcion1 = 0;
 int opcion;
 int opcion2; 
 char inputPeriodSelect[40], inputDataSelect[40], inputOperationSelect[40], inputFuncionalidadSelect[40], inputAnual[40];
+// Estos vectores servirán para almacenar las funcionalidades de nuestro grupo de manera clara y concisa
 int numeroTareas = 6;
 char vectorFuncionalidades[6][60] = {"Media","Varianza","Valor maximo y minimo", "Estimaciones futuras","Grafico","energia total"};
+// Inicialización del puntero hacia el vector que mas tarde será asignado con malloc 
 double* vectorFila;
 while(1)
 {
-	opcion1 = 0;
-	opcion2 = 1;
-	printf("\n%s\n", inputDataSelect);
-	printf("Bienvenido al menú del equip 3232!\n");
-	printf("Cómo deseas trabajar con los datos? \n");
-	printf("1.Intervalo Mensual 3.Total 4.Dato Exacto 5.Fecha concreta (Escribe el numero)\n");
-	fgets(inputPeriodSelect, sizeof(inputPeriodSelect), stdin);
+    // Reinicio de las variables y selección de la manera que se desean tratar los datos
+    opcion1 = 0;
+    opcion2 = 1;
+    printf("\n%s\n", inputDataSelect);
+    printf("Bienvenido al menú del equip 3232!\n");
+    printf("Cómo deseas trabajar con los datos? \n");
+    printf("1.Intervalo Mensual 2.Total 3.Dato Exacto 4.Fecha concreta (Escribe el numero)\n");
+    fgets(inputPeriodSelect, sizeof(inputPeriodSelect), stdin);
     inputPeriodSelect[strcspn(inputPeriodSelect, "\n")] = '\0';
+    // Variables de input posteriores y conversion del input de char a int
     char* inputYear[40], inputYearInicio[40], inputYearFinal[40];
     int yearInicio, yearFinal, sizeIntervalo;
-	int opcion = inputPeriodSelect[0] - '0';
+    int opcion = inputPeriodSelect[0] - '0';
     switch(opcion){
     	case 1:
     	{
     		char inputYearInicio[40], inputYearFinal[40]; 
-			// Intervalo mensual
+		// Intervalo mensual
     		printf("\nIntroduce el mes inicial:\n ");
     		int mes;
+		// Se muestran todas las opciones para que elija el usuario
     		for (mes = 1; mes < (datosATrabajar.numColumnas - 1); mes++){
 				printf("%i. %s ",mes,datosATrabajar.vectorFilaFechas[mes]);
 				if ((mes-1)%5 == 0 && (mes-1) ){
 					printf("\n");
 				}
 			}
+		printf("\n");
     		fgets(inputYearInicio, sizeof(inputYearInicio), stdin);
     		inputYearInicio[strcspn(inputYearInicio, "\n")] = '\0';
+		// Se obtiene la posicion de la fecha inicial
     		yearInicio = getNumberFromName(&datosATrabajar, inputYearInicio)/29;
     		printf("\nIntroduce el mes final: \n");
     		int mes2;
+		// Se vuelven a mostgrar todas las opciones para que elija el usuario
     		for (mes2 = 1; mes2 < (datosATrabajar.numColumnas - 1); mes2++){
 				printf("%i. %s ",mes2,datosATrabajar.vectorFilaFechas[mes2]);
 				if ((mes2-1)%5 == 0 && (mes2-1) ){
@@ -563,28 +577,32 @@ while(1)
 				}
 			}
     		printf("\n");
-			fgets(inputYearFinal, sizeof(inputYearFinal), stdin);
+		fgets(inputYearFinal, sizeof(inputYearFinal), stdin);
     		inputYearFinal[strcspn(inputYearFinal, "\n")] = '\0';
-			yearFinal = getNumberFromName(&datosATrabajar, inputYearFinal)/29;
-			sizeIntervalo = yearFinal - yearInicio + 1;
-			printf("\n\n %i \n\n", sizeIntervalo);
-			datosATrabajar.longitudIntervalo = sizeIntervalo;
-			if (sizeIntervalo <= 1 || !yearFinal || !yearInicio){
-				printf("Las fechas no son las correctas\n ");
-				continue;
+		// Se obtiene la posicion de la fecha final
+		yearFinal = getNumberFromName(&datosATrabajar, inputYearFinal)/29;
+		// Se calcula el tamaño del vector intervalo y se almacena en la estructura
+		sizeIntervalo = yearFinal - yearInicio + 1;
+		datosATrabajar.longitudIntervalo = sizeIntervalo;
+		if (sizeIntervalo <= 1 || !yearFinal || !yearInicio){
+			// Error si alguna de las fechas está mal hecha o el intervalo está al revés
+			printf("Las fechas no son las correctas\n ");
+			continue;
 			}
 			break;
 		}
-    	case 3:
+    	case 2:
     	{
-    		//Total
+    		// Se asume un intervalo total y se almacena en la estructura
     		sizeIntervalo = datosATrabajar.numColumnas - 1;
     		datosATrabajar.longitudIntervalo = sizeIntervalo;
     		break;
 		}
-    	case 4:
+    	case 3:
     	{
+		// Se pide la fila que desea
     		printf("\nIntroduce la fila deseada: \n");
+		// Se muestran todas las filas disponibles
 	    	int tipoElectricidad2;
 			for (tipoElectricidad2 = 1; tipoElectricidad2 < datosATrabajar.numFilas; tipoElectricidad2++){
 				printf("%i. %s ",tipoElectricidad2,datosATrabajar.vectorColumnaTitulos[tipoElectricidad2]);
@@ -592,27 +610,31 @@ while(1)
 					printf("\n");
 				}
 			}
-			printf("\n");
+		printf("\n");
 	    	fgets(inputDataSelect, sizeof(inputDataSelect), stdin);
-		    inputDataSelect[strcspn(inputDataSelect, "\n")] = '\0';
+		inputDataSelect[strcspn(inputDataSelect, "\n")] = '\0';
     		printf("\nIntroduce the date desired: \n");
-			int mes;
+		int mes;
     		for (mes = 1; mes < (datosATrabajar.numColumnas - 1); mes++){
 				printf("%i. %s ",mes,datosATrabajar.vectorFilaFechas[mes]);
 				if ((mes-1)%5 == 0 && (mes-1) ){
 					printf("\n");
 				}
 			}
-			printf("\n");
-			fgets(inputYearInicio, sizeof(inputYearInicio), stdin);
+		printf("\n");
+		fgets(inputYearInicio, sizeof(inputYearInicio), stdin);
     		inputYearInicio[strcspn(inputYearInicio, "\n")] = '\0';
-    		double validacionExacto = getExactValueFromMatrix(&datosATrabajar,inputDataSelect,inputYearInicio);
+    		// Se almacenan ambos imputs en la funcion y se espera el return
+		
+		double validacionExacto = getExactValueFromMatrix(&datosATrabajar,inputDataSelect,inputYearInicio);
     		if (validacionExacto){
-				printf("\nOn %s, there were %.6fGWh produced of type %s",inputYearInicio, getExactValueFromMatrix(&datosATrabajar,inputDataSelect,inputYearInicio),inputDataSelect);
+				printf("\nEl valor deseado de la columna %s y fila %s es %.6f",inputYearInicio,inputDataSelect ,getExactValueFromMatrix(&datosATrabajar,inputDataSelect,inputYearInicio));
 				}
 			else{
+			// Si el valor es 0, algo ha salido mal
 				printf("One of the two parameters is wrong");
 			}
+			// Reinicio de las variables input
 			int i;
 			for (i = 0; i < 40; i++){
 				inputDataSelect[i] = '\0';
@@ -620,7 +642,8 @@ while(1)
 			}
 			continue;
 		}
-		case 5:{
+		case 4:{
+			// Se pide la fecha pedida, se asume valor de intervalo 1 y se almacena el tamaño del vector en la estructura
 			printf("\nIntroduce the date desired: ");    		
     		fgets(inputYearInicio, sizeof(inputYearInicio), stdin);
     		inputYearInicio[strcspn(inputYearInicio, "\n")] = '\0';
@@ -629,9 +652,10 @@ while(1)
 			break;
 		}
 	}
-	// Mete aqui lo que haga falta
 	if(sizeIntervalo != 1){
+		// Solo se pide fila si no se ha elegido una fecha con anterioridad
 		printf("elige una de las siguientes filas con la que quieras trabajar (Escribe el nombre): (Para volver atras, introduce Exit) \n");
+		// se enseñan todas las posibles opciones
 		int tipoElectricidad;
 		for (tipoElectricidad = 1; tipoElectricidad < datosATrabajar.numFilas; tipoElectricidad++){
 			printf("%i. %s ",tipoElectricidad,datosATrabajar.vectorColumnaTitulos[tipoElectricidad]);
@@ -641,7 +665,8 @@ while(1)
 		}
 		printf("\n");
 		fgets(inputDataSelect, sizeof(inputDataSelect), stdin);
-	    inputDataSelect[strcspn(inputDataSelect, "\n")] = '\0';
+	        inputDataSelect[strcspn(inputDataSelect, "\n")] = '\0';
+		// Si se escribe exit, se vuelve al principio
 		if (inputDataSelect[0] == 'E' && inputDataSelect[1] == 'x' && inputDataSelect[2] == 'i' && inputDataSelect[3] == 't'){
 			int i;
 			for (i = 0; i < 40; i++){
@@ -650,16 +675,18 @@ while(1)
 			continue;
 		}
 		if (sizeIntervalo != datosATrabajar.numColumnas - 1){
+		// Se ejecuta la funcion getSpliceOfVector si la longitud no es igual ni a la total ni a 1
 		vectorFila = (double*)malloc(sizeof(double)*sizeIntervalo);
 		opcion1 = getSpliceOfVector(&datosATrabajar, inputYearInicio, inputYearFinal, inputDataSelect, vectorFila);
 		}
 		else{
-		printf("\nHE HECHO LO QUE DEBERIA\n");
+		// Si la longitud es igual a la total, se ejecuta getVectorByName
 		vectorFila = (double*)malloc(sizeof(double)*(datosATrabajar.numColumnas - 1));
 		opcion1 = getVectorByName(&datosATrabajar, inputDataSelect, vectorFila);
 		}
 		if(!opcion1)
 		{
+			// En caso de que no se haya encontrado un match con el input de la fila, se manda un error y se vuelve al principio
 			printf("\n ese tipo de energia no es valido, intenta otra vez");
 			int i;
 			for (i = 0; i < 40; i++){
@@ -669,6 +696,7 @@ while(1)
 		}
 	}
 	else{
+	// Esto se ejecuta si se ha pedido una fecha, y se prueba si se encuentra match
 	vectorFila = (double*)malloc(sizeof(double)*(datosATrabajar.numFilas)); 
 	opcion1 = getVectorByName(&datosATrabajar, inputYearInicio, vectorFila);
 	if (!opcion1){
@@ -679,20 +707,23 @@ while(1)
 	while(opcion2)
 	{ 
 		printf("\n elige una tarea(Escribe el numero): (Para volver atras, escribe Back) \n");
-    	int tarea;
+    		int tarea;
+		// Se muestran todos los contenidos de vectorFuncionalidades
 		for (tarea = 1; tarea <= numeroTareas; tarea++){
 			printf("%i. %s ",tarea,vectorFuncionalidades[tarea-1]);
 			if ((tarea-1)%5 == 0 && (tarea-1) ){
 				printf("\n");
 			}
 		};
+		// Se ordena por fecha solo cuando se ha sacado un vector de fila
 		if (sizeIntervalo != 1){
 			printf("%i. Ordenar vector", numeroTareas + 1);
 		}
 		printf("\n");
 		fgets(inputFuncionalidadSelect, sizeof(inputFuncionalidadSelect), stdin);
-    	inputFuncionalidadSelect[strcspn(inputFuncionalidadSelect, "\n")] = '\0';
-    	if (inputFuncionalidadSelect[0] == 'B' && inputFuncionalidadSelect[1] == 'a' && inputFuncionalidadSelect[2] == 'c' && inputFuncionalidadSelect[3] == 'k'){
+    		inputFuncionalidadSelect[strcspn(inputFuncionalidadSelect, "\n")] = '\0';
+    		// En el caso en el que se escriba Back, se vuelve al paso anterior
+		if (inputFuncionalidadSelect[0] == 'B' && inputFuncionalidadSelect[1] == 'a' && inputFuncionalidadSelect[2] == 'c' && inputFuncionalidadSelect[3] == 'k'){
 		int i;
 		for (i = 0; i < 40; i++){
 			inputDataSelect[i] = '\0';
@@ -702,11 +733,13 @@ while(1)
 		}
     	int opcion2 = inputFuncionalidadSelect[0] - '0';
 		if(opcion2> numeroTareas|| opcion2<1)
+		// Si se ha seleccionado una cantidad erronea, se vuelve al principio
     	{
 	    	printf("\n Esta opcion no es valida, por favor vuelve a intentarlo");
 	    	continue;
 		}
 		else{
+			// Switch de las funcionalidades del programa
 		  		switch(opcion2)
 	    		{
 	   	        	case 1:
