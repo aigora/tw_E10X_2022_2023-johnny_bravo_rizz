@@ -953,6 +953,7 @@ void imprimirVectorEnArchivo(struct datosMatriz *datosATrabajar, double* Vector,
     
     fclose(archivo)
 //cerramos el archivo
+	       printf("\nEl vector se ha escrito correctamente en el archivo.\n");
 	//informamos que se ha impreso correctamente el vector
 }
 
