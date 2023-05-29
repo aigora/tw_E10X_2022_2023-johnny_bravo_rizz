@@ -766,7 +766,7 @@ return 0;
 }
 
 // <---------------------------------------- FIN DEL ARCHIVO MAIN ---------------------------------------------------->
-float media(struct datosMatriz *datosATrabajar, double* Vector)
+float media(struct datosMatriz *datosATrabajar, double* Vector)//funcion calculo de una media
 {
   int i;/*valor unico*/
   float j = Vector[0], resultado;/*sumatorio de los valores*/
@@ -774,10 +774,9 @@ float media(struct datosMatriz *datosATrabajar, double* Vector)
   {
 	j=j+Vector[i];
   }
-  resultado =(float)(j)/(float)(datosATrabajar->longitudIntervalo);/*n es el tamaño del vector , osea , el numero de valores*/
+  resultado =(float)(j)/(float)(datosATrabajar->longitudIntervalo);/*n es el tamaño del vector , osea , el numero de valores, se divide entre el sumatorio para obtener resultado , oesa la media*/
   return resultado;
 }
-//maximos y minimos no son necesarios ya que el codigo del baselga ya hace esa funcion pero hay que implementarla en el menu
 
 float varianza(struct datosMatriz *datosATrabajar, double* Vector)
 {
@@ -786,9 +785,9 @@ float varianza(struct datosMatriz *datosATrabajar, double* Vector)
   float resultado , sum=0;
   for(i=0 ; i<datosATrabajar->longitudIntervalo ; i++)
   {
-    sum = sum + ((Vector[i]-media(datosATrabajar, Vector)) * (Vector[i]-media(datosATrabajar, Vector)));
+    sum = sum + ((Vector[i]-media(datosATrabajar, Vector)) * (Vector[i]-media(datosATrabajar, Vector)));//sumatorio del valor menos la media al cuadrado
   }
-  resultado = sum / datosATrabajar->longitudIntervalo;
+  resultado = sum / datosATrabajar->longitudIntervalo;//se divide lo anterior para conseguir resultado osea la varianza desesada
   return resultado;
 }
 
@@ -799,7 +798,7 @@ float engtot(struct datosMatriz *datosATrabajar,double* Vector) //energia total 
   float resultado = Vector[0];
   for(i=1 ; i<datosATrabajar->longitudIntervalo ; i++)
   {
-    resultado = resultado +  Vector[i];
+    resultado = resultado +  Vector[i]; //simplemente un sumatorio de la energia para encontrar la energia total
   }
   return resultado;
 }
@@ -810,19 +809,19 @@ void regresion(struct datosMatriz *datosATrabajar, double* Vector)//calcula la r
   int r=0;
   for(r=0; r<datosATrabajar->longitudIntervalo; r++)
   {
-  	vectorFecha[r]=r+1;
+  	vectorFecha[r]=r+1; //aqui se crea el vector de la fecha , cada nuevo valor de r corresponde a un mes , se numera los meses (mas 1 , 2 , ...) para facilitar los calculos , mas tarde se usa en otros calculos asique por conveniencia evitamos el valor 0 ya que no se puede dividir por cero
   }
   float b, x;
   //aqui calculo la covarianza poruque por ahora solo la usamos en esta funcion y es complicado hacerlo con una funcion ya que tiene dos vectores, aqui uno de esos vectores no es variable asique es mas facil
   int i;
-  float covarianza , sum=0;
+  float covarianza , sum=0;//la covarianza no tiene funcion porque solo se usa aqui , porloque hacemos el calculo de la covarianza para obtener la recta de regresion
   for(i=0 ; i<datosATrabajar->longitudIntervalo ; i++)
   {
     sum = sum + ((Vector[i]-media(datosATrabajar, Vector)) * (vectorFecha[i]-media1(vectorFecha)));
   }
   covarianza = sum / datosATrabajar->longitudIntervalo; 
   
-  b = (covarianza)/(varianza1(vectorFecha)); // da error vector fecha por alguna razon
+  b = (covarianza)/(varianza1(vectorFecha)); 
   printf("La recta de regresion tiene la forma : y= %f + %f * (x-%f) , ahora , dame un numero entero positivo , ese numero representara la cantidad de meses despues del ultimo mes registrado y hara una estimacion para ese mes. Pero cuanto mayor sea el numero , mayor sera el error\n", media(datosATrabajar, Vector), b, media1(vectorFecha));
   int num_meses;
   scanf("%i",&num_meses);
@@ -830,10 +829,10 @@ void regresion(struct datosMatriz *datosATrabajar, double* Vector)//calcula la r
   
   estimacion = media(datosATrabajar, Vector) + b * (((datosATrabajar->longitudIntervalo)+num_meses)-media(datosATrabajar, vectorFecha));  
   error = covarianza / (varianza(datosATrabajar, Vector) * varianza1(vectorFecha));
-  printf("Podemos hacer una estimacion para los primeros meses despues de los medidos: despues de %i meses , estimamos:%f . El coeficiente de correlacion lineal de estos datos es: %f \n",num_meses, estimacion, error);
+  printf("Podemos hacer una estimacion para los primeros meses despues de los medidos: despues de %i meses , estimamos:%f . El coeficiente de correlacion lineal (precision) de estos datos es: %f \n",num_meses, estimacion, error);
 }
 
-float media1(double* Vector) //esto es igual que la funcion media pero con un vector cualquiera
+float media1(double* Vector) //esto es igual que la funcion media pero con un vector cualquiera, es decir un vector del cual no conocemos el tamaño (por lo que tenemos que calcular este)
 {
   int tamanio;
   tamanio = sizeof(Vector) / sizeof(Vector[0]);
@@ -847,7 +846,7 @@ float media1(double* Vector) //esto es igual que la funcion media pero con un ve
   return resultado;
 }
 
-float varianza1(double* Vector)
+float varianza1(double* Vector)//varianza1 tiene la misma diferencia con varianza que la funcion media1 con media
 {
   int tamanio;
   tamanio = sizeof(Vector) / sizeof(Vector[0]);
