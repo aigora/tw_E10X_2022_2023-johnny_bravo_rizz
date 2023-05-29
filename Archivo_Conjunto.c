@@ -723,7 +723,7 @@ while(1)
           			case 3:
           			{
           				// maximo y minimo
-          	    		double maximo, minimo;
+          				double maximo, minimo;
           				obtenerMaximoMinimo(&datosATrabajar, vectorFila, &maximo, &minimo);
           	    		printf("el maximo es:%f y el minimo es:%f \n",maximo,minimo);
            		  		break;
@@ -739,12 +739,27 @@ while(1)
 	    				// GRAFICO
 	     	    		grafica(&datosATrabajar,vectorFila);
 						break;
+					}
+						case 6:
+	    	    	{
+	    	    		//varianza
+	    	    	//	regresion(&datosATrabajar,vectorFila);
+	       				break;
+	       			}
+	       				case 7:
+	    	    	{
+	    	    	//recta de regresion
+	    	    	//	regresion(&datosATrabajar,vectorFila);
+	       				break;
+	       			}
+	       				case 8:
+	    	    	{
+	    	    	//energia total
+	    	    		//regresion(&datosATrabajar,vectorFila);
+	       				break;
 	         		}
-	         		case 6:
+	         		case 9:
 	    			{
-					//varianza
-					//recta de regresion
-					//energia total
 	    				if (datosATrabajar.longitudIntervalo == 1){
 	    					printf("Choose another option\n");				 
 							continue;
