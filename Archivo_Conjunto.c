@@ -16,11 +16,6 @@ struct datosMatriz{
     char **vectorColumna;
     int longitudIntervalo;
 };
-struct datosCorreccion{
-	int filasAntesDatos;
-	int filasDespuesDatos;
-
-};
 
 float media(struct datosMatriz *datosATrabajar, double* Vector);
 float media1(double* Vector);
@@ -29,7 +24,6 @@ float varianza1(double* Vector);
 float engtot(struct datosMatriz *datosATrabajar, double* Vector);
 void regresion(struct datosMatriz *datosATrabajar, double* Vector);
 void grafica(struct datosMatriz *datosATrabajar, double* Vector);
-void imprimirVectorEnArchivo(struct datosMatriz *datosATrabajar, double* Vector, const char* nombreArchivo);
 // FUNCION PARA SACAR SOLO UN CACHO DE LA MATRIZ
 int getSpliceOfVector (struct datosMatriz *datosATrabajar, char* inicioSplice, char* finSplice, char* filaSpliced, double* vectorSpliced){
 	int fechaInicio = getNumberFromName(datosATrabajar, inicioSplice)/29;
@@ -129,7 +123,6 @@ if (columnaDeseada){
 printf("Could not get exact value from matrix\n");
 return 0;
 }
-// FUNCION PARA ORDENAR UN VECTOR DE MENOR A MAYOR (<) O DE MAYOR A MENOR (>)
 void sortVector (struct datosMatriz *datosATrabajar, double* vectorAOrdenar, char mayorOMenor)
 {
 // Esta es una implementación adaptada a nosotros de un algortimo que ya existe llamado BubleSort
@@ -184,7 +177,7 @@ printf("After sort: \n");
 for (i= 0; i < datosATrabajar->numColumnas-1; i++){
 	printf("%s  %.6f \n", datosATrabajar->vectorFila[i],vectorAOrdenar[i]);
 }
-} 		
+} 			
 int main()
 {
 	char inputArchivo[40];
