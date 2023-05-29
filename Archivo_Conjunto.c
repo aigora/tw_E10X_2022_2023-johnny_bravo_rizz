@@ -527,8 +527,8 @@ int opcion1 = 0;
 int opcion;
 int opcion2; 
 char inputPeriodSelect[40], inputDataSelect[40], inputOperationSelect[40], inputFuncionalidadSelect[40], inputAnual[40];
-int numeroTareas = 6;
-char vectorFuncionalidades[6][60] = {"Media","Varianza","Valor maximo y minimo", "Estimaciones futuras","Ordenación","Grafico"};
+int numeroTareas = 5;
+char vectorFuncionalidades[5][60] = {"Media","Varianza","Valor maximo y minimo", "Estimaciones futuras","Grafico"};
 double* vectorFila;
 while(1)
 {
@@ -654,11 +654,12 @@ while(1)
 			}
 			continue;
 		}
-		if (sizeIntervalo != 24){
+		if (sizeIntervalo != datosATrabajar.numColumnas - 1){
 		vectorFila = (double*)malloc(sizeof(double)*sizeIntervalo);
 		opcion1 = getSpliceOfVector(&datosATrabajar, inputYearInicio, inputYearFinal, inputDataSelect, vectorFila);
 		}
 		else{
+		printf("\nHE HECHO LO QUE DEBERIA\n");
 		vectorFila = (double*)malloc(sizeof(double)*(datosATrabajar.numColumnas - 1));
 		opcion1 = getVectorByName(&datosATrabajar, inputDataSelect, vectorFila);
 		}
@@ -689,6 +690,9 @@ while(1)
 			if ((tarea-1)%5 == 0 && (tarea-1) ){
 				printf("\n");
 			}
+		};
+		if (sizeIntervalo != 1){
+			printf("%i. Ordenar vector", numeroTareas);
 		}
 		printf("\n");
 		fgets(inputFuncionalidadSelect, sizeof(inputFuncionalidadSelect), stdin);
