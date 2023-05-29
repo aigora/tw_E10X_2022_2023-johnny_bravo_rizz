@@ -180,7 +180,7 @@ else if (mayorOMenor == '>'){
 			if (vectorAOrdenar[j] < vectorAOrdenar[j+1]){
 				temporalStore = vectorAOrdenar[j];
 				vectorAOrdenar[j] = vectorAOrdenar[j+1];
-				vectorAOrdenar[j+1] = temporalStore
+				vectorAOrdenar[j+1] = temporalStore;
 				// Se realiza de manera analoga la permutacion para la copia del vectorFilaFechas en vectorColumna, sirviendo este como buffer
 				datosATrabajar->vectorColumna[j] = datosATrabajar->vectorFila[j];
 				datosATrabajar->vectorFila[j] = datosATrabajar->vectorFila[j+1];
