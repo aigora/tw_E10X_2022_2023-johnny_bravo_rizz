@@ -232,7 +232,7 @@ int main()
 			printf("Not one of the options, please restart the program");
 			return 0;
 	}
-	printf("\n\n %i %i \n\n", filasAntesDatos, filasDespuesDatos);
+
     // variables para iniciar la lectura
     // Aqui se almacena toda la linea, maximo 1024 caracteres
     int sizeBuffer = 1024;
@@ -443,16 +443,7 @@ int main()
 
 fclose(dimensionsScout);    
 // <---------------- PREPARACIÓN DE LOS DATOS PARA USO ------------------------->
-// Comprobación de que los datos se han guardado bien en la matriz
 rowNumber -= filasAntesDatos;
-int prueba2, prueba = 0;
-for (prueba2 = 0; prueba2 < rowNumber; prueba2++){
-    for (prueba = 0; prueba < columnNumber; prueba++){
-        printf("%s", matrizDatos[prueba2][prueba]);
-        printf(" %i %i\n", prueba2,prueba);
-    }
-printf("\n\n");
-}
 // Declaramos una estructura donde meteremos informacion util sobre la matrizzz
 struct datosMatriz datosATrabajar;
 // Almacenamos la matriz misma y sus dimensiones dentro de la estructura
@@ -522,10 +513,9 @@ while(1)
     // Reinicio de las variables y selección de la manera que se desean tratar los datos
     opcion1 = 0;
     opcion2 = 1;
-    printf("\n%s\n", inputDataSelect);
-    printf("Bienvenido al menú del equip 3232!\n");
+    printf("\n\nBienvenido al menú del equip 3232!\n");
     printf("Cómo deseas trabajar con los datos? \n");
-    printf("1.Intervalo Mensual 2.Total 3.Dato Exacto 4.Fecha concreta (Escribe el numero)\n");
+    printf("1.Intervalo Mensual 2.Total 3.Dato Exacto 4.Fecha concreta 5.Imprimir todo el fichero(Escribe el numero)\n");
     fgets(inputPeriodSelect, sizeof(inputPeriodSelect), stdin);
     inputPeriodSelect[strcspn(inputPeriodSelect, "\n")] = '\0';
     // Variables de input posteriores y conversion del input de char a int
@@ -633,6 +623,19 @@ while(1)
     		inputYearInicio[strcspn(inputYearInicio, "\n")] = '\0';
     		sizeIntervalo = 1;
     		datosATrabajar.longitudIntervalo = datosATrabajar.numFilas-2;
+			break;
+		}
+		case 5:{
+		int prueba2=0;
+		int prueba = 0;
+		printf("\n");
+		for (prueba2 = 0; prueba2 < rowNumber; prueba2++){
+		    for (prueba = 0; prueba < columnNumber; prueba++){
+		        printf("%s", matrizDatos[prueba2][prueba]);
+		        printf(" %i %i\n", prueba2,prueba);
+		    }
+		printf("\n\n");
+		}
 			break;
 		}
 	}
