@@ -756,7 +756,7 @@ return 0;
 float media(struct datosMatriz *datosATrabajar, double* Vector)
 {
   int i;/*valor unico*/
-  float j = Vector[0], resultado;/*sumatorio de los valores*/
+  float j = 0, resultado;/*sumatorio de los valores*/
   for(i=0; i<datosATrabajar->numColumnas ; i++)
   {
 	j=j+Vector[i];
