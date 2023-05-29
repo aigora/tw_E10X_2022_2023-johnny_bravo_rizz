@@ -732,7 +732,7 @@ while(1)
 		break;
 		}
     	int opcion2 = inputFuncionalidadSelect[0] - '0';
-		if(opcion2> numeroTareas|| opcion2<1)
+		if(opcion2> numeroTareas + 2|| opcion2<1)
 		// Si se ha seleccionado una cantidad erronea, se vuelve al principio
     	{
 	    	printf("\n Esta opcion no es valida, por favor vuelve a intentarlo");
