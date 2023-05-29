@@ -755,7 +755,8 @@ while(1)
 	       				case 8:
 	    	    	{
 	    	    	//energia total
-	    	    		//regresion(&datosATrabajar,vectorFila);
+				printf("la energia total es:%f",engtot(&datosATrabajar,vectorFila));
+	    	    		
 	       				break;
 	         		}
 	         		case 9:
