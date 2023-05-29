@@ -14,7 +14,14 @@ struct datosMatriz{
     char **vectorColumnaTitulos;
     char **vectorFila;
     char **vectorColumna;
+    int longitudIntervalo;
 };
+struct datosCorreccion{
+	int filasAntesDatos;
+	int filasDespuesDatos;
+
+};
+
 float media(struct datosMatriz *datosATrabajar, double* Vector);
 float media1(double* Vector);
 float varianza(struct datosMatriz *datosATrabajar, double* Vector);
@@ -22,7 +29,6 @@ float varianza1(double* Vector);
 float engtot(struct datosMatriz *datosATrabajar, double* Vector);
 void regresion(struct datosMatriz *datosATrabajar, double* Vector);
 void grafica(struct datosMatriz *datosATrabajar, double* Vector);
-void imprimirVectorEnArchivo(struct datosMatriz *datosATrabajar, double* Vector, const char* nombreArchivo);
 // FUNCION PARA SACAR SOLO UN CACHO DE LA MATRIZ
 int getSpliceOfVector (struct datosMatriz *datosATrabajar, char* inicioSplice, char* finSplice, char* filaSpliced, double* vectorSpliced){
 	int fechaInicio = getNumberFromName(datosATrabajar, inicioSplice)/29;
@@ -177,9 +183,12 @@ printf("After sort: \n");
 for (i= 0; i < datosATrabajar->numColumnas-1; i++){
 	printf("%s  %.6f \n", datosATrabajar->vectorFila[i],vectorAOrdenar[i]);
 }
-} 			
+} 		
 int main()
 {
+	// VALORES DE AJUSTE DEPENDIENTES DE ARCHIVO DE ORIGEN
+	int filasAntesDatos = 4;
+	int filasDespuesDatos = 0;
     // variables para iniciar la lectura
     FILE *dimensionsScout;
     // Aqui se almacena toda la linea, maximo 1024 caracteres (creo que es suficiente)
@@ -187,7 +196,7 @@ int main()
     char* pruebaDimensiones = (char*)malloc(sizeof(char*)*sizeBuffer);
     // se llama paco xq estuve probando cosas y se ha quedado asi, si vais a probarlo en vuestro pc
     // guardad el csv en la misma carpeta q el archivo de c y meteis aqui el codigo q sea
-    dimensionsScout = fopen("generacion_por_tecnologias_21_22_puntos_simplificado.csv", "r");
+    dimensionsScout = fopen("PROBANDO.csv", "r");
     // Error por si nos confundimos al escribir el archivo o se mueve o lo que sea
     if (dimensionsScout == NULL)
     {
@@ -196,7 +205,7 @@ int main()
     }
     // Declaración matriz con dimensiones variables por malloc
     int columna;
-    for (columna = 0; columna < 5; columna++){
+    for (columna = 0; columna < filasAntesDatos + 1; columna++){
         fgets(pruebaDimensiones, 1024, dimensionsScout);
     }
     int lastWasComma = 0;
@@ -227,6 +236,9 @@ int main()
 		pruebaDimensiones[i] = '\0';
 	}
     }
+    if (filasDespuesDatos){
+    	rowNumber = rowNumber - filasDespuesDatos;
+	}
     fclose(dimensionsScout);
     free(pruebaDimensiones);
     // declaracion de la matriz con malloc
@@ -247,7 +259,7 @@ int main()
             matrizDatos[filas][columnas] = (char*)malloc(80*sizeof(char));
             // Esto inicializa cada una de las celdas y les mete un valor para que no estén vacias y pasen cosas feas
             // Solucion temporal mientras arreglo el memory leak
-            int arregloGuarro = 0;
+            int arregloGuarro;
 	    for (arregloGuarro = 0; arregloGuarro < 80; arregloGuarro++){
 	        matrizDatos[filas][columnas][arregloGuarro] = '\0';
 	    }
@@ -257,11 +269,10 @@ int main()
     // comprobación de las dimensiones de la matriz
     printf(" %i %i ", rowNumber, columnNumber);
 
-
     // < ------------------------------------------- PROCESO DE INSERTADO DE DATOS DEL ARCHIVO EN EL TENSOR DINAMICO matrizDatos ------------------------------------->
     char almacenFila[1024];
     FILE *elementSeparation;
-    elementSeparation = fopen("generacion_por_tecnologias_21_22.csv", "r");
+    elementSeparation = fopen("PROBANDO.csv", "r");
     char element[80] = "";
     // Variables pseudobooleanas que sirven para comprobar cositas
     int letraElement = 0;  
@@ -290,10 +301,10 @@ int main()
         if (almacenFila[letra] == ','){
             if (!floatElement){
                 // Se ejecuta si pilla una coma fuera de un decimal
-                if (fila >= 4){
+                if (fila >= filasAntesDatos){
                     element[letraElement] = '\0';
                     // a partir de la fila 5 va almacenando cosas en las celdas
-                    filaReal = fila - 4;
+                    filaReal = fila - filasAntesDatos;
                     int a = 0;
                     for (a = 0; element[a] != '\0'; a++){
                         matrizDatos[filaReal][column][a] = element[a];
@@ -387,7 +398,7 @@ int main()
         }
         element[letraElement - 1] = '\0';
         // Este se ejecuta para el último elemento xq no hay una coma al final de la linea
-        if (fila >= 4){
+        if (fila >= filasAntesDatos){
 	int c = 0;
         for (c = 0; element[c] != '\0'; c++){
             matrizDatos[filaReal][column][c] = element[c];
@@ -400,17 +411,18 @@ int main()
 	}
 }
 // Esta es la comprobación de que los datos se han guardado bien
+
+fclose(dimensionsScout);    
+// <---------------- PREPARACIÓN DE LOS DATOS PARA USO ------------------------->
+rowNumber -= filasAntesDatos;
 int prueba2, prueba = 0;
-for (prueba2 = 0; prueba2 < 19; prueba2++){
-    for (prueba = 0; prueba < 25; prueba++){
+for (prueba2 = 0; prueba2 < rowNumber; prueba2++){
+    for (prueba = 0; prueba < columnNumber; prueba++){
         printf("%s", matrizDatos[prueba2][prueba]);
         printf(" %i %i\n", prueba2,prueba);
     }
 printf("\n\n");
 }
-fclose(dimensionsScout);    
-// <---------------- PREPARACIÓN DE LOS DATOS PARA USO ------------------------->
-rowNumber -= 4;
 // Declaramos una estructura donde meteremos punteros a una serie de vectores (ir al principio del archivo para explicación)
 struct datosMatriz datosATrabajar;
 datosATrabajar.matriz = matrizDatos;
@@ -426,7 +438,10 @@ for (tituloFila = 0; tituloFila < rowNumber; tituloFila++){
     // Declaramos los punteros de memoria para cada array de caracteres, y los llenamos con el titulo de la fila correspondiente
     datosATrabajar.vectorColumnaTitulos[tituloFila] = (char*)malloc(sizeof(char)*80);
     int letra = 0;
-    for (letra = 0; matrizDatos[tituloFila][0][letra] != '\0'; letra++){
+    for (letra = 0; letra<80; letra++){
+        datosATrabajar.vectorColumnaTitulos[tituloFila][letra] = '\0';
+    }
+	for (letra = 0; matrizDatos[tituloFila][0][letra] != '\0'; letra++){
         datosATrabajar.vectorColumnaTitulos[tituloFila][letra] = matrizDatos[tituloFila][0][letra];
     }
     printf("\ntitulo: %s\n",datosATrabajar.vectorColumnaTitulos[tituloFila]);
@@ -438,6 +453,9 @@ int fechaColumna = 1;
 for (fechaColumna = 1; fechaColumna < columnNumber; fechaColumna++){
     datosATrabajar.vectorFilaFechas[fechaColumna - 1] = (char*)malloc(sizeof(char)*80);
     int letra = 0;
+    for (letra = 0; letra < 80; letra++){
+        datosATrabajar.vectorFilaFechas[fechaColumna - 1][letra] = '\0';
+    }
     for (letra = 0; matrizDatos[0][fechaColumna][letra] != '\0'; letra++){
         datosATrabajar.vectorFilaFechas[fechaColumna - 1][letra] = matrizDatos[0][fechaColumna][letra];
     }
@@ -445,6 +463,7 @@ for (fechaColumna = 1; fechaColumna < columnNumber; fechaColumna++){
 };
 // <--------------------- USO DE LOS DATOS ---------------------------->
 // EJEMPLO DE COMO USAR EL getVectorByName y la funcion SortVector (ahora mismo solamente funciona para filas)
+/*
 char inputString[40];
 int cosaAAA = 1;
 while (cosaAAA){
@@ -453,7 +472,8 @@ fgets(inputString, sizeof(inputString), stdin);
 double vectorFila[datosATrabajar.numColumnas - 1];
 getVectorByName(&datosATrabajar, inputString, vectorFila);
 sortVector(&datosATrabajar, vectorFila, '>');	
-}    
+}
+*/    
 /* NOTA IMPORTANTE SOBRE EL USO DE LOS VECTORES DE LA MATRIZ:
 He cambiado como se sacan los vectores de la matriz para que sea mas sencillo de utilizar
 la funcion getVectorByName simplemente tiene el input del vector y la fila/columna que quereis (detecta sola si es una fila o una columna)
@@ -463,7 +483,6 @@ He dejado arriba un ejemplo de cómo se puede implementar el uso de la funcion
 
 */
 
-// <---------------------------------------------------- INICIO MENU ----------------------------------------------------->
 // INICIO DEL MENÚ DE OPCIONES
 int opcion1 = 0;
 int opcion;
@@ -472,14 +491,14 @@ char inputPeriodSelect[40], inputDataSelect[40], inputOperationSelect[40], input
 int numeroTareas = 6;
 char vectorFuncionalidades[6][60] = {"Media","Varianza","Valor maximo y minimo", "Estimaciones futuras","Ordenación","Grafico"};
 double* vectorFila;
-while(opcion1!=19)
+while(1)
 {
 	opcion1 = 0;
 	opcion2 = 1;
 	printf("\n%s\n", inputDataSelect);
 	printf("Bienvenido al menú del equip 3232!\n");
 	printf("Cómo deseas trabajar con los datos? \n");
-	printf("1.Intervalo Mensual 2.Anual 3.Total 4.Dato Exacto 5.Fecha concreta (Escribe el numero)\n");
+	printf("1.Intervalo Mensual 3.Total 4.Dato Exacto 5.Fecha concreta (Escribe el numero)\n");
 	fgets(inputPeriodSelect, sizeof(inputPeriodSelect), stdin);
     inputPeriodSelect[strcspn(inputPeriodSelect, "\n")] = '\0';
     char* inputYear[40], inputYearInicio[40], inputYearFinal[40];
@@ -513,71 +532,25 @@ while(opcion1!=19)
 			fgets(inputYearFinal, sizeof(inputYearFinal), stdin);
     		inputYearFinal[strcspn(inputYearFinal, "\n")] = '\0';
 			yearFinal = getNumberFromName(&datosATrabajar, inputYearFinal)/29;
-			sizeIntervalo = yearFinal - yearInicio;
+			sizeIntervalo = yearFinal - yearInicio + 1;
+			printf("\n\n %i \n\n", sizeIntervalo);
+			datosATrabajar.longitudIntervalo = sizeIntervalo;
 			if (sizeIntervalo <= 1 || !yearFinal || !yearInicio){
 				printf("Las fechas no son las correctas\n ");
 				continue;
 			}
 			break;
 		}
-    	case 2:
-    	{
-			printf("Que intervalo anual, 2021 o 2022\n");
-    		fgets(inputAnual, sizeof(inputAnual), stdin);
-    		inputAnual[strcspn(inputAnual, "\n")] = '\0';
-    		if (inputAnual[0] == '2' && inputAnual[1] == '0' && inputAnual[2] == '2' && inputAnual[3] == '1'){
-    			inputYearInicio[0] = '0';
-    			inputYearInicio[1] = '1';
-    			inputYearInicio[2] = '/';
-    			inputYearInicio[3] = '2';
-    			inputYearInicio[4] = '0';
-    			inputYearInicio[5] = '2';
-    			inputYearInicio[6] = '1';
-				yearInicio = getNumberFromName(&datosATrabajar, inputYearInicio)/29;
-				inputYearFinal[0] = '1';
-    			inputYearFinal[1] = '2';
-    			inputYearFinal[2] = '/';
-    			inputYearFinal[3] = '2';
-    			inputYearFinal[4] = '0';
-    			inputYearFinal[5] = '2';
-    			inputYearFinal[6] = '1';
-				yearFinal = getNumberFromName(&datosATrabajar, inputYearFinal)/29;
-			}
-			else if (inputAnual[0] == '2' && inputAnual[1] == '0' && inputAnual[2] == '2' && inputAnual[3] == '2'){
-    			inputYearInicio[0] = '0';
-    			inputYearInicio[1] = '1';
-    			inputYearInicio[2] = '/';
-    			inputYearInicio[3] = '2';
-    			inputYearInicio[4] = '0';
-    			inputYearInicio[5] = '2';
-    			inputYearInicio[6] = '2';
-    			yearInicio = getNumberFromName(&datosATrabajar, inputYearInicio)/29;
-				inputYearFinal[0] = '1';
-    			inputYearFinal[1] = '2';
-    			inputYearFinal[2] = '/';
-    			inputYearFinal[3] = '2';
-    			inputYearFinal[4] = '0';
-    			inputYearFinal[5] = '2';
-    			inputYearFinal[6] = '2';
-				yearFinal = getNumberFromName(&datosATrabajar, inputYearFinal)/29;
-			}
-			else{
-				printf("That is not one of the options\n");
-				continue;
-			}
-			sizeIntervalo = 12;
-			printf(" %i %i \n", yearInicio, yearFinal);
-    		break;
-		}
     	case 3:
     	{
     		//Total
-    		sizeIntervalo = 24;
+    		sizeIntervalo = datosATrabajar.numColumnas - 1;
+    		datosATrabajar.longitudIntervalo = sizeIntervalo;
     		break;
 		}
     	case 4:
     	{
-    		printf("\nIntroduce the type of electricity: \n");
+    		printf("\nIntroduce la fila deseada: \n");
 	    	int tipoElectricidad2;
 			for (tipoElectricidad2 = 1; tipoElectricidad2 < datosATrabajar.numFilas; tipoElectricidad2++){
 				printf("%i. %s ",tipoElectricidad2,datosATrabajar.vectorColumnaTitulos[tipoElectricidad2]);
@@ -618,12 +591,13 @@ while(opcion1!=19)
     		fgets(inputYearInicio, sizeof(inputYearInicio), stdin);
     		inputYearInicio[strcspn(inputYearInicio, "\n")] = '\0';
     		sizeIntervalo = 1;
+    		datosATrabajar.longitudIntervalo = datosATrabajar.numFilas-2;
 			break;
 		}
 	}
 	// Mete aqui lo que haga falta
 	if(sizeIntervalo != 1){
-		printf("elige uno de los siguientes metodos de generacion de energia (Escribe el nombre): (Para volver atras, introduce Exit) \n");
+		printf("elige una de las siguientes filas con la que quieras trabajar (Escribe el nombre): (Para volver atras, introduce Exit) \n");
 		int tipoElectricidad;
 		for (tipoElectricidad = 1; tipoElectricidad < datosATrabajar.numFilas; tipoElectricidad++){
 			printf("%i. %s ",tipoElectricidad,datosATrabajar.vectorColumnaTitulos[tipoElectricidad]);
@@ -706,19 +680,19 @@ while(opcion1!=19)
 	    	    	case 2:
 	    			{
 	    				// VARIANZA
-	     	    		// printf("la varianza es : %f\n",varianza(&datosATrabajar, vectorFila));
+	     	    		printf("la varianza es : %f\n",varianza(&datosATrabajar, vectorFila));
 	     	   			break;
 	         		}
           			case 3:
          	   		{
          	   			// MAXIMO Y MINIMO
-          	    	  	// printf("la energia total es : %f\n",engtot(&datosATrabajar,vectorFila));
+          	    	  	printf("la energia total es : %f\n",engtot(&datosATrabajar,vectorFila));
           	    	  break;
           			}
           			case 4:
           			{
           				// RECTA REGRESIÓN
-          	    		// regresion(&datosATrabajar,vectorFila);
+          	    		regresion(&datosATrabajar,vectorFila);
            		  		break;
 		   			}
 		   			case 5:
@@ -752,16 +726,16 @@ for (i = 0; i < 40; i++){
 return 0;
 }
 
-
+// <---------------------------------------- FIN DEL ARCHIVO MAIN ---------------------------------------------------->
 float media(struct datosMatriz *datosATrabajar, double* Vector)
 {
   int i;/*valor unico*/
-  float j = 0, resultado;/*sumatorio de los valores*/
-  for(i=0; i<datosATrabajar->numColumnas ; i++)
+  float j = Vector[0], resultado;/*sumatorio de los valores*/
+  for(i=0; i<datosATrabajar->longitudIntervalo ; i++)
   {
 	j=j+Vector[i];
   }
-  resultado =(float)(j)/(float)(datosATrabajar->numColumnas);/*n es el tamaño del vector , osea , el numero de valores*/
+  resultado =(float)(j)/(float)(datosATrabajar->longitudIntervalo);/*n es el tamaño del vector , osea , el numero de valores*/
   return resultado;
 }
 //maximos y minimos no son necesarios ya que el codigo del baselga ya hace esa funcion pero hay que implementarla en el menu
@@ -771,11 +745,11 @@ float varianza(struct datosMatriz *datosATrabajar, double* Vector)
   double* vectorFila;
   int i;
   float resultado , sum=0;
-  for(i=0 ; i<datosATrabajar->numColumnas ; i++)
+  for(i=0 ; i<datosATrabajar->longitudIntervalo ; i++)
   {
     sum = sum + ((Vector[i]-media(datosATrabajar, Vector)) * (Vector[i]-media(datosATrabajar, Vector)));
   }
-  resultado = sum / datosATrabajar->numColumnas;
+  resultado = sum / datosATrabajar->longitudIntervalo;
   return resultado;
 }
 
@@ -784,7 +758,7 @@ float engtot(struct datosMatriz *datosATrabajar,double* Vector) //energia total 
 {
   int i;
   float resultado = Vector[0];
-  for(i=1 ; i<datosATrabajar->numColumnas ; i++)
+  for(i=1 ; i<datosATrabajar->longitudIntervalo ; i++)
   {
     resultado = resultado +  Vector[i];
   }
@@ -793,29 +767,29 @@ float engtot(struct datosMatriz *datosATrabajar,double* Vector) //energia total 
 
 void regresion(struct datosMatriz *datosATrabajar, double* Vector)//calcula la recta de regresion de una fila de datos usando la media la varianza y la covarianza(hay que hacer la covarianza aun) para usando esa recta hacer una estimacion de lo que podria ser un valor futuro
 {//en regresion hay que introducir tres datos , el primer vector (y) es el valor energético , el segundo vector son los dias o fechas en los que ocurren esos valores , las fechas se hacen como numeros enteros para facilitar los calculos .
-  double vectorFecha[datosATrabajar->numColumnas] ;
+  double vectorFecha[datosATrabajar->longitudIntervalo] ;
   int r=0;
-  for(r=0; r<datosATrabajar->numColumnas; r++)
+  for(r=0; r<datosATrabajar->longitudIntervalo; r++)
   {
-  	vectorFecha[r]=r;
+  	vectorFecha[r]=r+1;
   }
   float b, x;
   //aqui calculo la covarianza poruque por ahora solo la usamos en esta funcion y es complicado hacerlo con una funcion ya que tiene dos vectores, aqui uno de esos vectores no es variable asique es mas facil
   int i;
   float covarianza , sum=0;
-  for(i=0 ; i<datosATrabajar->numColumnas ; i++)
+  for(i=0 ; i<datosATrabajar->longitudIntervalo ; i++)
   {
     sum = sum + ((Vector[i]-media(datosATrabajar, Vector)) * (vectorFecha[i]-media1(vectorFecha)));
   }
-  covarianza = sum / datosATrabajar->numColumnas;
+  covarianza = sum / datosATrabajar->longitudIntervalo; 
   
-  b = (covarianza)/(varianza1(vectorFecha));
+  b = (covarianza)/(varianza1(vectorFecha)); // da error vector fecha por alguna razon
   printf("La recta de regresion tiene la forma : y= %f + %f * (x-%f) , ahora , dame un numero entero positivo , ese numero representara la cantidad de meses despues del ultimo mes registrado y hara una estimacion para ese mes. Pero cuanto mayor sea el numero , mayor sera el error\n", media(datosATrabajar, Vector), b, media1(vectorFecha));
   int num_meses;
   scanf("%i",&num_meses);
   float error ,estimacion;
   
-  estimacion = media(datosATrabajar, Vector) + b * (((datosATrabajar->numColumnas)+num_meses)-media(datosATrabajar, vectorFecha));  
+  estimacion = media(datosATrabajar, Vector) + b * (((datosATrabajar->longitudIntervalo)+num_meses)-media(datosATrabajar, vectorFecha));  
   error = covarianza / (varianza(datosATrabajar, Vector) * varianza1(vectorFecha));
   printf("Podemos hacer una estimacion para los primeros meses despues de los medidos: despues de %i meses , estimamos:%f . El coeficiente de correlacion lineal de estos datos es: %f \n",num_meses, estimacion, error);
 }
@@ -861,24 +835,4 @@ void grafica(struct datosMatriz *datosATrabajar, double* Vector){//funcion para 
 			}
 		}
 	}
-}
-
-void imprimirVectorEnArchivo(struct datosMatriz *datosATrabajar, double* Vector, const char* nombreArchivo) {
-    FILE* archivo = fopen(nombreArchivo, "w");
-    if (archivo == NULL) {
-        printf("No se pudo abrir el archivo.\n");
-        return;
-    }
-    
-    fprintf(archivo, "El vector es: ");
-    int i;
-    int longitud = sizeof(Vector) / sizeof (Vector[0]);
-    for (i = 0; i < longitud; i++) {
-        fprintf(archivo, "%d ", Vector[i]);
-    }
-    fprintf(archivo, "\n");
-    
-    fclose(archivo);
-
-    printf("\nEl vector se ha escrito correctamente en el archivo.\n");
 }
