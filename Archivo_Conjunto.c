@@ -464,7 +464,7 @@ He dejado arriba un ejemplo de cómo se puede implementar el uso de la funcion
 */
 
 
-	int opcion1 = 0;
+int opcion1 = 0;
 int opcion;
 int opcion2; 
 char inputPeriodSelect[40], inputDataSelect[40], inputOperationSelect[40], inputFuncionalidadSelect[40], inputAnual[40];
@@ -478,11 +478,11 @@ while(opcion1!=19)
 	printf("\n%s\n", inputDataSelect);
 	printf("Bienvenido al menú del equip 3232!\n");
 	printf("Cómo deseas trabajar con los datos? \n");
-	printf("1.Intervalo Mensual 2.Anual 3.Total 4.Dato Exacto (Escribe el numero)\n");
+	printf("1.Intervalo Mensual 2.Anual 3.Total 4.Dato Exacto 5.Fecha concreta (Escribe el numero)\n");
 	fgets(inputPeriodSelect, sizeof(inputPeriodSelect), stdin);
-    inputPeriodSelect[strcspn(inputPeriodSelect, "\n")] = '\0';
-    char* inputYear[40], inputYearInicio[40], inputYearFinal[40];
-    int yearInicio, yearFinal, sizeIntervalo;
+        inputPeriodSelect[strcspn(inputPeriodSelect, "\n")] = '\0';
+        char* inputYear[40], inputYearInicio[40], inputYearFinal[40];
+        int yearInicio, yearFinal, sizeIntervalo;
 	int opcion = inputPeriodSelect[0] - '0';
     switch(opcion){
     	case 1:
@@ -490,23 +490,38 @@ while(opcion1!=19)
     		char inputYearInicio[40], inputYearFinal[40]; 
 			// Intervalo mensual
     		printf("\nIntroduce el mes inicial: ");
+		int mes;
+    		for (mes = 1; mes < (datosATrabajar.numColumnas - 1); mes++){
+				printf("%i. %s ",mes,datosATrabajar.vectorFilaFechas[mes]);
+				if ((mes-1)%5 == 0 && (mes-1) ){
+					printf("\n");
+				}
+			}
     		fgets(inputYearInicio, sizeof(inputYearInicio), stdin);
     		inputYearInicio[strcspn(inputYearInicio, "\n")] = '\0';
     		yearInicio = getNumberFromName(&datosATrabajar, inputYearInicio)/29;
     		printf("\nIntroduce el mes final: ");
+		int mes2;
+    		for (mes2 = 1; mes2 < (datosATrabajar.numColumnas - 1); mes2++){
+				printf("%i. %s ",mes2,datosATrabajar.vectorFilaFechas[mes2]);
+				if ((mes2-1)%5 == 0 && (mes2-1) ){
+					printf("\n");
+				}
+			}
+    		printf("\n");
     		fgets(inputYearFinal, sizeof(inputYearFinal), stdin);
     		inputYearFinal[strcspn(inputYearFinal, "\n")] = '\0';
-			yearFinal = getNumberFromName(&datosATrabajar, inputYearFinal)/29;
-			sizeIntervalo = yearFinal - yearInicio;
-			if (sizeIntervalo <= 1 || !yearFinal || !yearInicio){
-				printf("Las fechas no son las correctas\n ");
-				continue;
-			}
-			break;
+		yearFinal = getNumberFromName(&datosATrabajar, inputYearFinal)/29;
+		sizeIntervalo = yearFinal - yearInicio;
+		if (sizeIntervalo <= 1 || !yearFinal || !yearInicio){
+			printf("Las fechas no son las correctas\n ");
+			continue;
+		}
+		break;
 		}
     	case 2:
     	{
-			printf("Que intervalo anual, 2021 o 2022\n");
+		printf("Que intervalo anual, 2021 o 2022\n");
     		fgets(inputAnual, sizeof(inputAnual), stdin);
     		inputAnual[strcspn(inputAnual, "\n")] = '\0';
     		if (inputAnual[0] == '2' && inputAnual[1] == '0' && inputAnual[2] == '2' && inputAnual[3] == '1'){
@@ -517,15 +532,15 @@ while(opcion1!=19)
     			inputYearInicio[4] = '0';
     			inputYearInicio[5] = '2';
     			inputYearInicio[6] = '1';
-				yearInicio = getNumberFromName(&datosATrabajar, inputYearInicio)/29;
-				inputYearFinal[0] = '1';
+			yearInicio = getNumberFromName(&datosATrabajar, inputYearInicio)/29;
+			inputYearFinal[0] = '1';
     			inputYearFinal[1] = '2';
     			inputYearFinal[2] = '/';
     			inputYearFinal[3] = '2';
     			inputYearFinal[4] = '0';
     			inputYearFinal[5] = '2';
     			inputYearFinal[6] = '1';
-				yearFinal = getNumberFromName(&datosATrabajar, inputYearFinal)/29;
+			yearFinal = getNumberFromName(&datosATrabajar, inputYearFinal)/29;
 			}
 			else if (inputAnual[0] == '2' && inputAnual[1] == '0' && inputAnual[2] == '2' && inputAnual[3] == '2'){
     			inputYearInicio[0] = '0';
@@ -536,18 +551,18 @@ while(opcion1!=19)
     			inputYearInicio[5] = '2';
     			inputYearInicio[6] = '2';
     			yearInicio = getNumberFromName(&datosATrabajar, inputYearInicio)/29;
-				inputYearFinal[0] = '1';
+			inputYearFinal[0] = '1';
     			inputYearFinal[1] = '2';
     			inputYearFinal[2] = '/';
     			inputYearFinal[3] = '2';
     			inputYearFinal[4] = '0';
     			inputYearFinal[5] = '2';
     			inputYearFinal[6] = '2';
-				yearFinal = getNumberFromName(&datosATrabajar, inputYearFinal)/29;
+			yearFinal = getNumberFromName(&datosATrabajar, inputYearFinal)/29;
 			}
 			else{
-				printf("That is not one of the options\n");
-				continue;
+			printf("That is not one of the options\n");
+			continue;
 			}
 			sizeIntervalo = 12;
 			printf(" %i %i \n", yearInicio, yearFinal);
@@ -562,9 +577,25 @@ while(opcion1!=19)
     	case 4:
     	{
     		printf("\nIntroduce the type of electricity: ");
+		int tipoElectricidad2;
+		for (tipoElectricidad2 = 1; tipoElectricidad2 < datosATrabajar.numFilas; tipoElectricidad2++){
+			printf("%i. %s ",tipoElectricidad2,datosATrabajar.vectorColumnaTitulos[tipoElectricidad2]);
+			if ((tipoElectricidad2-1)%5 == 0 && (tipoElectricidad2-1) ){
+				printf("\n");
+			}
+		}
+		printf("\n");
     		fgets(inputDataSelect, sizeof(inputDataSelect), stdin);
-		    inputDataSelect[strcspn(inputDataSelect, "\n")] = '\0';
-    		printf("\nIntroduce the date desired: ");    		
+		inputDataSelect[strcspn(inputDataSelect, "\n")] = '\0';
+    		printf("\nIntroduce the date desired: "); 
+		int mes;
+    		for (mes = 1; mes < (datosATrabajar.numColumnas - 1); mes++){
+				printf("%i. %s ",mes,datosATrabajar.vectorFilaFechas[mes]);
+				if ((mes-1)%5 == 0 && (mes-1) ){
+					printf("\n");
+				}
+			}
+			printf("\n");
     		fgets(inputYearInicio, sizeof(inputYearInicio), stdin);
     		inputYearInicio[strcspn(inputYearInicio, "\n")] = '\0';
     		double validacionExacto = getExactValueFromMatrix(&datosATrabajar,inputDataSelect,inputYearInicio);
@@ -582,6 +613,13 @@ while(opcion1!=19)
 			continue;
 		}
 	}
+		case 5:{
+			printf("\nIntroduce the date desired: ");    		
+    		fgets(inputYearInicio, sizeof(inputYearInicio), stdin);
+    		inputYearInicio[strcspn(inputYearInicio, "\n")] = '\0';
+    		sizeIntervalo = 1;
+			break;
+		}
 	// Mete aqui lo que haga falta
 	printf("elige uno de los siguientes metodos de generacion de energia (Escribe el nombre): (Para volver atras, introduce Exit) \n");
 	int tipoElectricidad;
