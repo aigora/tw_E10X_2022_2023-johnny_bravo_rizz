@@ -716,19 +716,19 @@ while(1)
           			case 2:
          	   		{
          	   			// MAXIMO Y MINIMO
-          	    	  	// printf("la energia total es : %f\n",engtot(&datosATrabajar,vectorFila));
+          	    	  	printf("la energia total acumulada es : %f\n",engtot(&datosATrabajar,vectorFila));
           	    	  break;
           			}
           			case 3:
           			{
           				// RECTA REGRESIÓN
-          	    		// regresion(&datosATrabajar,vectorFila);
+          	    		regresion(&datosATrabajar,vectorFila);
            		  		break;
 		   			}
 		   			case 4:
 	    	    	{
 	    	    		// ORDENACION VECTOR
-	            		// printf("la media es : %f\n",media(&datosATrabajar, vectorFila));
+	            		  printf("la varianza es: %f",varianza(&datosATrabajar, vectorFila));
 	       				break;
 	        		}
 	    	    	case 5:
