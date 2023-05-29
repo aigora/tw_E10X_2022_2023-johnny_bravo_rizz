@@ -905,13 +905,25 @@ float varianza1(double* Vector)//varianza1 tiene la misma diferencia con varianz
 }
 
 void grafica(struct datosMatriz *datosATrabajar, double* Vector){//funcion para expresar de forma gráfica los resultados numéricos
-	int i, longitud;
+	int i, longitud;	
+	double maximo, minimo;	
+	
+	int j, division;
+    obtenerMaximoMinimo(&datosATrabajar, Vector, &maximo, &minimo);
+    if (minimo<0){
+    	minimo = minimo*(-1);
+	}
+	division = minimo/50;
 	longitud = sizeof(Vector) / sizeof (Vector[0]);
 	for (i=0; i<datosATrabajar->longitudIntervalo; i++){
-		int nveces=Vector[i]/100; //de esta forma hacemos que cada '-', que es de lo que esta formada la grafica represente 100 unidades
-		int j;
+		if (Vector[i] < 0){
+			Vector[i] = Vector[i]*(-1);
+		}
+	//de esta forma hacemos que cada '-', que es de lo que esta formada la grafica represente 1/40 parte del valor minimo
+		int nveces = Vector[i]/division;
 		for(j=0; j<nveces; j++){ //bucle para imprimir la grafica
 			printf("-");
+			
 			if(j==(nveces-1)){//cuando el vector se acaba hay que añadir un \0
 				printf("\n");
 			}
