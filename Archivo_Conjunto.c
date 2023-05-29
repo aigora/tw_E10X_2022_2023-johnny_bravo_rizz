@@ -678,14 +678,14 @@ while(1)
 	{ 
 		printf("\n elige una tarea(Escribe el numero): (Para volver atras, escribe Back) \n");
     	int tarea;
-		for (tarea = 1; tarea < numeroTareas; tarea++){
+		for (tarea = 1; tarea <= numeroTareas; tarea++){
 			printf("%i. %s ",tarea,vectorFuncionalidades[tarea-1]);
 			if ((tarea-1)%5 == 0 && (tarea-1) ){
 				printf("\n");
 			}
 		};
 		if (sizeIntervalo != 1){
-			printf("%i. Ordenar vector", numeroTareas);
+			printf("%i. Ordenar vector", numeroTareas + 1);
 		}
 		printf("\n");
 		fgets(inputFuncionalidadSelect, sizeof(inputFuncionalidadSelect), stdin);
