@@ -177,7 +177,7 @@ printf("After sort: \n");
 for (i= 0; i < datosATrabajar->numColumnas-1; i++){
 	printf("%s  %.6f \n", datosATrabajar->vectorFila[i],vectorAOrdenar[i]);
 }
-} 			
+} 		
 int main()
 {
 	char inputArchivo[40];
@@ -704,7 +704,6 @@ while(1)
 	    	printf("\n Esta opcion no es valida, por favor vuelve a intentarlo");
 	    	continue;
 		}
-		else{
 		  		switch(opcion2)
 	    		{
 	   	        	case 1:
