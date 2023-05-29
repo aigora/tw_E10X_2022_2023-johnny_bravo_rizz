@@ -50,7 +50,7 @@ for (filas = 0; filas < datosATrabajar->numFilas; filas++){
 	    }
 	    if ((datosATrabajar->vectorColumnaTitulos[filas][letra] == '\0'|| datosATrabajar->vectorColumnaTitulos[filas][letra] == '\n') && (peticion[letra] == '\0' || peticion[letra] == '\n')) {
 			filaDeseada = filas;
-			return filaDeseada*31;;  // Strings are equal
+			return (filaDeseada)*31;;  // Strings are equal
 	    }  // Strings are not equal
 	}
 if (!filaDeseada){
@@ -64,7 +64,7 @@ if (!filaDeseada){
 	    }
 	    if ((datosATrabajar->vectorFilaFechas[columnas][letra] == '\0'|| datosATrabajar->vectorFilaFechas[columnas][letra] == '\n') && (peticion[letra] == '\0' || peticion[letra] == '\n')) {
 	        columnaDeseada = columnas;
-			return columnaDeseada*29;  // Strings are equal
+			return (columnaDeseada + 1)*29;  // Strings are equal
 	    }  // Strings are not equal
 	}
 }
@@ -177,7 +177,7 @@ printf("After sort: \n");
 for (i= 0; i < datosATrabajar->numColumnas-1; i++){
 	printf("%s  %.6f \n", datosATrabajar->vectorFila[i],vectorAOrdenar[i]);
 }
-} 		
+} 			
 int main()
 {
     // variables para iniciar la lectura
