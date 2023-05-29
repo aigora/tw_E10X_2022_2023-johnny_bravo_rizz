@@ -187,17 +187,44 @@ for (i= 0; i < datosATrabajar->numColumnas-1; i++){
 } 		
 int main()
 {
+	char inputArchivo[40];
+	int filasAntesDatos;
+	int filasDespuesDatos;
+	printf("\nBienvenido/a al indexador de csv del grupo johnny bravo rizz. \n\nEsta aplicación está programada de tal manera que puede leer cualquier csv que se le ofrezca, siempre y cuando\nse ajusten ciertos parametros. \n\nHemos preparado 3 archivos de demostración, por favor elige cual deseas (introduce el numero):\n");
+	printf("1.SALDOS POR FRONTERAS - FÍSICO_01-05-2022_29-05-2023\n");
+	printf("2.ESTRUCTURA DE LA GENERACIÓN POR TECNOLOGÍAS_01-01-2021_31-12-2022\n");
+	printf("3.EMISIONES Y FACTOR DE EMISIÓN DE CO2 EQ. DE LA GENERACIÓN_22-05-2023_29-05-2023\n");
 	// VALORES DE AJUSTE DEPENDIENTES DE ARCHIVO DE ORIGEN
-	int filasAntesDatos = 4;
-	int filasDespuesDatos = 0;
+	fgets(inputArchivo,sizeof(inputArchivo),stdin);
+	FILE *dimensionsScout;
+	switch (inputArchivo[0])
+	{
+		case '1':
+			filasAntesDatos = 4;
+			filasDespuesDatos = 11;
+			dimensionsScout = fopen("Archivo1.csv", "r");
+			break;
+		case '2':
+			filasAntesDatos = 4;
+			filasDespuesDatos = 11;
+			dimensionsScout = fopen("Archivo2.csv", "r");
+			break;
+		case '3':
+			filasAntesDatos = 4;
+			filasDespuesDatos = 12;
+			dimensionsScout = fopen("Archivo3.csv", "r");
+			break;
+		default:
+			printf("Not one of the options, please restart the program");
+			return 0;
+	}
+	printf("\n\n %i %i \n\n", filasAntesDatos, filasDespuesDatos);
     // variables para iniciar la lectura
-    FILE *dimensionsScout;
     // Aqui se almacena toda la linea, maximo 1024 caracteres (creo que es suficiente)
     int sizeBuffer = 1024;
     char* pruebaDimensiones = (char*)malloc(sizeof(char*)*sizeBuffer);
     // se llama paco xq estuve probando cosas y se ha quedado asi, si vais a probarlo en vuestro pc
     // guardad el csv en la misma carpeta q el archivo de c y meteis aqui el codigo q sea
-    dimensionsScout = fopen("PROBANDO.csv", "r");
     // Error por si nos confundimos al escribir el archivo o se mueve o lo que sea
     if (dimensionsScout == NULL)
     {
@@ -273,7 +300,18 @@ int main()
     // < ------------------------------------------- PROCESO DE INSERTADO DE DATOS DEL ARCHIVO EN EL TENSOR DINAMICO matrizDatos ------------------------------------->
     char almacenFila[1024];
     FILE *elementSeparation;
-    elementSeparation = fopen("PROBANDO.csv", "r");
+    switch (inputArchivo[0])
+	{
+		case '1':
+			elementSeparation = fopen("Archivo1.csv", "r");
+			break;
+		case '2':
+			elementSeparation = fopen("Archivo2.csv", "r");
+			break;
+		case '3':
+			elementSeparation = fopen("Archivo3.csv", "r");
+			break;
+	}
     char element[80] = "";
     // Variables pseudobooleanas que sirven para comprobar cositas
     int letraElement = 0;  
