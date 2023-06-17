@@ -10,32 +10,6 @@ struct datosMatriz{
     char **vectorColumna;
     int longitudIntervalo;
 };
-
-float media(struct datosMatriz *datosATrabajar, double* Vector);
-float media1(double* Vector);
-float varianza(struct datosMatriz *datosATrabajar, double* Vector);
-float varianza1(double* Vector);
-float engtot(struct datosMatriz *datosATrabajar, double* Vector);
-void regresion(struct datosMatriz *datosATrabajar, double* Vector);
-void grafica(struct datosMatriz *datosATrabajar, double* Vector);
-void imprimirVectorEnArchivo(struct datosMatriz *datosATrabajar, double* Vector, const char* nombreArchivo);
-void obtenerMaximoMinimo(struct datosMatriz *datosATrabajar, double* Vector, double *maximo, double *minimo);
-// FUNCION PARA SACAR SOLO UN CACHO DE LA MATRIZ EN UN VECTOR FILA
-int getSpliceOfVector (struct datosMatriz *datosATrabajar, char* inicioSplice, char* finSplice, char* filaSpliced, double* vectorSpliced){
-	// declaramos los puntos de inicio y fin del splice con la función getNumberFromName
-	int fechaInicio = getNumberFromName(datosATrabajar, inicioSplice)/29;
-	int fechaFinal = getNumberFromName(datosATrabajar, finSplice)/29;
-	// Sacamos la fila que vamos a splicear
-	int intfilaSpliced = getNumberFromName(datosATrabajar, filaSpliced)/31;
-	int fila;
-	// transferimos los contenidos de la matriz al vector splice
-	for (fila = fechaInicio; fila <= fechaFinal; fila++){
-		vectorSpliced[fila - fechaInicio] = strtof(datosATrabajar->matriz[intfilaSpliced][fila], NULL);
-		printf("\n%.6f %i\n",vectorSpliced[fila - fechaInicio], fila);
-	}
-// devolvemos el valor de la fila spliceada para procesamiento posterior con el menú
-return intfilaSpliced;
-}
 // FUNCION PARA CONVERTIR EL TITULO DE LA FILA/COLUMNA A SU POSICION NUMERICA
 int getNumberFromName (struct datosMatriz *datosATrabajar, char* peticion){
 // Declaramos valores para los forloops
@@ -74,10 +48,35 @@ if (!filaDeseada){
 	}
 }
 // Si no se ha resuelto la funcion en este punto, es que no hay match y se devuelve un error
-printf("\n No hay ninguna fila o columna con ese nombre  \n");
 return 0;	
 
 }
+float media(struct datosMatriz *datosATrabajar, double* Vector);
+float media1(double* Vector);
+float varianza(struct datosMatriz *datosATrabajar, double* Vector);
+float varianza1(double* Vector);
+float engtot(struct datosMatriz *datosATrabajar, double* Vector);
+void regresion(struct datosMatriz *datosATrabajar, double* Vector);
+void grafica(struct datosMatriz *datosATrabajar, double* Vector);
+void imprimirVectorEnArchivo(struct datosMatriz *datosATrabajar, double* Vector, const char* nombreArchivo);
+void obtenerMaximoMinimo(struct datosMatriz *datosATrabajar, double* Vector, double *maximo, double *minimo);
+// FUNCION PARA SACAR SOLO UN CACHO DE LA MATRIZ EN UN VECTOR FILA
+int getSpliceOfVector (struct datosMatriz *datosATrabajar, char* inicioSplice, char* finSplice, char* filaSpliced, double* vectorSpliced){
+	// declaramos los puntos de inicio y fin del splice con la función getNumberFromName
+	int fechaInicio = getNumberFromName(datosATrabajar, inicioSplice)/29;
+	int fechaFinal = getNumberFromName(datosATrabajar, finSplice)/29;
+	// Sacamos la fila que vamos a splicear
+	int intfilaSpliced = getNumberFromName(datosATrabajar, filaSpliced)/31;
+	int fila;
+	// transferimos los contenidos de la matriz al vector splice
+	for (fila = fechaInicio; fila <= fechaFinal; fila++){
+		vectorSpliced[fila - fechaInicio] = strtof(datosATrabajar->matriz[intfilaSpliced][fila], NULL);
+		printf("\n%.6f %i\n",vectorSpliced[fila - fechaInicio], fila);
+	}
+// devolvemos el valor de la fila spliceada para procesamiento posterior con el menú
+return intfilaSpliced;
+}
+
 // FUNCION SACAR VECTOR FILA/COLUMNA POR NOMBRE 
 int getVectorByName (struct datosMatriz *datosATrabajar, char* peticion, double* vectorPeticion){
 int sizeOfVector, alojamientoVector, deseo;
@@ -344,7 +343,7 @@ int main()
                     element[letraElement] = '\0';
                     // a partir de la fila correspondiente a filasAntesDatos, se va almacenando cosas en las celdas
                     // Se corrige la fila para corresponder con la posicion en la matriz
-		    filaReal = fila - filasAntesDatos;
+		    		filaReal = fila - filasAntesDatos;
                     int a = 0;
                     for (a = 0; element[a] != '\0'; a++){
                         matrizDatos[filaReal][column][a] = element[a];
@@ -434,8 +433,8 @@ int main()
 	}
 }
 // Esta es la comprobación de que los datos se han guardado bien
+fclose(elementSeparation);    
 
-fclose(dimensionsScout);    
 // <---------------- PREPARACIÓN DE LOS DATOS PARA USO ------------------------->
 rowNumber -= filasAntesDatos;
 // Declaramos una estructura donde meteremos informacion util sobre la matrizzz
@@ -508,8 +507,8 @@ while(1)
     // Reinicio de las variables y selección de la manera que se desean tratar los datos
     opcion1 = 0;
     opcion2 = 1;
-    printf("Como deseas trabajar con los datos? \n");
-    printf("1.Intervalo Mensual 2.Total 3.Dato Exacto \n4.Fecha concreta 5.Imprimir todo el fichero 6. Cerrar el programa(Escribe el numero)\n");
+    printf("\n\nComo deseas trabajar con los datos? (Escribe el numero)\n");
+    printf("1.Intervalo Mensual 2.Total 3.Dato Exacto \n4.Fecha concreta 5.Imprimir todo el fichero 6.Modificar datos 7. Cerrar el programa\n");
     fgets(inputPeriodSelect, sizeof(inputPeriodSelect), stdin);
     inputPeriodSelect[strcspn(inputPeriodSelect, "\n")] = '\0';
     // Variables de input posteriores y conversion del input de char a int
@@ -521,30 +520,28 @@ while(1)
     	{
     		char inputYearInicio[40], inputYearFinal[40]; 
 		// Intervalo mensual
-    		printf("\nIntroduce el mes inicial:\n ");
+    		printf("\nIntroduce el mes inicial:\n|| ");
     		int mes;
 		// Se muestran todas las opciones para que elija el usuario
     		for (mes = 1; mes < (datosATrabajar.numColumnas - 1); mes++){
-				printf("%i. %s ",mes,datosATrabajar.vectorFilaFechas[mes]);
-				if ((mes-1)%5 == 0 && (mes-1) ){
-					printf("\n");
+				printf("%s || ",datosATrabajar.vectorFilaFechas[mes]);
+				if (!((mes-1)%5) && (mes-1) && ((mes+1) != (datosATrabajar.numColumnas - 1))){
+					printf("\n|| ");
 				}
 			}
-		printf("\n");
+			printf("\n\n");
     		fgets(inputYearInicio, sizeof(inputYearInicio), stdin);
     		inputYearInicio[strcspn(inputYearInicio, "\n")] = '\0';
 		// Se obtiene la posicion de la fecha inicial
     		yearInicio = getNumberFromName(&datosATrabajar, inputYearInicio)/29;
-    		printf("\nIntroduce el mes final: \n");
-    		int mes2;
-		// Se vuelven a mostgrar todas las opciones para que elija el usuario
-    		for (mes2 = 1; mes2 < (datosATrabajar.numColumnas - 1); mes2++){
-				printf("%i. %s ",mes2,datosATrabajar.vectorFilaFechas[mes2]);
-				if ((mes2-1)%5 == 0 && (mes2-1) ){
-					printf("\n");
+    		printf("\n\nIntroduce el mes final: \n|| ");
+    		for (mes = 1; mes < (datosATrabajar.numColumnas - 1); mes++){
+				printf("%s || ",datosATrabajar.vectorFilaFechas[mes]);
+				if (!((mes-1)%5) && (mes-1) && ((mes+1) != (datosATrabajar.numColumnas - 1))){
+					printf("\n|| ");
 				}
 			}
-    		printf("\n");
+			printf("\n\n");
 		fgets(inputYearFinal, sizeof(inputYearFinal), stdin);
     		inputYearFinal[strcspn(inputYearFinal, "\n")] = '\0';
 		// Se obtiene la posicion de la fecha final
@@ -554,7 +551,7 @@ while(1)
 		datosATrabajar.longitudIntervalo = sizeIntervalo;
 		if (sizeIntervalo <= 1 || !yearFinal || !yearInicio){
 			// Error si alguna de las fechas está mal hecha o el intervalo está al revés
-			printf("Las fechas no son las correctas\n ");
+			printf("\nLas fechas no son las correctas o el intervalo tiene longitud negativa\n ");
 			continue;
 			}
 			break;
@@ -569,7 +566,8 @@ while(1)
     	case 3:
     	{
 		// Se pide la fila que desea
-    		printf("\nIntroduce la fila deseada: \n");
+    		printf("\nIntroduce la fila deseada:\n");
+    		
 		// Se muestran todas las filas disponibles
 	    	int tipoElectricidad2;
 			for (tipoElectricidad2 = 1; tipoElectricidad2 < datosATrabajar.numFilas; tipoElectricidad2++){
@@ -581,15 +579,15 @@ while(1)
 		printf("\n");
 	    	fgets(inputDataSelect, sizeof(inputDataSelect), stdin);
 		inputDataSelect[strcspn(inputDataSelect, "\n")] = '\0';
-    		printf("\nIntroduce la fecha deseada: \n");
-		int mes;
-    		for (mes = 1; mes < (datosATrabajar.numColumnas - 1); mes++){
-				printf("%i. %s ",mes,datosATrabajar.vectorFilaFechas[mes]);
-				if ((mes-1)%5 == 0 && (mes-1) ){
-					printf("\n");
-				}
+    	printf("\nIntroduce la fecha deseada:\n|| ");
+    	int mes;
+		for (mes = 1; mes < (datosATrabajar.numColumnas - 1); mes++){
+			printf("%s || ",datosATrabajar.vectorFilaFechas[mes]);
+			if (!((mes-1)%5) && (mes-1) && ((mes+1) != (datosATrabajar.numColumnas - 1))){
+				printf("\n|| ");
 			}
-		printf("\n");
+		}
+		printf("\n\n");
 		fgets(inputYearInicio, sizeof(inputYearInicio), stdin);
     		inputYearInicio[strcspn(inputYearInicio, "\n")] = '\0';
     		// Se almacenan ambos imputs en la funcion y se espera el return
@@ -612,7 +610,15 @@ while(1)
 		}
 		case 4:{
 			// Se pide la fecha pedida, se asume valor de intervalo 1 y se almacena el tamaño del vector en la estructura
-			printf("\nIntroduce the date desired: ");    		
+    		printf("\nIntroduce la fecha deseada:\n|| ");
+			int mes;
+			for (mes = 1; mes < (datosATrabajar.numColumnas - 1); mes++){
+				printf("%s || ",datosATrabajar.vectorFilaFechas[mes]);
+				if (!((mes-1)%5) && (mes-1) && ((mes+1) != (datosATrabajar.numColumnas - 1))){
+					printf("\n|| ");
+				}
+			}
+			printf("\n\n");
     		fgets(inputYearInicio, sizeof(inputYearInicio), stdin);
     		inputYearInicio[strcspn(inputYearInicio, "\n")] = '\0';
     		sizeIntervalo = 1;
@@ -620,30 +626,161 @@ while(1)
 			break;
 		}
 		case 5:{
-		int prueba2=0;
-		int prueba = 0;
-		printf("\n");
-		for (prueba2 = 0; prueba2 < rowNumber; prueba2++){
-		    for (prueba = 0; prueba < columnNumber; prueba++){
-		        printf("%s", matrizDatos[prueba2][prueba]);
-		        printf(" %i %i\n", prueba2,prueba);
-		    }
-		printf("\n\n");
-		}
+			printf("\n Las filas se encuentran separadas, con las posiciones de cada dato en el fichero al lado\n\n");
+			int prueba2=0;
+			int prueba = 0;
+			printf("\n");
+			for (prueba2 = 0; prueba2 < rowNumber; prueba2++){
+			    for (prueba = 0; prueba < columnNumber; prueba++){
+			        printf("%s", matrizDatos[prueba2][prueba]);
+			        printf(" fila %i columna %i\n", prueba2 + 1,prueba + 1);
+			    }
+			printf("\n\n");
+			}
 			break;
 		}
 	    case 6:{
+			FILE *fileRead;
+			switch (inputArchivo[0])
+				{
+				case '1':
+					fileRead = fopen("Archivo1.csv", "r");
+					break;
+				case '2':
+					fileRead = fopen("Archivo2.csv", "r");
+					break;
+				case '3':
+					fileRead = fopen("Archivo3.csv", "r");
+					break;
+			}
+
+	    	char input[10];
+	    	FILE *fileWrite;
+	    	printf("\n Deseas modificar el archivo (1) o imprimir los cambios en un nuevo fichero(2)?\n");
+	    	fgets(input, sizeof(input), stdin);
+	    	if (input[0] == '1'){
+				fileWrite = fopen("Archivo2.csv", "w");
+				}
+			else if (input[0] == '2'){
+				printf("\nIntroduce el nombre del nuevo fichero: ");
+				char filename[100];
+				fgets(filename, sizeof(filename), stdin);
+				int iteracion;
+				for (iteracion = 0; filename[iteracion]!='\0'; iteracion++){
+					continue;
+				}
+				filename[iteracion-1] = '\0';
+			    strcat(filename, ".csv"); 
+			    fileWrite = fopen(filename, "w");
+			    if (fileWrite == NULL) {
+			        printf("Error creating the file.\n");
+			        return 1;
+    			}
+				}
+			    
+			else{
+				// Si el valor es 0, algo ha salido mal
+					printf("\nUno de los parametros no es correcto\n");
+					continue;
+					}
+			int salida = 1;
+			// Se pide la fila que desea
+			printf("\nIntroduce la fila deseada:\n");
+			// Se muestran todas las filas disponibles
+			int tipoElectricidad2;
+			for (tipoElectricidad2 = 1; tipoElectricidad2 < datosATrabajar.numFilas; tipoElectricidad2++){
+				printf("%i. %s ",tipoElectricidad2,datosATrabajar.vectorColumnaTitulos[tipoElectricidad2]);
+				if ((tipoElectricidad2-1)%5 == 0 && (tipoElectricidad2-1) ){
+					printf("\n");
+					}
+			}
+			printf("\n");
+			fgets(inputDataSelect, sizeof(inputDataSelect), stdin);
+			inputDataSelect[strcspn(inputDataSelect, "\n")] = '\0';
+			printf("\nIntroduce la fecha deseada:\n|| ");
+			int mes;
+			for (mes = 1; mes < (datosATrabajar.numColumnas - 1); mes++){
+				printf("%s || ",datosATrabajar.vectorFilaFechas[mes]);
+				if (!((mes-1)%5) && (mes-1) && ((mes+1) != (datosATrabajar.numColumnas - 1))){
+					printf("\n|| ");
+					}
+				}
+			printf("\n\n");
+			fgets(inputYearInicio, sizeof(inputYearInicio), stdin);
+			inputYearInicio[strcspn(inputYearInicio, "\n")] = '\0';
+			// Se almacenan ambos imputs en la funcion y se espera el return
+			int columnaDeseada = getNumberFromName(&datosATrabajar, inputYearInicio)/29;
+			int filaDeseada = getNumberFromName(&datosATrabajar, inputDataSelect)/31;
+			double validacionExacto = getExactValueFromMatrix(&datosATrabajar,inputDataSelect,inputYearInicio);
+			int pruebaDecimales = 1;
+			if (validacionExacto){
+				printf("\nEl valor deseado de la columna %s y fila %s es %.6f\n",inputYearInicio,inputDataSelect ,getExactValueFromMatrix(&datosATrabajar,inputDataSelect,inputYearInicio));
+				printf("\nIntroduce el nuevo valor que deseas que posea(separa decimales con un punto, y si deseas que el valor sea 0, escribe '-'): ");
+				char numero[30];
+				fgets(numero,sizeof(numero),stdin);
+				printf("\n iNPTU: %s", numero);
+				double inputANumero = atof(numero);
+				if (numero[0] == '-'){
+					inputANumero = 0;
+				}
+				else if (!inputANumero){
+					printf("\nIntroduce un NUMERO distinto de 0 (leer enunciado en caso de querer 0)");
+					continue;
+				}
+				char fila[1024];
+				//while(fgets(fila,sizeof(fila),fileRead)){
+				int columna;
+				int numFila = 0;
+				while(fgets(fila,sizeof(fila),fileRead)){
+				printf("\n%s\n", fila);
+				if (numFila == filaDeseada + filasAntesDatos){
+					fprintf(fileWrite, "%s", datosATrabajar.matriz[filaDeseada][0]);	
+					for(columna = 1; columna < datosATrabajar.numColumnas - 1; columna++){
+						if(columna == columnaDeseada){
+							printf("\n COLUMNA BUENA");
+							fprintf(fileWrite, ",\"%.6f\"", inputANumero);
+						}
+						else{
+							printf("\n COLUMNA MALA");
+							fprintf(fileWrite, ",\"%.6f\"", strtof(datosATrabajar.matriz[filaDeseada][columna],NULL));
+						}
+					}
+					fprintf(fileWrite,"\n");
+				}
+				else{
+					printf("\n fila");
+					fprintf(fileWrite, "%s", fila);				
+					}
+				numFila++;
+				}
+				//}
+			}
+			else{
+				printf("\nUno de los valores no es correcto");
+				continue;
+			}
+
+				// Reinicio de las variables input
+			int i;
+			for (i = 0; i < 40; i++){
+				inputDataSelect[i] = '\0';
+				inputYearInicio[i] = '\0';
+			}
+			continue;
+		}
+		case 7:{
+
 	    free(matrizDatos);
 	    free(datosATrabajar.vectorFila);
 	    free(datosATrabajar.vectorFilaFechas);
 	    free(datosATrabajar.vectorColumna);
-            free(datosATrabajar.vectorColumnaTitulos);
+        free(datosATrabajar.vectorColumnaTitulos);
 	    return 0;
 	    }
 	}
 	if(sizeIntervalo != 1){
 		// Solo se pide fila si no se ha elegido una fecha con anterioridad
-		printf("elige una de las siguientes filas con la que quieras trabajar (Escribe el nombre): (Para volver atras, introduce Exit) \n");
+		printf("\nelige una de las siguientes filas con la que quieras trabajar (Escribe el nombre): (Para volver atras, introduce Exit) \n");
 		// se enseñan todas las posibles opciones
 		int tipoElectricidad;
 		for (tipoElectricidad = 1; tipoElectricidad < datosATrabajar.numFilas; tipoElectricidad++){
@@ -911,7 +1048,7 @@ void grafica(struct datosMatriz *datosATrabajar, double* Vector){//funcion para 
 	double maximo, minimo;	
 	
 	int j, division;
-    obtenerMaximoMinimo(&datosATrabajar, Vector, &maximo, &minimo);
+    // obtenerMaximoMinimo(&datosATrabajar, Vector, &maximo, &minimo);
     if (minimo<0){
     	minimo = minimo*(-1);
 	}
@@ -940,7 +1077,6 @@ void imprimirVectorEnArchivo(struct datosMatriz *datosATrabajar, double* Vector,
         printf("No se pudo abrir el archivo.\n");
         return;
     }
-    
     fprintf(archivo, "El vector es: ");
     int i;
     int longitud = sizeof(Vector) / sizeof (Vector[0]);
