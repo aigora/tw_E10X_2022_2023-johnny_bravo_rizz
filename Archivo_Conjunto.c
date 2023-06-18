@@ -201,6 +201,9 @@ int main()
 	printf("1.SALDOS POR FRONTERAS - FISICO_01-05-2022_29-05-2023\n");
 	printf("2.ESTRUCTURA DE LA GENERACION POR TECNOLOGIAS_01-01-2021_31-12-2022\n");
 	printf("3.EMISIONES Y FACTOR DE EMISION DE CO2 EQ. DE LA GENERACION_22-05-2023_29-05-2023\n");
+	printf("4.balance-electrico_02-2021_12-2022\n");
+	printf("5.balance-electrico_2011_2014\n");
+	printf("6.EVOLUCIÓN DE LA RED DE TRANSPORTE (km DE CIRCUITO)_01-01-2019_31-12-2023\n");
 	// VALORES DE AJUSTE DEPENDIENTES DE ARCHIVO DE ORIGEN
 	fgets(inputArchivo,sizeof(inputArchivo),stdin);
 	FILE *dimensionsScout;
@@ -220,6 +223,21 @@ int main()
 			filasAntesDatos = 4;
 			filasDespuesDatos = 12;
 			dimensionsScout = fopen("Archivo3.csv", "r");
+			break;
+		case '4':
+			filasAntesDatos = 4;
+			filasDespuesDatos = 23;
+			dimensionsScout = fopen("Archivo4.csv", "r");
+			break;
+		case '5':
+			filasAntesDatos = 4;
+			filasDespuesDatos = 23;
+			dimensionsScout = fopen("Archivo5.csv", "r");
+			break;
+		case '6':
+			filasAntesDatos = 4;
+			filasDespuesDatos = 7;
+			dimensionsScout = fopen("Archivo6.csv", "r");
 			break;
 		default:
 			printf("Not one of the options, please restart the program");
@@ -311,6 +329,15 @@ int main()
 			break;
 		case '3':
 			elementSeparation = fopen("Archivo3.csv", "r");
+			break;
+		case '4':
+			elementSeparation = fopen("Archivo4.csv", "r");
+			break;
+		case '5':
+			elementSeparation = fopen("Archivo5.csv", "r");
+			break;
+		case '6':
+			elementSeparation = fopen("Archivo6.csv", "r");
 			break;
 	}
     char element[80];
@@ -637,7 +664,7 @@ while(1)
 			    }
 			printf("\n\n");
 			}
-			break;
+			continue;
 		}
 	    case 6:{
 			FILE *fileRead;
@@ -652,6 +679,15 @@ while(1)
 				case '3':
 					fileRead = fopen("Archivo3.csv", "r");
 					break;
+				case '4':
+					fileRead = fopen("Archivo4.csv", "r");
+					break;
+				case '5':
+					fileRead = fopen("Archivo5.csv", "r");
+					break;
+				case '6':
+					fileRead = fopen("Archivo6.csv", "r");
+					break;
 			}
 
 	    	char input[10];
@@ -659,7 +695,7 @@ while(1)
 	    	printf("\n Deseas modificar el archivo (1) o imprimir los cambios en un nuevo fichero(2)?\n");
 	    	fgets(input, sizeof(input), stdin);
 	    	if (input[0] == '1'){
-				fileWrite = fopen("Archivo2.csv", "w");
+				fileWrite = fopen("temp.csv", "w");
 				}
 			else if (input[0] == '2'){
 				printf("\nIntroduce el nombre del nuevo fichero: ");
@@ -737,22 +773,88 @@ while(1)
 					fprintf(fileWrite, "%s", datosATrabajar.matriz[filaDeseada][0]);	
 					for(columna = 1; columna < datosATrabajar.numColumnas - 1; columna++){
 						if(columna == columnaDeseada){
-							printf("\n COLUMNA BUENA");
 							fprintf(fileWrite, ",\"%.6f\"", inputANumero);
 						}
 						else{
-							printf("\n COLUMNA MALA");
 							fprintf(fileWrite, ",\"%.6f\"", strtof(datosATrabajar.matriz[filaDeseada][columna],NULL));
 						}
 					}
 					fprintf(fileWrite,"\n");
 				}
 				else{
-					printf("\n fila");
 					fprintf(fileWrite, "%s", fila);				
 					}
 				numFila++;
 				}
+				fclose(fileRead);
+				fclose(fileWrite);
+				if (input[0] == '1'){
+					switch (inputArchivo[0])
+						{
+						case '1':
+							if (remove("Archivo1.csv") != 0) {
+								printf("Error deleting file");
+								return 1;
+							}
+							if (rename("temp.csv", "Archivo1.csv") != 0) {
+								printf("Error renaming file");
+								return 1;
+							}
+							break;
+						case '2':
+							if (remove("Archivo2.csv") != 0) {
+								printf("Error deleting file");
+								return 1;
+							}
+							if (rename("temp.csv", "Archivo2.csv") != 0) {
+								printf("Error renaming file");
+								return 1;
+							}
+							break;
+						case '3':
+							if (remove("Archivo3.csv") != 0) {
+								printf("Error deleting file");
+								return 1;
+							}
+							if (rename("temp.csv", "Archivo3.csv") != 0) {
+								printf("Error renaming file");
+								return 1;
+							}
+							break;
+						case '4':
+							if (remove("Archivo4.csv") != 0) {
+								printf("Error deleting file");
+								return 1;
+							}
+							if (rename("temp.csv", "Archivo4.csv") != 0) {
+								printf("Error renaming file");
+								return 1;
+							}
+							break;
+						case '5':
+							if (remove("Archivo5.csv") != 0) {
+								printf("Error deleting file");
+								return 1;
+							}
+							if (rename("temp.csv", "Archivo5.csv") != 0) {
+								printf("Error renaming file");
+								return 1;
+							}
+							break;
+						case '6':
+							if (remove("Archivo6.csv") != 0) {
+								printf("Error deleting file");
+								return 1;
+							}
+							if (rename("temp.csv", "Archivo6.csv") != 0) {
+								printf("Error renaming file");
+								return 1;
+							}
+							break;
+						}
+				}
+				printf("Modificacion del archivo con exito, por favor reinicie el programa\n");
+				return 0;
 				//}
 			}
 			else{
@@ -932,8 +1034,6 @@ while(1)
 						 
     	    	}
 		}
-	break;
-	}
 int i;
 for (i = 0; i < 40; i++){
 			inputDataSelect[i] = '\0';
@@ -944,6 +1044,8 @@ for (i = 0; i < 40; i++){
 			inputYearInicio[i] = '\0';
 			inputYearFinal[i] = '\0';
 		}
+break;
+}
 free(vectorFila);
 }
 return 0;
@@ -1006,8 +1108,9 @@ void regresion(struct datosMatriz *datosATrabajar, double* Vector)//calcula la r
   
   b = (covarianza)/(varianza1(vectorFecha)); 
   printf("La recta de regresion tiene la forma : y= %f + %f * (x-%f) , ahora , dame un numero entero positivo , ese numero representara la cantidad de meses despues del ultimo mes registrado y hara una estimacion para ese mes. Pero cuanto mayor sea el numero , mayor sera el error\n", media(datosATrabajar, Vector), b, media1(vectorFecha));
-  int num_meses;
-  scanf("%i",&num_meses);
+  char input[10];
+  fgets(input,sizeof(input),stdin);
+  int num_meses = atoi(input);
   float error ,estimacion;
   
   estimacion = media(datosATrabajar, Vector) + b * (((datosATrabajar->longitudIntervalo)+num_meses)-media(datosATrabajar, vectorFecha));  
