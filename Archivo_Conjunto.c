@@ -1080,7 +1080,7 @@ while(1)
 	    					printf("Choose another option\n");				 
 							continue;
 						}
-						printf("\nQuieres ordenarlos de menor a mayor (1) o de mayor a menor (2)?");
+						printf("\nQuieres ordenarlos de mayor a menor (1) o de menor a mayor (2)?");
 						char input123[10];
 						fgets(input123,sizeof(input123),stdin);
 						printf("\n");
