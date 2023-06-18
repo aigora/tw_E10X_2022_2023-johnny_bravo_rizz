@@ -205,7 +205,13 @@ int main()
 	printf("3.EMISIONES Y FACTOR DE EMISION DE CO2 EQ. DE LA GENERACION_22-05-2023_29-05-2023\n");
 	printf("4.balance-electrico_02-2021_12-2022\n");
 	printf("5.balance-electrico_2011_2014\n");
-	printf("6.EVOLUCIÓN DE LA RED DE TRANSPORTE (km DE CIRCUITO)_01-01-2019_31-12-2023\n");
+	printf("6.EVOLUCION DE LA RED DE TRANSPORTE (km DE CIRCUITO)_01-01-2019_31-12-2023\n");
+	printf("7.SALDOS POR FRONTERAS - FISICO_01-06-2018_29-02-2020\n");
+	printf("8.EVOLUCION DE LA GENERACION RENOVABLE Y NO RENOVABLE_01-07-2022_18-06-2023\n");
+	printf("9.ENERGIA GESTIONADA EN LOS SERVICIOS DE AJUSTE_01-07-2018_29-02-2020 (1)\n");
+	
+	
+	
 	// VALORES DE AJUSTE DEPENDIENTES DE ARCHIVO DE ORIGEN
 	fgets(inputArchivo,sizeof(inputArchivo),stdin);
 	FILE *dimensionsScout;
@@ -241,6 +247,21 @@ int main()
 			filasDespuesDatos = 7;
 			dimensionsScout = fopen("Archivo6.csv", "r");
 			break;
+		case '7':
+			filasAntesDatos = 4;
+			filasDespuesDatos = 10;
+			dimensionsScout = fopen("Archivo7.csv", "r");
+			break;
+		case '8':
+			filasAntesDatos = 4;
+			filasDespuesDatos = 12;
+			dimensionsScout = fopen("Archivo8.csv", "r");
+			break;	
+		case '9':
+			filasAntesDatos = 4;
+			filasDespuesDatos = 7;
+			dimensionsScout = fopen("Archivo9.csv", "r");
+			break;	
 		default:
 			printf("Not one of the options, please restart the program");
 			return 0;
@@ -258,10 +279,10 @@ int main()
     }
     // Se sacan filas hasta que se alcanza la primera fila con datos
     int columna;
-    for (columna = 0; columna < filasAntesDatos + 1; columna++){
+	for (columna = 0; columna < filasAntesDatos + 1; columna++){
         fgets(pruebaDimensiones, 1024, dimensionsScout);
     }
-    int lastWasComma = 0;
+	int lastWasComma = 0;
     int isCommaInWord = 0;
     int columnNumber = 1;
     int transportVariable = 0;
@@ -317,7 +338,6 @@ int main()
             }
         }
     // comprobación de las dimensiones de la matriz
-
     // < ------------------------------------------- PROCESO DE INSERTADO DE DATOS DEL ARCHIVO EN EL TENSOR DINAMICO matrizDatos ------------------------------------->
     char almacenFila[1024];
     FILE *elementSeparation;
@@ -341,6 +361,15 @@ int main()
 		case '6':
 			elementSeparation = fopen("Archivo6.csv", "r");
 			break;
+		case '7':
+			elementSeparation = fopen("Archivo7.csv", "r");
+			break;
+		case '8':
+			elementSeparation = fopen("Archivo8.csv", "r");
+			break;
+		case '9':
+			elementSeparation = fopen("Archivo9.csv", "r");
+			break;
 	}
     char element[80];
     // Variables pseudobooleanas que sirven para comprobar cosas dentro del indexado
@@ -356,7 +385,7 @@ int main()
         column = 0;
         // Se almacena el contenido de la fila en almacenFila
         fgets(almacenFila, 1024, elementSeparation);
-        letraElement = 0; 
+		letraElement = 0; 
         letra = 0;
         // Iteramos hasta el final de la linea (hasta que sale \0)
         for (letra = 0; almacenFila[letra] != '\0'; letra++){
@@ -688,6 +717,15 @@ while(1)
 				case '6':
 					fileRead = fopen("Archivo6.csv", "r");
 					break;
+				case '7':
+					fileRead = fopen("Archivo7.csv", "r");
+					break;
+				case '8':
+					fileRead = fopen("Archivo8.csv", "r");
+					break;
+				case '9':
+					fileRead = fopen("Archivo9.csv", "r");
+					break;
 			}
 
 	    	char input[10];
@@ -745,6 +783,13 @@ while(1)
 			int columnaDeseada = getNumberFromName(&datosATrabajar, inputYearInicio)/29;
 			int filaDeseada = getNumberFromName(&datosATrabajar, inputDataSelect)/31;
 			double validacionExacto = getExactValueFromMatrix(&datosATrabajar,inputDataSelect,inputYearInicio);
+			if(!columnaDeseada || !filaDeseada){
+				printf("Uno de los parametros no es correcto");
+				if (input[0] == '1'){
+					remove("temp.csv");
+				}
+				continue;	
+			}
 			int pruebaDecimales = 1;
 			if (validacionExacto){
 				printf("\nEl valor deseado de la columna %s y fila %s es %.6f\n",inputYearInicio,inputDataSelect ,getExactValueFromMatrix(&datosATrabajar,inputDataSelect,inputYearInicio));
@@ -848,17 +893,40 @@ while(1)
 								return 1;
 							}
 							break;
+						case '7':
+							if (remove("Archivo7.csv") != 0) {
+								printf("Error deleting file");
+								return 1;
+							}
+							if (rename("temp.csv", "Archivo7.csv") != 0) {
+								printf("Error renaming file");
+								return 1;
+							}
+							break;
+						case '8':
+							if (remove("Archivo8.csv") != 0) {
+								printf("Error deleting file");
+								return 1;
+							}
+							if (rename("temp.csv", "Archivo8.csv") != 0) {
+								printf("Error renaming file");
+								return 1;
+							}
+							break;
+						case '9':
+							if (remove("Archivo9.csv") != 0) {
+								printf("Error deleting file");
+								return 1;
+							}
+							if (rename("temp.csv", "Archivo9.csv") != 0) {
+								printf("Error renaming file");
+								return 1;
+							}
+							break;
 						}
 				}
 				printf("Modificacion del archivo con exito, por favor reinicie el programa\n");
 				return 0;
-			}
-			else{
-				printf("El espacio vale 0, está vacío o uno de los parametros no es correcto");
-				if (input[0] == '1'){
-					remove("temp.csv");
-				}
-				continue;
 			}
 				// Reinicio de las variables input
 			int i;
@@ -1151,7 +1219,7 @@ void grafica(struct datosMatriz *datosATrabajar, double* Vector){//funcion para 
 	double maximo, minimo;	
 	
 	int j, division;
-    obtenerMaximoMinimo(datosATrabajar, Vector, &maximo, &minimo);
+    // obtenerMaximoMinimo(&datosATrabajar, Vector, &maximo, &minimo);
     if (minimo<0){
     	minimo = minimo*(-1);
 	}
