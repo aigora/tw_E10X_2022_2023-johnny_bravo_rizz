@@ -1233,7 +1233,7 @@ void grafica(struct datosMatriz *datosATrabajar, double* Vector){//funcion para 
 	double maximo, minimo;	
 	
 	int j, division;
-    // obtenerMaximoMinimo(&datosATrabajar, Vector, &maximo, &minimo);
+    obtenerMaximoMinimo(datosATrabajar, Vector, &maximo, &minimo);
     if (minimo<0){
     	minimo = minimo*(-1);
 	}
