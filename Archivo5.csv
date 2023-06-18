@@ -1,0 +1,39 @@
+Título,balance-electrico_2011_2014,,,
+Comunidades autónomas,CANTABRIA,,,
+Magnitudes,MWh,,,
+ ,,,,
+Fechas,2011,2012,2013,2014
+Hidraulica,"257133,93","297221,154","343005,288","257531,653"
+Eolica,"65239,515","62089,362","74550,424","76308,95"
+Solar fotovoltaica,"2058,545","2136,588","2067,143","2218,715"
+Otras renovables,"14083,686","16857,638","81926,784","85795,958"
+Generacion renovable,"338515,676","378304,74199999997","501549,63899999997","421855,276"
+Turbinacion bombeo,"364963,361","575401,949","537838,28","606802,956"
+Cogeneracion,"1287265,096","1669321,387","1219724,15","831901,583"
+Generacion no renovable,"1652228,457","2244723,336","1757562,43","1438704,5389999999"
+Consumos en bombeo,"-509191,14","-806690,268","-762329,74","-854983,244"
+Saldo de intercambios,"3009923,987","2599968,803","2892372,84","3320585,36"
+Demanda en b.c.,"4491476,98","4416306,613","4389155,169","4326161,931"
+ ,,,,
+Notas,,,,
+ ,Balance eléctrico: asignación de unidades de producción según combustible principal.,,,
+ ,"Otras renovables: incluye biogás, biomasa, hidráulica marina y geotérmica.",,,
+ ,Los valores de incrementos y año móvil incluyen residuos hasta el 31/12/2014.,,,
+ ,Residuos renovables : generación incluida en otras renovables y cogeneración hasta el 31/12/2014.,,,
+ ,Turbinación de bombeo puro + estimación de turbinación de bombeo mixto.,,,
+ ,Ciclo combinado: Incluye funcionamiento en ciclo abierto.,,,
+ ,Fuel + Gas: En el sistema eléctrico nacional se incluye la generación con grupos auxiliares de Baleares.,,,
+ ,Cogeneración: los valores de incrementos y año móvil incluyen residuos hasta el 31/12/2014.,,,
+ ,Residuos no renovables: generación incluida en otras renovables y cogeneración hasta el 31/12/2014.,,,
+ ,Demanda corregida: corregidos los efectos de temperatura y laboralidad.,,,
+ ,Enlace Península-Baleares: Valor positivo - entrada de energía en el sistema; Valor negativo - salida de energía del sistema.,,,
+ ,Valor positivo: saldo importador; valor negativo: saldo exportador.,,,
+ ,Los valores de incrementos no se calculan cuando los saldos de intercambios tienen distinto signo.,,,
+ ,Demanda corregida: corregidos los efectos de temperatura y laboralidad.,,,
+ ,,,,
+Estados,,,,
+ ,Definitivo: 01/01/2011 - 31/12/2014,,,
+ ,,,,
+Fecha exportación,18/06/2023 - 14:12:34,,,
+ ,,,,
+Fuente,www.ree.es,,,
