@@ -58,7 +58,6 @@ float varianza1(double* Vector);
 float engtot(struct datosMatriz *datosATrabajar, double* Vector);
 void regresion(struct datosMatriz *datosATrabajar, double* Vector);
 void grafica(struct datosMatriz *datosATrabajar, double* Vector);
-void imprimirVectorEnArchivo(struct datosMatriz *datosATrabajar, double* Vector, const char* nombreArchivo);
 void obtenerMaximoMinimo(struct datosMatriz *datosATrabajar, double* Vector, double *maximo, double *minimo);
 // FUNCION PARA SACAR SOLO UN CACHO DE LA MATRIZ EN UN VECTOR FILA
 int getSpliceOfVector (struct datosMatriz *datosATrabajar, char* inicioSplice, char* finSplice, char* filaSpliced, double* vectorSpliced){
@@ -1038,14 +1037,12 @@ while(1)
 	    	    	{
 	    	    		// MEDIA
 	            		printf("la media es : %f\n",media(&datosATrabajar, vectorFila));
-					imprimirVectorEnArchivo(&datosATrabajar, vectorFila, "vector_trabajo.txt");
 	       				break;
 	        		}
           			case 2:
          	   		{
          	   			// Varianza
          	   			  printf("la varianza es: %f",varianza(&datosATrabajar, vectorFila));
-						imprimirVectorEnArchivo(&datosATrabajar, vectorFila, "vector_trabajo.txt");
           	    	  break;
           			}
           			case 3:
@@ -1054,21 +1051,18 @@ while(1)
           				double maximo, minimo;
           				obtenerMaximoMinimo(&datosATrabajar, vectorFila, &maximo, &minimo);
           	    		printf("el maximo es:%f y el minimo es:%f \n",maximo,minimo);
-						imprimirVectorEnArchivo(&datosATrabajar, vectorFila, "vector_trabajo.txt");
            		  		break;
 		   			}
 		   			case 4:
 	    	    	{
 	    	    			// estimaciones futuras
 	    	    		regresion(&datosATrabajar,vectorFila);
-					imprimirVectorEnArchivo(&datosATrabajar, vectorFila, "vector_trabajo.txt");
 	       				break;
 	        		}
 	    	    	case 5:
 	    			{
 	    				// GRAFICO
 	     	    		grafica(&datosATrabajar,vectorFila);
-						imprimirVectorEnArchivo(&datosATrabajar, vectorFila, "vector_trabajo.txt");
 						break;
 					}
 						
@@ -1077,7 +1071,6 @@ while(1)
 	    	    	{
 	    	    	//energia total
 				printf("la energia total es:%f",engtot(&datosATrabajar,vectorFila));
-					imprimirVectorEnArchivo(&datosATrabajar, vectorFila, "vector_trabajo.txt");
 	    	    		
 	       				break;
 	         		}
@@ -1253,29 +1246,6 @@ void grafica(struct datosMatriz *datosATrabajar, double* Vector){//funcion para 
 			}
 		}
 	}
-}
-
-void imprimirVectorEnArchivo(struct datosMatriz *datosATrabajar, double* Vector, const char* nombreArchivo) {
-    FILE* archivo = fopen(nombreArchivo, "w");
-    if (archivo == NULL) {
-	    //en caso de que el archivo no se pueda abrir informará del error
-        printf("No se pudo abrir el archivo.\n");
-        return;
-    }
-    fprintf(archivo, "El vector es: ");
-    int i;
-    int longitud = sizeof(Vector) / sizeof (Vector[0]);
-    for (i = 0; i < datosATrabajar->longitudIntervalo; i++) {
-	    //recorre el vector
-        fprintf(archivo, "%f ", Vector[i]);
-	    //lo imprime en el archivo
-    }
-    fprintf(archivo, "\n");
-    
-    fclose(archivo);
-//cerramos el archivo
-	       printf("\nEl vector se ha escrito correctamente en el archivo.\n");
-	//informamos que se ha impreso correctamente el vector
 }
 
 void obtenerMaximoMinimo(struct datosMatriz *datosATrabajar, double* Vector, double *maximo, double *minimo) {
