@@ -938,11 +938,6 @@ while(1)
 			continue;
 		}
 		case 7:{
-	    free(matrizDatos);
-	    free(datosATrabajar.vectorFila);
-	    free(datosATrabajar.vectorFilaFechas);
-	    free(datosATrabajar.vectorColumna);
-        free(datosATrabajar.vectorColumnaTitulos);
 	    return 0;
 	    }
 	    default:{
