@@ -136,24 +136,25 @@ if (columnaDeseada){
 	}
 return 0;
 }
-void sortVector (struct datosMatriz *datosATrabajar, double* vectorAOrdenar, char mayorOMenor)
+void sortVector (struct datosMatriz *datosATrabajar, double* vectorAOrdenar, char mayorOMenor, char* inicioSort)
 {
 int i, j, letra; 
+int startSort = getNumberFromName(datosATrabajar, inicioSort)/29;
 double temporalStore;
 char buffer;
 char temporalDateStore[30];
 // Comprobación del vector antes de la ordenación
 printf("Before sort: \n");
-for (i= 0; i < datosATrabajar->numColumnas - 1; i++){
-	datosATrabajar->vectorFila[i] = datosATrabajar->vectorFilaFechas[i];
+for (i= 0; i < datosATrabajar->longitudIntervalo; i++){
+	datosATrabajar->vectorFila[i] = datosATrabajar->vectorFilaFechas[i + startSort - 1];
 	printf("%s ", datosATrabajar->vectorFila[i]);
 	printf("%.6f\n", vectorAOrdenar[i]);
 }
 printf("\n");
 // Implementación de un algoritmo de ordenacion que ordena tanto el contenido de la fila como una copia de sus posiciones en fechas
 if (mayorOMenor == '<'){
-	for (i= 0; i < datosATrabajar->numColumnas-2; i++){
-		for (j= 0; j < datosATrabajar->numColumnas-2-i;j++){
+	for (i= 0; i < datosATrabajar->longitudIntervalo-1; i++){
+		for (j= 0; j < datosATrabajar->longitudIntervalo-1-i;j++){
 			// En el caso de que sea uno mayor que el otro, se permutan las posiciones
 			if (vectorAOrdenar[j] > vectorAOrdenar[j+1]){
 				temporalStore = vectorAOrdenar[j];
@@ -168,8 +169,8 @@ if (mayorOMenor == '<'){
 	}
 }
 else if (mayorOMenor == '>'){
-	for (i= 0; i < datosATrabajar->numColumnas-2; i++){
-		for (j= 0; j < datosATrabajar->numColumnas-2-i;j++){
+	for (i= 0; i < datosATrabajar->longitudIntervalo-1; i++){
+		for (j= 0; j < datosATrabajar->longitudIntervalo-1-i;j++){
 			// En el caso de que sea uno mayor que el otro, se permutan las posiciones
 			if (vectorAOrdenar[j] < vectorAOrdenar[j+1]){
 				temporalStore = vectorAOrdenar[j];
@@ -190,7 +191,7 @@ else{
 }
 // Comprobación de los datos con sus fechas correspondientes 
 printf("After sort: \n");
-for (i= 0; i < datosATrabajar->numColumnas-1; i++){
+for (i= 0; i < datosATrabajar->longitudIntervalo; i++){
 	printf("%s  %.6f \n", datosATrabajar->vectorFila[i],vectorAOrdenar[i]);
 }
 } 		
@@ -1091,9 +1092,27 @@ while(1)
 	    					printf("Choose another option\n");				 
 							continue;
 						}
-	    				sortVector(&datosATrabajar, vectorFila, '>');
-	     	   			break;
-	         		}
+						printf("\nQuieres ordenarlos de menor a mayor (1) o de mayor a menor (2)?");
+						char input123[10];
+						fgets(input123,sizeof(input123),stdin);
+						printf("\n");
+						if(input123[0] == '1'){
+	    				sortVector(&datosATrabajar, vectorFila, '>',inputYearInicio);
+	     	   			}
+	     	   			else if(input123[0] == '2'){
+						sortVector(&datosATrabajar, vectorFila, '<',inputYearInicio);	
+						}
+						else{
+						printf("Not one of the options");
+						continue;
+						}	
+						
+						int i;
+						for(i = 0; input123[i] != '\0'; i++){
+							input123[i] = '\0';
+						}
+						break;
+	         			}
 	         		default:
 	         		{	
 					printf("Choose another option\n");				 
@@ -1219,7 +1238,7 @@ void grafica(struct datosMatriz *datosATrabajar, double* Vector){//funcion para 
 	double maximo, minimo;	
 	
 	int j, division;
-    obtenerMaximoMinimo(datosATrabajar, Vector, &maximo, &minimo);
+    // obtenerMaximoMinimo(&datosATrabajar, Vector, &maximo, &minimo);
     if (minimo<0){
     	minimo = minimo*(-1);
 	}
