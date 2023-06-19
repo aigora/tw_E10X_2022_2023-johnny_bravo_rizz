@@ -93,9 +93,9 @@ if (!(deseo%31)){
 	printf("\nFila deseada: %i. \nSu vector es el siguiente:\n\n", filaDeseada);
 	// Se obtiene el tamaño del vector completo consultando la estructura datosATrabajar
 	sizeOfVector = datosATrabajar->numColumnas;	
-	for(alojamientoVector = 1; alojamientoVector < sizeOfVector; alojamientoVector++){	
-		vectorPeticion[alojamientoVector - 1] = strtof(datosATrabajar->matriz[filaDeseada][alojamientoVector], NULL);
-		printf("posicion %i: %.6f \n",alojamientoVector - 1,vectorPeticion[alojamientoVector - 1]);
+	for(alojamientoVector = 0; alojamientoVector < sizeOfVector; alojamientoVector++){	
+		vectorPeticion[alojamientoVector] = strtof(datosATrabajar->matriz[filaDeseada + 1][alojamientoVector], NULL);
+		printf("posicion %i: %.6f \n",alojamientoVector - 1,vectorPeticion[alojamientoVector]);
 	}
 	// Parte de luis
 	return filaDeseada;
