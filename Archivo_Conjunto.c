@@ -145,7 +145,7 @@ char temporalDateStore[30];
 // Comprobación del vector antes de la ordenación
 printf("Before sort: \n");
 for (i= 0; i < datosATrabajar->longitudIntervalo; i++){
-	datosATrabajar->vectorFila[i] = datosATrabajar->vectorFilaFechas[i + startSort - 1];
+	datosATrabajar->vectorFila[i] = datosATrabajar->vectorFilaFechas[i + startSort];
 	printf("%s ", datosATrabajar->vectorFila[i]);
 	printf("%.6f\n", vectorAOrdenar[i]);
 }
