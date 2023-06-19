@@ -1080,7 +1080,7 @@ while(1)
 	    					printf("Choose another option\n");				 
 							continue;
 						}
-						printf("\nQuieres ordenarlos de mayor a menor (1) o de menor a mayor (2)?");
+						printf("\nQuieres ordenarlos de menor a mayor (1) o de mayor a menor (2)?");
 						char input123[10];
 						fgets(input123,sizeof(input123),stdin);
 						printf("\n");
@@ -1224,27 +1224,23 @@ float varianza1(double* Vector)//varianza1 tiene la misma diferencia con varianz
 void grafica(struct datosMatriz *datosATrabajar, double* Vector){//funcion para expresar de forma gráfica los resultados numéricos
 	int i, longitud;	
 	double maximo, minimo;	
-	
-	int j, division;
+	int j;
+	double division;
     obtenerMaximoMinimo(datosATrabajar, Vector, &maximo, &minimo);
-    if (minimo<0){
-    	minimo = minimo*(-1);
-	}
-	division = minimo/50;
-	longitud = sizeof(Vector) / sizeof (Vector[0]);
-	for (i=0; i<datosATrabajar->longitudIntervalo; i++){
-		if (Vector[i] < 0){
-			Vector[i] = Vector[i]*(-1);
+	division = (maximo-minimo)/25;
+	longitud = datosATrabajar->longitudIntervalo;
+	printf("\nEl 0 es equivalente a %.6f y el maximo (25 rallas) es igual a %.6f. \nCada ralla equivale a %.6f\n\n",minimo, maximo, division);
+		
+	for (i=0; i<longitud; i++){
+		double vectorGrafica = (Vector[i] - minimo)/division;
+		if (vectorGrafica < 0){
+			vectorGrafica = -vectorGrafica;
 		}
-	//de esta forma hacemos que cada '-', que es de lo que esta formada la grafica represente 1/40 parte del valor minimo
-		int nveces = Vector[i]/division;
-		for(j=0; j<nveces; j++){ //bucle para imprimir la grafica
+		printf("Elemento %i:",i);
+		for(j = 0; j < vectorGrafica; j++){
 			printf("-");
-			
-			if(j==(nveces-1)){//cuando el vector se acaba hay que añadir un \0
-				printf("\n");
-			}
 		}
+		printf("\n");
 	}
 }
 
