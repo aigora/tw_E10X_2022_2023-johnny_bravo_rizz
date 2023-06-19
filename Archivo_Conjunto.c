@@ -107,9 +107,9 @@ else if (!(deseo%29)){
 	printf("Columna deseada: %i\n\n", columnaDeseada);
 	// Se resta uno al numero de filas para ignorar la fila de fechas
 	sizeOfVector = datosATrabajar->numFilas - 1;
-	for(alojamientoVector = 1; alojamientoVector < sizeOfVector; alojamientoVector++){	
-		vectorPeticion[alojamientoVector - 1] = strtof(datosATrabajar->matriz[alojamientoVector][columnaDeseada], NULL);
-		printf("%.6f %i\n",vectorPeticion[alojamientoVector - 1], alojamientoVector);
+	for(alojamientoVector = 0; alojamientoVector < sizeOfVector; alojamientoVector++){	
+		vectorPeticion[alojamientoVector] = strtof(datosATrabajar->matriz[alojamientoVector + 1][columnaDeseada], NULL);
+		printf("%.6f %i\n",vectorPeticion[alojamientoVector], alojamientoVector);
 	}
 }
 // En caso de que no sea ninguna, se devuelve un erro de ortografía
