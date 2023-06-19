@@ -92,10 +92,10 @@ if (!(deseo%31)){
 	int filaDeseada = deseo/31;
 	printf("\nFila deseada: %i. \nSu vector es el siguiente:\n\n", filaDeseada);
 	// Se obtiene el tamaño del vector completo consultando la estructura datosATrabajar
-	sizeOfVector = datosATrabajar->numColumnas;	
+	sizeOfVector = datosATrabajar->numColumnas - 1;	
 	for(alojamientoVector = 0; alojamientoVector < sizeOfVector; alojamientoVector++){	
-		vectorPeticion[alojamientoVector] = strtof(datosATrabajar->matriz[filaDeseada + 1][alojamientoVector], NULL);
-		printf("posicion %i: %.6f \n",alojamientoVector - 1,vectorPeticion[alojamientoVector]);
+		vectorPeticion[alojamientoVector] = strtof(datosATrabajar->matriz[filaDeseada][alojamientoVector + 1], NULL);
+		printf("posicion %i: %.6f \n",alojamientoVector,vectorPeticion[alojamientoVector]);
 	}
 	// Parte de luis
 	return filaDeseada;
@@ -556,7 +556,7 @@ int opcion2;
 char inputPeriodSelect[40], inputDataSelect[40], inputOperationSelect[40], inputFuncionalidadSelect[40], inputAnual[40];
 // Estos vectores servirán para almacenar las funcionalidades de nuestro grupo de manera clara y concisa
 int numeroTareas = 6;
-char vectorFuncionalidades[6][60] = {"Media","Varianza","Valor maximo y minimo", "Estimaciones futuras","Grafico","energia total"};
+char vectorFuncionalidades[6][60] = {"Media","Varianza","Valor maximo y minimo", "Recta de regresion","Grafico","energia total"};
 // Inicialización del puntero hacia el vector que mas tarde será asignado con malloc 
 double* vectorFila;
 printf("\n\nBienvenido al menu del equipo Jhonny Bravo Rizz!\n");
@@ -647,7 +647,6 @@ while(1)
 		fgets(inputYearInicio, sizeof(inputYearInicio), stdin);
     		inputYearInicio[strcspn(inputYearInicio, "\n")] = '\0';
     		// Se almacenan ambos imputs en la funcion y se espera el return
-		printf("\n prUEBA: %s %s",inputDataSelect,inputYearInicio);
 		double validacionExacto = getExactValueFromMatrix(&datosATrabajar,inputDataSelect,inputYearInicio);
     		if (validacionExacto){
 				printf("\nEl valor deseado de la columna %s y fila %s es %.6f",inputYearInicio,inputDataSelect ,getExactValueFromMatrix(&datosATrabajar,inputDataSelect,inputYearInicio));
@@ -1182,15 +1181,7 @@ void regresion(struct datosMatriz *datosATrabajar, double* Vector)//calcula la r
   covarianza = sum / datosATrabajar->longitudIntervalo; 
   
   b = (covarianza)/(varianza1(vectorFecha)); 
-  printf("La recta de regresion tiene la forma : y= %f + %f * (x-%f) , ahora , dame un numero entero positivo , ese numero representara la cantidad de meses despues del ultimo mes registrado y hara una estimacion para ese mes. Pero cuanto mayor sea el numero , mayor sera el error\n", media(datosATrabajar, Vector), b, media1(vectorFecha));
-  char input[10];
-  fgets(input,sizeof(input),stdin);
-  int num_meses = atoi(input);
-  float error ,estimacion;
-  
-  estimacion = media(datosATrabajar, Vector) + b * (((datosATrabajar->longitudIntervalo)+num_meses)-media(datosATrabajar, vectorFecha));  
-  error = covarianza / (varianza(datosATrabajar, Vector) * varianza1(vectorFecha));
-  printf("Podemos hacer una estimacion para los primeros meses despues de los medidos: despues de %i meses , estimamos:%f . El coeficiente de correlacion lineal (precision) de estos datos es: %f \n",num_meses, estimacion, error);
+  printf("La recta de regresion tiene la forma : y= %f + %f * (x-%f)\n", media(datosATrabajar, Vector), b, media1(vectorFecha));
 }
 
 float media1(double* Vector) //esto es igual que la funcion media pero con un vector cualquiera, es decir un vector del cual no conocemos el tamaño (por lo que tenemos que calcular este)
